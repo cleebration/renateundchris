@@ -168,7 +168,7 @@ function shopButtons(b) {
   const rest = (b.shops || [])
     .map((s) => `<a class="buy" href="${esc(s.u)}" target="_blank" rel="noopener">${esc(s.n)}</a>`)
     .join("");
-  const local = `<a class="buy ghost" href="https://www.genialokal.de/" target="_blank" rel="noopener">Deine Buchhandlung <small>vor Ort</small></a>`;
+  const local = `<a class="buy ghost" href="${esc(b.genialokal || "https://www.genialokal.de/")}" target="_blank" rel="noopener">Deine Buchhandlung <small>vor Ort</small></a>`;
   return primary + rest + local;
 }
 function relatedBlock(b) {
