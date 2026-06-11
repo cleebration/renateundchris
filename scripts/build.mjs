@@ -81,7 +81,7 @@ function footer(rel = "") {
       <a href="${site.social.renatePhotos}" target="_blank" rel="noopener">renateleeb.photos</a>
       <a href="${site.social.cleebration}" target="_blank" rel="noopener">cleebration.com</a>
     </div>
-    <div class="cr">© ${year} Renate &amp; Chris Leeb · ${site.domain}</div>
+    <div class="cr">© ${year} Renate &amp; Chris Leeb · ${site.domain} · <a href="/impressum">Impressum</a> · <a href="/datenschutz">Datenschutz</a></div>
   </footer>`;
 }
 
@@ -276,6 +276,112 @@ function buildAbout() {
   return page({ title: "Über uns · Renate & Chris", desc: "Renate Leeb und Chris H. Leeb – gemeinsam machen wir Bücher, in denen Bild und Text einander suchen.", canonical: `https://${site.domain}/ueber-uns`, body });
 }
 
+/* ---------- legal pages ---------- */
+function legalShell(title, subtitle, inner) {
+  return `<main class="wrap detailwrap">
+    <a class="pg pg-back" href="/">
+      <span class="pg-dir">← Übersicht</span>
+      <span class="pg-title">Alle Bücher</span>
+    </a>
+    <section class="legal">
+      <h1>${title}</h1>
+      <p class="legal-sub">${subtitle}</p>
+      ${inner}
+    </section>
+  </main>`;
+}
+const LEGAL_NAME = "Chris H. Leeb";
+const LEGAL_ADDR = "Willingerstraße 17, 4030 Linz, Österreich";
+const LEGAL_MAIL = "renateundchris@cleebration.com";
+const MONTHS_DE = ["Jänner","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+const STAND = `${MONTHS_DE[new Date().getMonth()]} ${new Date().getFullYear()}`;
+
+function buildImpressum() {
+  const inner = `
+    <h2>Medieninhaber &amp; verantwortlich für den Inhalt</h2>
+    <p>${LEGAL_NAME}<br>Willingerstraße 17<br>4030 Linz<br>Österreich</p>
+
+    <h2>Kontakt</h2>
+    <p>E-Mail: <a href="mailto:${LEGAL_MAIL}">${LEGAL_MAIL}</a></p>
+
+    <h2>Art der Website</h2>
+    <p>renateundchris.com ist die private Website von Renate Leeb und Chris H. Leeb. Sie stellt ihre gemeinsamen und einzelnen Buchprojekte vor (Bildbände, ein Roman, ein Kinderbuch sowie eine herausgegebene Lebensgeschichte). Der Kauf der Bücher erfolgt ausschließlich über externe Buchhandlungen und Plattformen (z. B. die örtliche Buchhandlung über genialokal oder Books on Demand). Auf dieser Website selbst werden keine Waren verkauft und keine Zahlungen abgewickelt.</p>
+
+    <h2>Blattlinie (§ 25 MedienG)</h2>
+    <p>Die Website informiert über die Buchprojekte von Renate Leeb und Chris H. Leeb sowie über damit verbundene Themen. Die Beiträge geben die persönliche Auffassung der Betreiber wieder.</p>
+
+    <h2>Urheberrecht</h2>
+    <p>Die Inhalte dieser Website (Texte, Fotografien, Cover-Abbildungen, Gestaltung) sind urheberrechtlich geschützt. Die Fotografien stammen von Renate Leeb, die Texte von Chris H. Leeb; die Rechte an den Cover-Abbildungen liegen bei den jeweiligen Urheber:innen bzw. beim Verlag (Books on Demand). Eine Verwertung außerhalb der gesetzlich erlaubten Fälle bedarf der vorherigen Zustimmung.</p>
+
+    <h2>Haftung für Inhalte</h2>
+    <p>Die Inhalte wurden mit größter Sorgfalt erstellt. Für ihre Richtigkeit, Vollständigkeit und Aktualität wird jedoch keine Gewähr übernommen.</p>
+
+    <h2>Haftung für Links</h2>
+    <p>Diese Website enthält Links zu externen Websites Dritter, auf deren Inhalte kein Einfluss besteht. Für diese fremden Inhalte wird keine Gewähr übernommen; verantwortlich ist stets der jeweilige Anbieter der verlinkten Seiten.</p>
+
+    <h2>Online-Streitbeilegung</h2>
+    <p>Da auf dieser Website keine Verträge mit Verbraucherinnen und Verbrauchern geschlossen werden, besteht keine Verpflichtung zur Teilnahme an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle.</p>`;
+  return page({
+    title: "Impressum · Renate & Chris",
+    desc: "Impressum und Offenlegung gemäß § 5 ECG und § 25 Mediengesetz.",
+    canonical: `https://${site.domain}/impressum`,
+    body: legalShell("Impressum", "Angaben gemäß § 5 ECG (E-Commerce-Gesetz) und § 25 Mediengesetz (Österreich)", inner),
+  });
+}
+
+function buildDatenschutz() {
+  const inner = `
+    <h2>1. Verantwortlicher</h2>
+    <p>Verantwortlich für die Datenverarbeitung auf dieser Website ist:<br>
+    ${LEGAL_NAME}, ${LEGAL_ADDR} · <a href="mailto:${LEGAL_MAIL}">${LEGAL_MAIL}</a></p>
+
+    <h2>2. Grundsätzliches</h2>
+    <p>Der Schutz deiner persönlichen Daten ist uns wichtig. Wir verarbeiten personenbezogene Daten nur im notwendigen Umfang und auf Grundlage der gesetzlichen Bestimmungen. Diese Erklärung informiert dich über Art, Umfang und Zweck der Verarbeitung sowie über deine Rechte.</p>
+
+    <h2>3. Hosting (Cloudflare)</h2>
+    <p>Diese Website wird über Cloudflare (Cloudflare, Inc., 101 Townsend Street, San Francisco, CA 94107, USA) bereitgestellt und ausgeliefert. Beim Aufruf werden in Server-Logfiles automatisch Daten wie die (gekürzte) IP-Adresse, Datum und Uhrzeit, die aufgerufene Datei, Browsertyp, Betriebssystem und Referrer-URL verarbeitet. Diese Daten dienen ausschließlich dem technischen Betrieb, der Auslieferung und der Sicherheit der Website (Art. 6 Abs. 1 lit. f DSGVO). Da Cloudflare Daten auch in den USA verarbeiten kann, stützt sich die Übermittlung auf die EU-Standardvertragsklauseln. Details: <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">cloudflare.com/privacypolicy</a>.</p>
+
+    <h2>4. Schriftarten (Google Fonts)</h2>
+    <p>Zur einheitlichen Darstellung bindet diese Website die Schriftarten „Fraunces" und „Spline Sans Mono" über Google Fonts ein. Beim Aufruf der Seite wird dabei deine IP-Adresse an Server von Google (Google Ireland Limited bzw. Google LLC, USA) übertragen, damit die Schriften geladen werden können (Art. 6 Abs. 1 lit. f DSGVO – einheitliche, ansprechende Darstellung). Die Übermittlung in die USA stützt sich auf die EU-Standardvertragsklauseln. Mehr dazu: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>.</p>
+
+    <h2>5. Cookies / Speicherung</h2>
+    <p>Diese Website verwendet ausschließlich technisch notwendige Mechanismen. Es werden keine Tracking- oder Marketing-Cookies gesetzt und keine Analyse-Dienste eingebunden.</p>
+
+    <h2>6. Newsletter</h2>
+    <p>Dieser Abschnitt gilt, sobald der Newsletter aktiv ist. Solange das Anmeldeformular keine Daten an einen Dienst übermittelt, findet keine Verarbeitung statt. Bei Aktivierung verarbeiten wir deine E-Mail-Adresse, den Anmeldezeitpunkt und die Anmelde-IP zum Versand des Newsletters – auf Grundlage deiner Einwilligung im Double-Opt-in-Verfahren (Art. 6 Abs. 1 lit. a DSGVO). Ein Widerruf ist jederzeit über den Abmeldelink in jeder E-Mail möglich. Als Versanddienst kommt EmailOctopus zum Einsatz (<a href="https://emailoctopus.com/legal/privacy" target="_blank" rel="noopener">emailoctopus.com/legal/privacy</a>).</p>
+
+    <h2>7. Kontaktaufnahme</h2>
+    <p>Wenn du uns per E-Mail kontaktierst, verarbeiten wir deine Angaben zur Bearbeitung der Anfrage (Art. 6 Abs. 1 lit. f DSGVO). Die Daten werden gelöscht, sobald sie nicht mehr benötigt werden.</p>
+
+    <h2>8. Externe Links</h2>
+    <p>Diese Website verlinkt auf externe Seiten – etwa Buchhandlungen und Plattformen für den Buchkauf (genialokal, Books on Demand), <a href="${site.social.cleebration}" target="_blank" rel="noopener">cleebration.com</a>, <a href="${site.social.renatePhotos}" target="_blank" rel="noopener">renateleeb.photos</a> sowie Social-Media-Profile. Beim Anklicken gelangst du auf Seiten Dritter, für deren Datenverarbeitung der jeweilige Anbieter verantwortlich ist. Die Verweise sind reine Verlinkungen und laden keine Tracking-Skripte.</p>
+
+    <h2>9. Deine Rechte</h2>
+    <p>Dir stehen nach der DSGVO folgende Rechte zu:</p>
+    <ul>
+      <li>Auskunft über deine verarbeiteten Daten (Art. 15)</li>
+      <li>Berichtigung unrichtiger Daten (Art. 16)</li>
+      <li>Löschung (Art. 17)</li>
+      <li>Einschränkung der Verarbeitung (Art. 18)</li>
+      <li>Datenübertragbarkeit (Art. 20)</li>
+      <li>Widerspruch gegen die Verarbeitung (Art. 21)</li>
+      <li>Widerruf erteilter Einwilligungen (Art. 7 Abs. 3)</li>
+    </ul>
+    <p>Zur Ausübung genügt eine Nachricht an die oben genannte E-Mail-Adresse.</p>
+
+    <h2>10. Beschwerderecht</h2>
+    <p>Wenn du der Ansicht bist, dass die Verarbeitung deiner Daten gegen das Datenschutzrecht verstößt, kannst du dich bei der österreichischen Datenschutzbehörde beschweren: Österreichische Datenschutzbehörde, Barichgasse 40–42, 1030 Wien — <a href="https://www.dsb.gv.at" target="_blank" rel="noopener">www.dsb.gv.at</a></p>
+
+    <h2>11. Aktualität</h2>
+    <p>Diese Datenschutzerklärung wird angepasst, sobald sich die Datenverarbeitung ändert (z. B. bei Aktivierung des Newsletters). Stand: ${STAND}</p>`;
+  return page({
+    title: "Datenschutz · Renate & Chris",
+    desc: "Datenschutzerklärung gemäß DSGVO und österreichischem Datenschutzgesetz.",
+    canonical: `https://${site.domain}/datenschutz`,
+    body: legalShell("Datenschutzerklärung", "Gemäß Datenschutz-Grundverordnung (DSGVO) und österreichischem Datenschutzgesetz (DSG)", inner),
+  });
+}
+
 /* ---------- write ---------- */
 function rmrf(p) { if (fs.existsSync(p)) fs.rmSync(p, { recursive: true, force: true }); }
 rmrf(DIST);
@@ -292,6 +398,8 @@ if (fs.existsSync(path.join(ROOT, "tools"))) {
 }
 fs.writeFileSync(path.join(DIST, "index.html"), buildIndex());
 fs.writeFileSync(path.join(DIST, "ueber-uns.html"), buildAbout());
+fs.writeFileSync(path.join(DIST, "impressum.html"), buildImpressum());
+fs.writeFileSync(path.join(DIST, "datenschutz.html"), buildDatenschutz());
 for (const b of books) {
   fs.writeFileSync(path.join(DIST, "buch", `${b.slug}.html`), buildBook(b));
 }
