@@ -197,7 +197,10 @@ function bookNav(b) {
   const prev = books[(idx - 1 + books.length) % books.length];
   const next = books[(idx + 1) % books.length];
   return `<nav class="bookbar" aria-label="Buch-Navigation">
-    <a class="back" href="/">← Alle Bücher</a>
+    <a class="pg pg-back" href="/">
+      <span class="pg-dir">← Übersicht</span>
+      <span class="pg-title">Alle Bücher</span>
+    </a>
     <div class="pager">
       <a class="pg pg-prev" href="/buch/${prev.slug}" title="${esc(prev.title)}">
         <span class="pg-dir">← Voriges</span>
@@ -247,7 +250,10 @@ function buildBook(b) {
 /* ---------- simple about page ---------- */
 function buildAbout() {
   const body = `<main class="wrap detailwrap">
-    <a class="back" href="/">← Alle Bücher</a>
+    <a class="pg pg-back" href="/">
+      <span class="pg-dir">← Übersicht</span>
+      <span class="pg-title">Alle Bücher</span>
+    </a>
     <section class="about">
       <div class="eyebrow">Über uns</div>
       <h1>Renate &amp; Chris</h1>
