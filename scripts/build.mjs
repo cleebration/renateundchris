@@ -129,10 +129,11 @@ function filterbar() {
 function card(b) {
   const persons = b.contributors.map((c) => c.person).join(" ");
   const roles = b.contributors.map((c) => c.role).join(" ");
+  const pairs = b.contributors.map((c) => `${c.person}:${c.role}`).join(" ");
   const by = b.author && b.type !== "roman" && b.type !== "kinderbuch"
     ? `von ${esc(b.author)}` : contributors(b);
   return `<a class="card" href="/buch/${b.slug}"
-      data-persons="${persons}" data-roles="${roles}" data-type="${b.type}">
+      data-persons="${persons}" data-roles="${roles}" data-pairs="${pairs}" data-type="${b.type}">
     <div class="frame">${cover(b)}</div>
     <div class="c-meta">
       <span class="c-kicker"><span class="c-dot" style="background:${b.accent}"></span>${esc(typeLabels[b.type])}</span>
