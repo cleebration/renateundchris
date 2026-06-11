@@ -1,0 +1,13 @@
+{
+  "name": "renateundchris",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Bücher-Website von Renate & Chris – statisch, datengetrieben (books.json).",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "update-prices": "node scripts/fetch-prices.mjs",
+    "refresh": "node scripts/fetch-prices.mjs && node scripts/build.mjs"
+  },
+  "engines": { "node": ">=18" }
+}

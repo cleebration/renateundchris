@@ -1,0 +1,164 @@
+<!doctype html><html lang="de"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neues Buch hinzufügen</title>
+<style>
+  :root{--ink:#16191b;--muted:#5b6266;--line:#d8dbd7;--accent:#1f6f74;--paper:#f3f4f2}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:var(--paper);line-height:1.5}
+  .wrap{max-width:820px;margin:0 auto;padding:30px 22px 80px}
+  h1{font-size:1.5rem;margin:0 0 4px}
+  p.sub{color:var(--muted);margin:0 0 26px}
+  fieldset{border:1px solid var(--line);border-radius:12px;padding:18px;margin:0 0 18px;background:#fff}
+  legend{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:0 8px}
+  label{display:block;font-size:.82rem;font-weight:600;margin:12px 0 5px}
+  input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font:inherit;background:#fff}
+  textarea{min-height:78px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  .hint{font-size:.72rem;color:var(--muted);font-weight:400;margin-top:4px}
+  .contrib{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;margin-bottom:8px}
+  .btn{background:var(--accent);color:#fff;border:0;border-radius:9px;padding:12px 20px;font-weight:600;cursor:pointer;font-size:.95rem}
+  .btn.sec{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 18px}
+  pre{background:#0f1417;color:#d7e2e0;padding:16px;border-radius:10px;overflow:auto;font-size:.8rem;white-space:pre-wrap}
+  .sw{display:inline-block;width:18px;height:18px;border-radius:4px;vertical-align:middle;margin-left:8px;border:1px solid var(--line)}
+  small.k{font-family:ui-monospace,Menlo,monospace}
+</style></head><body><div class="wrap">
+  <h1>Neues Buch hinzufügen</h1>
+  <p class="sub">Felder ausfüllen → Eintrag erzeugen → in <small class="k">books.json</small> einfügen (oder die ganze Datei laden und aktualisiert herunterladen). Danach committen, der Rest passiert automatisch.</p>
+
+  <fieldset>
+    <legend>Optional: bestehende books.json laden</legend>
+    <input type="file" id="loadFile" accept="application/json">
+    <div class="hint">Wenn du die Datei lädst, kannst du am Ende die komplette aktualisierte <small class="k">books.json</small> herunterladen und die „verwandten Bücher“ bequem auswählen.</div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Grunddaten</legend>
+    <label>Titel</label><input id="title" oninput="autoslug()">
+    <label>Slug (URL) <span class="hint">– wird automatisch erzeugt, anpassbar</span></label><input id="slug">
+    <label>Untertitel</label><input id="subtitle">
+    <div class="row3">
+      <div><label>Typ</label><select id="type">
+        <option value="roman">Roman</option><option value="kinderbuch">Kinderbuch</option>
+        <option value="bildband">Bildband</option><option value="biografie">Biografie</option>
+      </select></div>
+      <div><label>Jahr</label><input id="year" type="number" value="2026"></div>
+      <div><label>Format</label><input id="format" value="Hardcover"></div>
+    </div>
+    <label>Autor:in (optional, z.B. bei Herausgeberschaft)</label><input id="author">
+  </fieldset>
+
+  <fieldset>
+    <legend>Beteiligte (Person · Rolle)</legend>
+    <div id="contribs"></div>
+    <button class="btn sec" type="button" onclick="addContrib()">+ Beteiligte:n</button>
+  </fieldset>
+
+  <fieldset>
+    <legend>Preise & Identifikatoren</legend>
+    <div class="row"><div><label>ISBN</label><input id="isbn"></div><div><label>ISBN E-Book (optional)</label><input id="isbnEbook"></div></div>
+    <div class="row"><div><label>Preis (BoD, €)</label><input id="price" type="number" step="0.01" value="29.90"></div>
+      <div><label>E-Book-Preis (optional, €)</label><input id="priceEbook" type="number" step="0.01"></div></div>
+    <label>BoD-Link <span class="hint">– Quelle für den automatischen Preis</span></label><input id="bodUrl" placeholder="https://buchshop.bod.de/...">
+    <div class="row"><div><label>Thalia-Link</label><input id="thalia"></div><div><label>Amazon-Link</label><input id="amazon"></div></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Farbe & Cover</legend>
+    <label>Cover-URL <span class="hint">– leer lassen für farbige Ersatzfläche</span></label><input id="cover">
+    <label>Akzentfarbe<span class="sw" id="swA"></span></label>
+    <input id="accent" type="color" value="#1f6f74" oninput="deriveColors()" style="height:46px;padding:4px">
+    <div class="hint">Dunkler Ton & heller Wasch-Ton werden automatisch abgeleitet.</div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Texte</legend>
+    <label>Kurzbeschreibung</label><textarea id="blurb"></textarea>
+    <label>„Wie alles begann“</label><textarea id="origin"></textarea>
+    <label>Verwandte Bücher (Slugs, mit Komma getrennt)</label><input id="related" placeholder="meerdeutig, seensuechtig">
+    <div class="hint" id="relHint"></div>
+  </fieldset>
+
+  <div class="actions">
+    <button class="btn" type="button" onclick="generate()">Eintrag erzeugen</button>
+    <button class="btn sec" type="button" onclick="copyOut()">Eintrag kopieren</button>
+    <button class="btn sec" type="button" id="dlBtn" onclick="downloadFull()" disabled>Aktualisierte books.json herunterladen</button>
+  </div>
+  <pre id="out">// Hier erscheint der JSON-Eintrag …</pre>
+
+<script>
+let loaded = null;
+const $ = (id) => document.getElementById(id);
+
+function autoslug(){
+  const s = $("title").value.toLowerCase()
+    .replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss")
+    .replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
+  if(!$("slug").dataset.touched) $("slug").value = s;
+}
+$("slug").addEventListener("input",()=>{$("slug").dataset.touched="1"});
+
+function addContrib(person="renate", role="fotografie"){
+  const d=document.createElement("div"); d.className="contrib";
+  d.innerHTML=`<select class="cp"><option value="renate">Renate Leeb</option><option value="chris">Chris H. Leeb</option></select>
+  <select class="cr"><option value="fotografie">Fotografie</option><option value="text">Texte</option><option value="autor">Autor</option><option value="herausgeber">Herausgeber:in</option></select>
+  <button class="btn sec" type="button" onclick="this.parentNode.remove()">×</button>`;
+  $("contribs").appendChild(d);
+  d.querySelector(".cp").value=person; d.querySelector(".cr").value=role;
+}
+addContrib("renate","fotografie"); addContrib("chris","text");
+
+function hexToRgb(h){const n=parseInt(h.slice(1),16);return[n>>16&255,n>>8&255,n&255]}
+function rgbToHex(r,g,b){return"#"+[r,g,b].map(x=>Math.max(0,Math.min(255,Math.round(x))).toString(16).padStart(2,"0")).join("")}
+function deriveColors(){
+  const [r,g,b]=hexToRgb($("accent").value);
+  window._accentInk=rgbToHex(r*.62,g*.62,b*.62);
+  window._wash=rgbToHex(r+(255-r)*.82,g+(255-g)*.82,b+(255-b)*.82);
+  $("swA").style.background=$("accent").value;
+}
+deriveColors();
+
+function collectContribs(){
+  return Array.from(document.querySelectorAll(".contrib")).map(d=>({
+    person:d.querySelector(".cp").value, role:d.querySelector(".cr").value
+  }));
+}
+function buildObj(){
+  const shops=[];
+  if($("thalia").value) shops.push({n:"Thalia",u:$("thalia").value.trim()});
+  if($("amazon").value) shops.push({n:"Amazon",u:$("amazon").value.trim()});
+  const o={
+    slug:$("slug").value.trim(), title:$("title").value.trim(), subtitle:$("subtitle").value.trim(),
+    type:$("type").value, contributors:collectContribs(),
+    accent:$("accent").value, accentInk:window._accentInk, wash:window._wash,
+    cover:$("cover").value.trim(),
+    isbn:$("isbn").value.trim(), format:$("format").value.trim(), year:Number($("year").value),
+    price:Number($("price").value), bodUrl:$("bodUrl").value.trim(),
+    blurb:$("blurb").value.trim(), origin:$("origin").value.trim(),
+    related:$("related").value.split(",").map(s=>s.trim()).filter(Boolean),
+    shops
+  };
+  if($("author").value.trim()) o.author=$("author").value.trim();
+  if($("isbnEbook").value.trim()) o.isbnEbook=$("isbnEbook").value.trim();
+  if($("priceEbook").value.trim()) o.priceEbook=Number($("priceEbook").value);
+  return o;
+}
+function generate(){ $("out").textContent=JSON.stringify(buildObj(),null,2); }
+function copyOut(){ generate(); navigator.clipboard.writeText($("out").textContent); }
+
+$("loadFile").addEventListener("change",async(e)=>{
+  const f=e.target.files[0]; if(!f) return;
+  loaded=JSON.parse(await f.text());
+  $("dlBtn").disabled=false;
+  const slugs=(loaded.books||[]).map(b=>b.slug);
+  $("relHint").textContent="Vorhandene Slugs: "+slugs.join(", ");
+});
+function downloadFull(){
+  if(!loaded){alert("Bitte zuerst eine books.json laden.");return;}
+  loaded.books.push(buildObj());
+  const blob=new Blob([JSON.stringify(loaded,null,2)+"\n"],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="books.json"; a.click();
+}
+</script>
+</div></body></html>
