@@ -17,7 +17,6 @@
   },
   "roleLabels": {
     "autor": "Autor",
-    "text": "Texte",
     "fotografie": "Fotografie",
     "herausgeber": "Herausgeber:in"
   },
@@ -120,7 +119,7 @@
         },
         {
           "person": "chris",
-          "role": "text"
+          "role": "autor"
         }
       ],
       "accent": "#1f6f74",
@@ -162,7 +161,7 @@
         },
         {
           "person": "chris",
-          "role": "text"
+          "role": "autor"
         }
       ],
       "accent": "#b1486f",
@@ -204,7 +203,7 @@
         },
         {
           "person": "chris",
-          "role": "text"
+          "role": "autor"
         }
       ],
       "accent": "#3a6ea5",
