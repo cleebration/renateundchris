@@ -220,7 +220,7 @@ function buildBook(b) {
     desc: b.blurb,
     rel: "../",
     bodyStyle: accentStyle(b),
-    image: b.cover || "",
+    image: b.cover ? (b.cover.startsWith("http") ? b.cover : `https://${site.domain}${b.cover}`) : "",
     canonical: `https://${site.domain}/buch/${b.slug}`,
     body,
   });
@@ -250,6 +250,10 @@ rmrf(DIST);
 fs.mkdirSync(path.join(DIST, "buch"), { recursive: true });
 fs.copyFileSync(path.join(ROOT, "src", "styles.css"), path.join(DIST, "styles.css"));
 fs.copyFileSync(path.join(ROOT, "src", "app.js"), path.join(DIST, "app.js"));
+// Cover/Assets mitliefern
+if (fs.existsSync(path.join(ROOT, "assets"))) {
+  fs.cpSync(path.join(ROOT, "assets"), path.join(DIST, "assets"), { recursive: true });
+}
 // tools mitliefern (Formular zum Bücher-Hinzufügen)
 if (fs.existsSync(path.join(ROOT, "tools"))) {
   fs.cpSync(path.join(ROOT, "tools"), path.join(DIST, "tools"), { recursive: true });
