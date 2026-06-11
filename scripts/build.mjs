@@ -43,10 +43,10 @@ const HEAD_FONTS = `
 
 function masthead(rel = "") {
   return `<header class="mast"><div class="wrap mast-row">
-    <a class="brand" href="${rel}index.html">Renate&nbsp;<span>&amp;</span>&nbsp;Chris</a>
+    <a class="brand" href="/">Renate&nbsp;<span>&amp;</span>&nbsp;Chris</a>
     <nav class="mast-nav">
-      <a href="${rel}index.html">Bücher</a>
-      <a href="${rel}ueber-uns.html">Über uns</a>
+      <a href="/">Bücher</a>
+      <a href="/ueber-uns">Über uns</a>
       <a href="${site.social.renatePhotos}" target="_blank" rel="noopener">Renates Fotografie</a>
       <a href="${site.social.cleebration}" target="_blank" rel="noopener">cleebration</a>
     </nav>
@@ -95,7 +95,7 @@ ${canonical ? `<link rel="canonical" href="${canonical}">` : ""}
 <meta property="og:description" content="${esc(desc)}">${image ? `\n<meta property="og:image" content="${esc(image)}">` : ""}
 <meta name="twitter:card" content="summary_large_image">
 ${HEAD_FONTS}
-<link rel="stylesheet" href="${rel}styles.css">
+<link rel="stylesheet" href="/styles.css">
 ${extraHead}
 </head><body${bodyStyle ? ` style="${bodyStyle}"` : ""}>
 ${masthead(rel)}
@@ -131,7 +131,7 @@ function card(b) {
   const roles = b.contributors.map((c) => c.role).join(" ");
   const by = b.author && b.type !== "roman" && b.type !== "kinderbuch"
     ? `von ${esc(b.author)}` : contributors(b);
-  return `<a class="card" href="buch/${b.slug}.html"
+  return `<a class="card" href="/buch/${b.slug}"
       data-persons="${persons}" data-roles="${roles}" data-type="${b.type}">
     <div class="frame">${cover(b)}</div>
     <div class="c-meta">
@@ -153,7 +153,7 @@ function buildIndex() {
     <section class="shelf">${books.map(card).join("")}</section>
     ${newsletter("newsletter-allgemein")}
   </main>
-  <script src="app.js" defer></script>`;
+  <script src="/app.js" defer></script>`;
   return page({
     title: "Bücher · Renate & Chris",
     desc: "Alle Bücher von Renate Leeb und Chris H. Leeb – filterbar nach Person, Rolle und Typ.",
@@ -175,7 +175,7 @@ function relatedBlock(b) {
   const items = (b.related || []).map((slug) => {
     const r = bySlug(slug);
     if (!r) return "";
-    return `<a class="rel" href="${r.slug}.html">
+    return `<a class="rel" href="/buch/${r.slug}">
       <span class="sw" style="background:${r.accent}"></span>
       <span><span class="rt">${esc(r.title)}</span><br><span class="rty">${esc(typeLabels[r.type])}</span></span>
     </a>`;
@@ -195,7 +195,7 @@ function metaRow(b) {
 function buildBook(b) {
   const tag = b.type === "bildband" ? "bildband-" + b.slug : b.type;
   const body = `<main class="wrap detailwrap">
-    <a class="back" href="../index.html">← Alle Bücher</a>
+    <a class="back" href="/">← Alle Bücher</a>
     <article class="detail">
       <div class="cover">${cover(b)}</div>
       <div>
@@ -229,7 +229,7 @@ function buildBook(b) {
 /* ---------- simple about page ---------- */
 function buildAbout() {
   const body = `<main class="wrap detailwrap">
-    <a class="back" href="index.html">← Alle Bücher</a>
+    <a class="back" href="/">← Alle Bücher</a>
     <section class="hero" style="padding-top:24px">
       <div class="eyebrow">Über uns</div>
       <h1>Renate &amp; Chris</h1>
@@ -259,7 +259,5 @@ fs.writeFileSync(path.join(DIST, "ueber-uns.html"), buildAbout());
 for (const b of books) {
   fs.writeFileSync(path.join(DIST, "buch", `${b.slug}.html`), buildBook(b));
 }
-// _redirects für Cloudflare Pages: hübsche URL /buch/<slug> -> .html
-fs.writeFileSync(path.join(DIST, "_redirects"), "/buch/:slug /buch/:slug.html 200\n");
 
 console.log(`✓ Build fertig: ${books.length} Buchseiten + Übersicht + Über-uns in /dist`);
