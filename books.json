@@ -1,263 +1,283 @@
-// Lightweight static site generator – keine Abhängigkeiten, nur Node.
-// Erzeugt aus books.json:  dist/index.html  +  dist/buch/<slug>.html  (eine URL pro Buch)
-import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, "..");
-const DIST = path.join(ROOT, "dist");
-
-const data = JSON.parse(fs.readFileSync(path.join(ROOT, "books.json"), "utf8"));
-const { site, people, roleLabels, typeLabels, books } = data;
-const bySlug = (s) => books.find((b) => b.slug === s);
-
-const esc = (s = "") =>
-  String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-const eur = (n) => "€\u00a0" + Number(n).toFixed(2).replace(".", ",");
-
-function contributors(b) {
-  return b.contributors
-    .map((c) => `${people[c.person]} · ${roleLabels[c.role]}`)
-    .join("  ·  ");
+{
+  "site": {
+    "name": "Renate & Chris",
+    "domain": "renateundchris.com",
+    "tagline": "Bücher von Renate Leeb und Chris H. Leeb",
+    "newsletterAction": "https://renateundchris.eo.page/SUBSCRIBE",
+    "social": {
+      "instagram": "https://www.instagram.com/",
+      "facebook": "https://www.facebook.com/",
+      "renatePhotos": "https://www.renateleeb.photos",
+      "cleebration": "https://www.cleebration.com"
+    }
+  },
+  "people": {
+    "chris": "Chris H. Leeb",
+    "renate": "Renate Leeb"
+  },
+  "roleLabels": {
+    "autor": "Autor",
+    "text": "Texte",
+    "fotografie": "Fotografie",
+    "herausgeber": "Herausgeber:in"
+  },
+  "typeLabels": {
+    "roman": "Roman",
+    "kinderbuch": "Kinderbuch",
+    "bildband": "Bildband",
+    "biografie": "Biografie"
+  },
+  "books": [
+    {
+      "slug": "jetzt-ist-es-also-aus",
+      "title": "Jetzt ist es also aus",
+      "subtitle": "Roman",
+      "type": "roman",
+      "contributors": [
+        {
+          "person": "chris",
+          "role": "autor"
+        }
+      ],
+      "author": "Chris H. Leeb",
+      "accent": "#8a2f2f",
+      "accentInk": "#5f1f1f",
+      "wash": "#efe3e1",
+      "cover": "https://static.wixstatic.com/media/1ad5fa_0b23df63cf964e5ea002a765df10215b~mv2.jpeg",
+      "isbn": "978-3-7568-0074-2",
+      "isbnEbook": "978-3-7568-2305-5",
+      "format": "Paperback / E-Book",
+      "year": 2022,
+      "price": 19.99,
+      "priceEbook": 14.99,
+      "bodUrl": "https://buchshop.bod.de/jetzt-ist-es-also-aus-chris-h-leeb-9783756800742",
+      "blurb": "An einem einzigen Tag kollabiert ein Familiensystem. Ein Mann verliert den Job und dreht durch, seine Frau verlässt ihn und implodiert, eines der Kinder steigt aus der Gesellschaft aus.",
+      "origin": "Seit 2010 trug ich die Idee mit mir herum – immer wieder aufgeflammt, immer wieder liegen geblieben. Im Sommer 2022 schrieb ich dann, bis der Roman fertig war.",
+      "related": [
+        "koenig-kugelrund",
+        "im-schatten-eines-mangobaumes"
+      ],
+      "shops": [
+        {
+          "n": "Thalia",
+          "u": "https://www.thalia.at/shop/home/artikeldetails/A1065398473"
+        },
+        {
+          "n": "Amazon",
+          "u": "https://www.amazon.de/dp/3756800741"
+        }
+      ],
+      "genialokal": "https://www.genialokal.de/Suche/?q=9783756800742"
+    },
+    {
+      "slug": "koenig-kugelrund",
+      "title": "König Kugelrund vom Kurvenreich",
+      "subtitle": "Reihe: Im Kurvenreich · Band 01",
+      "type": "kinderbuch",
+      "contributors": [
+        {
+          "person": "chris",
+          "role": "autor"
+        }
+      ],
+      "author": "Chris H. Leeb",
+      "accent": "#d2911f",
+      "accentInk": "#9a6809",
+      "wash": "#f3e9d2",
+      "cover": "https://static.wixstatic.com/media/1ad5fa_5bfadfca145a47d7b1d4be64ce827507~mv2.jpeg",
+      "isbn": "978-3-7568-0217-3",
+      "format": "Hardcover",
+      "year": 2022,
+      "price": 24.9,
+      "bodUrl": "https://buchshop.bod.de/koenig-kugelrund-vom-kurvenreich-chris-h-leeb-9783756802173",
+      "blurb": "Im Kurvenreich gibt es keine Ecken und Kanten – alles ist rund und gebogen. Hier wohnen König Dario, Königin Daria, die Prinzessin und ein Zauberer inmitten vieler glücklicher Leute.",
+      "origin": "Die Warnschilder vor kurvenreichen Strecken brachten mich auf die Idee, dass sie genauso gut auf das „Kurvenreich“ hindeuten könnten. Weitere Bände der Reihe sind in Arbeit.",
+      "related": [
+        "jetzt-ist-es-also-aus",
+        "seensuechtig"
+      ],
+      "shops": [
+        {
+          "n": "Thalia",
+          "u": "https://www.thalia.at/shop/home/artikeldetails/A1065212044"
+        },
+        {
+          "n": "Amazon",
+          "u": "https://www.amazon.de/dp/3756802175"
+        }
+      ],
+      "genialokal": "https://www.genialokal.de/Suche/?q=9783756802173"
+    },
+    {
+      "slug": "meerdeutig",
+      "title": "MeerDeutig",
+      "subtitle": "Für Vor-, Nach- und Quer-Denker",
+      "type": "bildband",
+      "contributors": [
+        {
+          "person": "renate",
+          "role": "fotografie"
+        },
+        {
+          "person": "chris",
+          "role": "text"
+        }
+      ],
+      "accent": "#1f6f74",
+      "accentInk": "#0f4a4e",
+      "wash": "#dde9e7",
+      "cover": "https://static.wixstatic.com/media/1ad5fa_23f27cf39a2042719f9351f353eca7ec~mv2.jpg",
+      "isbn": "978-3-7460-1888-1",
+      "format": "Hardcover",
+      "year": 2017,
+      "price": 29.9,
+      "bodUrl": "https://buchshop.bod.de/meerdeutig-renate-schwaiger-9783746018881",
+      "blurb": "Ein Buch für Vordenker, Nachdenker und Querdenker – Fotos und Texte, aufeinander abgestimmt. Mehrdeutig im besten Sinn: Jedes Bild lässt Raum für deine eigene Lesart.",
+      "origin": "Unser erstes gemeinsames Buch. Renates Fotografien treffen auf meine Texte – aufeinander abgestimmt zum Vor-, Nach- und Querdenken.",
+      "related": [
+        "liebesrauschend",
+        "seensuechtig"
+      ],
+      "shops": [
+        {
+          "n": "Thalia",
+          "u": "https://www.thalia.at/shop/home/artikeldetails/A1048046904"
+        },
+        {
+          "n": "Amazon",
+          "u": "https://www.amazon.de/dp/3746018889"
+        }
+      ],
+      "genialokal": "https://www.genialokal.de/Suche/?q=9783746018881"
+    },
+    {
+      "slug": "liebesrauschend",
+      "title": "LiebesRauschend",
+      "subtitle": "Im Mittelpunkt steht die Liebe",
+      "type": "bildband",
+      "contributors": [
+        {
+          "person": "renate",
+          "role": "fotografie"
+        },
+        {
+          "person": "chris",
+          "role": "text"
+        }
+      ],
+      "accent": "#b1486f",
+      "accentInk": "#80304e",
+      "wash": "#f0e0e7",
+      "cover": "https://static.wixstatic.com/media/1ad5fa_d780c17ec5c34cd49f444ff997d5d71c~mv2.png",
+      "isbn": "978-3-7481-0941-9",
+      "format": "Hardcover · Deutsch/Englisch",
+      "year": 2019,
+      "price": 29.9,
+      "bodUrl": "https://buchshop.bod.de/liebesrauschend-renate-schwaiger-9783748109419",
+      "blurb": "Im Mittelpunkt steht die Liebe. Renates Bilder und meine Texte – rauschend, dicht, nah. Aktualisierte und erweiterte Ausgabe, deutsch und englisch.",
+      "origin": "Unser zweites gemeinsames Buch, in der Zeit vor unserer Hochzeit entstanden. Damals trug Renate noch den Namen Schwaiger.",
+      "related": [
+        "meerdeutig",
+        "seensuechtig"
+      ],
+      "shops": [
+        {
+          "n": "Thalia",
+          "u": "https://www.thalia.at/shop/home/artikeldetails/A1052514062"
+        },
+        {
+          "n": "Amazon",
+          "u": "https://www.amazon.de/dp/3748109415"
+        }
+      ],
+      "genialokal": "https://www.genialokal.de/Suche/?q=9783748109419"
+    },
+    {
+      "slug": "seensuechtig",
+      "title": "SeenSüchtig",
+      "subtitle": "Den eigenen Sehnsüchten auf der Spur",
+      "type": "bildband",
+      "contributors": [
+        {
+          "person": "renate",
+          "role": "fotografie"
+        },
+        {
+          "person": "chris",
+          "role": "text"
+        }
+      ],
+      "accent": "#3a6ea5",
+      "accentInk": "#244a73",
+      "wash": "#dce6f0",
+      "cover": "https://static.wixstatic.com/media/1ad5fa_787e8b305a8c42a98951b44567c12c42~mv2.jpeg",
+      "isbn": "978-3-7562-7646-2",
+      "format": "Hardcover",
+      "year": 2022,
+      "price": 29.9,
+      "bodUrl": "https://buchshop.bod.de/seensuechtig-renate-leeb-9783756276462",
+      "blurb": "Die Sehnsüchte stehen im Mittelpunkt. Bilder von Seen, Texte vom Verlangen – vielleicht regt das Büchlein an, deine eigenen Sehnsüchte zu entdecken.",
+      "origin": "Unser drittes gemeinsames Buch, ganz knapp vor unserer Hochzeit am 27. August 2022 erstellt und veröffentlicht.",
+      "related": [
+        "meerdeutig",
+        "liebesrauschend"
+      ],
+      "shops": [
+        {
+          "n": "Thalia",
+          "u": "https://www.thalia.at/shop/home/artikeldetails/A1064954759"
+        },
+        {
+          "n": "Amazon",
+          "u": "https://www.amazon.de/s?k=seens%C3%BCchtig+renate+leeb"
+        }
+      ],
+      "genialokal": "https://www.genialokal.de/Suche/?q=9783756276462"
+    },
+    {
+      "slug": "im-schatten-eines-mangobaumes",
+      "title": "Im Schatten eines Mangobaumes",
+      "subtitle": "Die Lebenserinnerungen von Anton Antreich",
+      "type": "biografie",
+      "contributors": [
+        {
+          "person": "renate",
+          "role": "herausgeber"
+        },
+        {
+          "person": "chris",
+          "role": "herausgeber"
+        }
+      ],
+      "author": "Anton Antreich",
+      "accent": "#9c5b2c",
+      "accentInk": "#6e3c18",
+      "wash": "#ecdfd0",
+      "cover": "",
+      "isbn": "978-3-7578-5308-2",
+      "isbnEbook": "978-3-7583-5752-7",
+      "format": "Buch / E-Book",
+      "year": 2023,
+      "price": 14.99,
+      "priceEbook": 9.99,
+      "bodUrl": "https://buchshop.bod.de/im-schatten-eines-mangobaumes-anton-antreich-9783757853082",
+      "blurb": "Anton Antreich schreibt 2003 mit 75 Jahren unter einem Mangobaum in Kenia über sein Leben. 20 Jahre später machen wir diese Geschichte einer breiteren Öffentlichkeit zugänglich – ein Zeitzeugnis eines bewegten Jahrhunderts.",
+      "origin": "Als Herausgeber haben Renate und ich Anton Antreichs Aufzeichnungen zu einem Buch gemacht. Aus unserer Sicht ist es nicht nur die Geschichte eines Mannes, der 2023 stolze 95 Jahre alt wurde, sondern auch ein Stück Zeitgeschichte.",
+      "related": [
+        "meerdeutig",
+        "seensuechtig"
+      ],
+      "shops": [
+        {
+          "n": "Thalia",
+          "u": "https://www.thalia.at/shop/home/suchartikel/im_schatten_eines_mangobaumes/A1067650000/"
+        },
+        {
+          "n": "Amazon",
+          "u": "https://www.amazon.de/s?k=9783757853082"
+        }
+      ],
+      "genialokal": "https://www.genialokal.de/Suche/?q=9783757853082"
+    }
+  ]
 }
-function priceLabel(b) {
-  let s = "ab " + eur(b.price) + " · BoD";
-  return s;
-}
-function cover(b, cls) {
-  if (b.cover) {
-    return `<img src="${esc(b.cover)}" alt="Cover: ${esc(b.title)}" loading="lazy"
-      onerror="this.outerHTML='<div class=&quot;fallback&quot; style=&quot;background:${b.accent}&quot;>${esc(b.title)}</div>'">`;
-  }
-  return `<div class="fallback" style="background:${b.accent}">${esc(b.title)}</div>`;
-}
-function accentStyle(b) {
-  return `--accent:${b.accent};--accent-ink:${b.accentInk};--wash:${b.wash}`;
-}
-
-const HEAD_FONTS = `
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">`;
-
-function masthead(rel = "") {
-  return `<header class="mast"><div class="wrap mast-row">
-    <a class="brand" href="/">Renate&nbsp;<span>&amp;</span>&nbsp;Chris</a>
-    <nav class="mast-nav">
-      <a href="/">Bücher</a>
-      <a href="/ueber-uns">Über uns</a>
-      <a href="${site.social.renatePhotos}" target="_blank" rel="noopener">Renates Fotografie</a>
-      <a href="${site.social.cleebration}" target="_blank" rel="noopener">cleebration</a>
-    </nav>
-  </div></header>`;
-}
-
-function newsletter(tag) {
-  return `<section class="news"><div class="inner">
-    <div>
-      <div class="eyebrow" style="color:rgba(236,238,236,.7)">Newsletter</div>
-      <h2>Erfahre, wenn das nächste Buch erscheint.</h2>
-      <p>Neue Bücher, Lesungen und Hintergründe – kein Spam, jederzeit abbestellbar.</p>
-    </div>
-    <div>
-      <!-- EmailOctopus: action + Feldnamen aus dem Embed-Code deiner Liste einsetzen -->
-      <form class="nl-form" action="${site.newsletterAction}" method="post" target="_blank">
-        <input type="email" name="email_address" placeholder="deine@e-mail.at" aria-label="E-Mail-Adresse" required>
-        <input type="hidden" name="tag" value="${esc(tag)}">
-        <button type="submit">Anmelden</button>
-      </form>
-      <div class="nl-tag">Interesse-Tag: ${esc(tag)}</div>
-    </div>
-  </div></section>`;
-}
-
-function footer(rel = "") {
-  const year = new Date().getFullYear();
-  return `<footer class="site wrap">
-    <div class="soc">
-      <a href="${site.social.instagram}" target="_blank" rel="noopener">Instagram</a>
-      <a href="${site.social.facebook}" target="_blank" rel="noopener">Facebook</a>
-      <a href="${site.social.renatePhotos}" target="_blank" rel="noopener">renateleeb.photos</a>
-      <a href="${site.social.cleebration}" target="_blank" rel="noopener">cleebration.com</a>
-    </div>
-    <div class="cr">© ${year} Renate &amp; Chris Leeb · ${site.domain}</div>
-  </footer>`;
-}
-
-function page({ title, desc, body, rel = "", bodyStyle = "", image = "", canonical = "", extraHead = "" }) {
-  return `<!doctype html><html lang="de"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${esc(title)}</title>
-<meta name="description" content="${esc(desc)}">
-${canonical ? `<link rel="canonical" href="${canonical}">` : ""}
-<meta property="og:type" content="website"><meta property="og:title" content="${esc(title)}">
-<meta property="og:description" content="${esc(desc)}">${image ? `\n<meta property="og:image" content="${esc(image)}">` : ""}
-<meta name="twitter:card" content="summary_large_image">
-${HEAD_FONTS}
-<link rel="stylesheet" href="/styles.css">
-${extraHead}
-</head><body${bodyStyle ? ` style="${bodyStyle}"` : ""}>
-${masthead(rel)}
-${body}
-${footer(rel)}
-</body></html>`;
-}
-
-/* ---------- index / catalog ---------- */
-function chip(dim, value, label, pressed) {
-  return `<button class="chip" data-value="${value}" aria-pressed="${pressed ? "true" : "false"}">${label}</button>`;
-}
-function filterbar() {
-  const personChips =
-    chip("person", "alle", "Alle", true) +
-    chip("person", "chris", "Chris H. Leeb") +
-    chip("person", "renate", "Renate Leeb");
-  const roleChips =
-    chip("role", "alle", "Alle", true) +
-    Object.entries(roleLabels).map(([v, l]) => chip("role", v, l)).join("");
-  const typeChips =
-    chip("type", "alle", "Alle", true) +
-    Object.entries(typeLabels).map(([v, l]) => chip("type", v, l)).join("");
-  return `<div class="filterbar">
-    <div class="fgroup"><span class="flabel">Person</span><div class="chips" data-dim="person">${personChips}</div></div>
-    <div class="fgroup"><span class="flabel">Rolle</span><div class="chips" data-dim="role">${roleChips}</div></div>
-    <div class="fgroup"><span class="flabel">Typ</span><div class="chips" data-dim="type">${typeChips}</div></div>
-    <div class="fmeta" id="fmeta"></div>
-  </div>`;
-}
-function card(b) {
-  const persons = b.contributors.map((c) => c.person).join(" ");
-  const roles = b.contributors.map((c) => c.role).join(" ");
-  const by = b.author && b.type !== "roman" && b.type !== "kinderbuch"
-    ? `von ${esc(b.author)}` : contributors(b);
-  return `<a class="card" href="/buch/${b.slug}"
-      data-persons="${persons}" data-roles="${roles}" data-type="${b.type}">
-    <div class="frame">${cover(b)}</div>
-    <div class="c-meta">
-      <span class="c-kicker"><span class="c-dot" style="background:${b.accent}"></span>${esc(typeLabels[b.type])}</span>
-      <span class="c-title">${esc(b.title)}</span>
-      <span class="c-by">${by}</span>
-      <span class="c-price">${priceLabel(b)}</span>
-    </div>
-  </a>`;
-}
-function buildIndex() {
-  const body = `<main class="wrap">
-    <section class="hero">
-      <div class="eyebrow">${books.length} Bücher · ein Regal</div>
-      <h1>Geschichten, die <em>quer</em> denken, <em>rund</em> erzählen und <em>tief</em> gehen.</h1>
-      <p class="lede">Bücher von Renate Leeb und Chris H. Leeb – Bildbände, ein Roman, ein Kinderbuch und eine herausgegebene Lebensgeschichte. Filtere nach Person, Rolle oder Buchtyp.</p>
-    </section>
-    ${filterbar()}
-    <section class="shelf">${books.map(card).join("")}</section>
-    ${newsletter("newsletter-allgemein")}
-  </main>
-  <script src="/app.js" defer></script>`;
-  return page({
-    title: "Bücher · Renate & Chris",
-    desc: "Alle Bücher von Renate Leeb und Chris H. Leeb – filterbar nach Person, Rolle und Typ.",
-    canonical: `https://${site.domain}/`,
-    body,
-  });
-}
-
-/* ---------- book detail ---------- */
-function shopButtons(b) {
-  const primary = `<a class="buy primary" href="${esc(b.bodUrl)}" target="_blank" rel="noopener">Books on Demand <small>günstigster Preis</small></a>`;
-  const rest = (b.shops || [])
-    .map((s) => `<a class="buy" href="${esc(s.u)}" target="_blank" rel="noopener">${esc(s.n)}</a>`)
-    .join("");
-  const local = `<a class="buy ghost" href="${esc(b.genialokal || "https://www.genialokal.de/")}" target="_blank" rel="noopener">Deine Buchhandlung <small>vor Ort</small></a>`;
-  return primary + rest + local;
-}
-function relatedBlock(b) {
-  const items = (b.related || []).map((slug) => {
-    const r = bySlug(slug);
-    if (!r) return "";
-    return `<a class="rel" href="/buch/${r.slug}">
-      <span class="sw" style="background:${r.accent}"></span>
-      <span><span class="rt">${esc(r.title)}</span><br><span class="rty">${esc(typeLabels[r.type])}</span></span>
-    </a>`;
-  }).join("");
-  return `<section class="related"><div class="h">Das könnte dir auch gefallen</div><div class="rel-grid">${items}</div></section>`;
-}
-function metaRow(b) {
-  const rows = [
-    ["ISBN", b.isbn],
-    b.isbnEbook ? ["ISBN E-Book", b.isbnEbook] : null,
-    ["Format", b.format],
-    ["Erschienen", b.year],
-    ["Preis", "ab " + eur(b.price) + (b.priceEbook ? " · E-Book " + eur(b.priceEbook) : "")],
-  ].filter(Boolean);
-  return `<dl class="meta">${rows.map(([dt, dd]) => `<div><dt>${dt}</dt><dd>${esc(dd)}</dd></div>`).join("")}</dl>`;
-}
-function buildBook(b) {
-  const tag = b.type === "bildband" ? "bildband-" + b.slug : b.type;
-  const body = `<main class="wrap detailwrap">
-    <a class="back" href="/">← Alle Bücher</a>
-    <article class="detail">
-      <div class="cover">${cover(b)}</div>
-      <div>
-        <div class="d-eyebrow">
-          <span class="badge">${esc(typeLabels[b.type])}</span>
-          <span class="contribs">${contributors(b)}</span>
-        </div>
-        <h1>${esc(b.title)}</h1>
-        <p class="sub">${esc(b.subtitle || "")}${b.author && b.type === "biografie" ? " · von " + esc(b.author) : ""}</p>
-        <p class="blurb">${esc(b.blurb)}</p>
-        <div class="buy-label">Überall erhältlich</div>
-        <div class="buys">${shopButtons(b)}</div>
-        ${metaRow(b)}
-        <div class="origin"><div class="h">Wie alles begann</div><p>${esc(b.origin)}</p></div>
-      </div>
-    </article>
-    ${relatedBlock(b)}
-    ${newsletter(tag)}
-  </main>`;
-  return page({
-    title: `${b.title} · Renate & Chris`,
-    desc: b.blurb,
-    rel: "../",
-    bodyStyle: accentStyle(b),
-    image: b.cover || "",
-    canonical: `https://${site.domain}/buch/${b.slug}`,
-    body,
-  });
-}
-
-/* ---------- simple about page ---------- */
-function buildAbout() {
-  const body = `<main class="wrap detailwrap">
-    <a class="back" href="/">← Alle Bücher</a>
-    <section class="hero" style="padding-top:24px">
-      <div class="eyebrow">Über uns</div>
-      <h1>Renate &amp; Chris</h1>
-      <p class="lede">Renate Leeb – teacher, singer, mathematician, philosopher, nature enthusiast, photographer.
-      Chris H. Leeb – visionary, rule breaker, portfolio entrepreneur, speaker, musician.
-      Gemeinsam machen wir Bücher, in denen Bild und Text einander suchen.</p>
-      <p class="note">Renates Fotografie: <a href="${site.social.renatePhotos}">renateleeb.photos</a> ·
-      Chris solo: <a href="${site.social.cleebration}">cleebration.com</a></p>
-    </section>
-    ${newsletter("newsletter-allgemein")}
-  </main>`;
-  return page({ title: "Über uns · Renate & Chris", desc: "Renate Leeb und Chris H. Leeb.", canonical: `https://${site.domain}/ueber-uns`, body });
-}
-
-/* ---------- write ---------- */
-function rmrf(p) { if (fs.existsSync(p)) fs.rmSync(p, { recursive: true, force: true }); }
-rmrf(DIST);
-fs.mkdirSync(path.join(DIST, "buch"), { recursive: true });
-fs.copyFileSync(path.join(ROOT, "src", "styles.css"), path.join(DIST, "styles.css"));
-fs.copyFileSync(path.join(ROOT, "src", "app.js"), path.join(DIST, "app.js"));
-// tools mitliefern (Formular zum Bücher-Hinzufügen)
-if (fs.existsSync(path.join(ROOT, "tools"))) {
-  fs.cpSync(path.join(ROOT, "tools"), path.join(DIST, "tools"), { recursive: true });
-}
-fs.writeFileSync(path.join(DIST, "index.html"), buildIndex());
-fs.writeFileSync(path.join(DIST, "ueber-uns.html"), buildAbout());
-for (const b of books) {
-  fs.writeFileSync(path.join(DIST, "buch", `${b.slug}.html`), buildBook(b));
-}
-
-console.log(`✓ Build fertig: ${books.length} Buchseiten + Übersicht + Über-uns in /dist`);
