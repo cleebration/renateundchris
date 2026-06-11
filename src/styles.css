@@ -158,7 +158,10 @@ footer.site .cr a:hover{color:var(--accent-ink)}
 .about{max-width:62ch;padding-top:6px}
 .about h1{font-family:var(--serif);font-weight:400;font-size:clamp(2rem,5vw,3rem);line-height:1.05;letter-spacing:-.01em;margin:.12em 0 .35em}
 .about .lede{font-size:clamp(1.02rem,2.3vw,1.2rem);color:var(--ink);line-height:1.55;margin:0}
-.about-person{margin-top:32px}
+.about-person{margin-top:32px;display:flex;gap:22px;align-items:flex-start}
+.about-portrait{width:128px;height:128px;border-radius:50%;object-fit:cover;flex:0 0 auto;box-shadow:0 2px 16px rgba(20,25,28,.14)}
+.about-body{min-width:0}
+@media(max-width:560px){.about-person{gap:16px}.about-portrait{width:90px;height:90px}}
 .about-person h2{font-family:var(--serif);font-weight:500;font-size:1.4rem;color:var(--accent-ink);margin:0 0 .35em;transition:color .6s ease}
 .about-person p{color:var(--ink);line-height:1.62;margin:0;max-width:60ch}
 .about-link{margin-top:11px}
