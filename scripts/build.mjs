@@ -192,10 +192,28 @@ function metaRow(b) {
   ].filter(Boolean);
   return `<dl class="meta">${rows.map(([dt, dd]) => `<div><dt>${dt}</dt><dd>${esc(dd)}</dd></div>`).join("")}</dl>`;
 }
+function bookNav(b) {
+  const idx = books.findIndex((x) => x.slug === b.slug);
+  const prev = books[(idx - 1 + books.length) % books.length];
+  const next = books[(idx + 1) % books.length];
+  return `<nav class="bookbar" aria-label="Buch-Navigation">
+    <a class="back" href="/">← Alle Bücher</a>
+    <div class="pager">
+      <a class="pg pg-prev" href="/buch/${prev.slug}" title="${esc(prev.title)}">
+        <span class="pg-dir">← Voriges</span>
+        <span class="pg-title">${esc(prev.title)}</span>
+      </a>
+      <a class="pg pg-next" href="/buch/${next.slug}" title="${esc(next.title)}">
+        <span class="pg-dir">Nächstes →</span>
+        <span class="pg-title">${esc(next.title)}</span>
+      </a>
+    </div>
+  </nav>`;
+}
 function buildBook(b) {
   const tag = b.type === "bildband" ? "bildband-" + b.slug : b.type;
   const body = `<main class="wrap detailwrap">
-    <a class="back" href="/">← Alle Bücher</a>
+    ${bookNav(b)}
     <article class="detail">
       <div class="cover">${cover(b)}</div>
       <div>
@@ -230,18 +248,25 @@ function buildBook(b) {
 function buildAbout() {
   const body = `<main class="wrap detailwrap">
     <a class="back" href="/">← Alle Bücher</a>
-    <section class="hero" style="padding-top:24px">
+    <section class="about">
       <div class="eyebrow">Über uns</div>
       <h1>Renate &amp; Chris</h1>
-      <p class="lede">Renate Leeb – teacher, singer, mathematician, philosopher, nature enthusiast, photographer.
-      Chris H. Leeb – visionary, rule breaker, portfolio entrepreneur, speaker, musician.
-      Gemeinsam machen wir Bücher, in denen Bild und Text einander suchen.</p>
-      <p class="note">Renates Fotografie: <a href="${site.social.renatePhotos}">renateleeb.photos</a> ·
-      Chris solo: <a href="${site.social.cleebration}">cleebration.com</a></p>
+      <p class="lede">Wir machen gemeinsam Bücher, in denen Bild und Text einander suchen: Renates Fotografien und Chris’ Worte, nebeneinander, im Gespräch.</p>
+      <div class="about-person">
+        <h2>Renate</h2>
+        <p>Renate unterrichtet seit über zwanzig Jahren Mathematik und Psychologie/Philosophie – das Beweisbare und das, was sich dem Beweis entzieht, gehören für sie zusammen. Mit der Kamera geht sie genauso durchs Leben: neugierig, mit offenen Augen, bereit, am Wegrand, an einer Mauer oder am Himmel das Kleine zu entdecken, an dem die meisten vorbeigehen.</p>
+        <p class="about-link"><a href="${site.social.renatePhotos}">→ Mehr von Renate: renateleeb.photos</a></p>
+      </div>
+      <div class="about-person">
+        <h2>Chris</h2>
+        <p>Chris ist Unternehmer und Keynote-Speaker und steht genauso gern auf der Konzert- wie auf der Vortragsbühne – Musik begleitet ihn, seit er denken kann. In seinen Texten verbindet er beides: den Blick fürs große Muster und die Freude am einzelnen Ton.</p>
+        <p class="about-link"><a href="${site.social.cleebration}">→ Chris solo: cleebration.com</a></p>
+      </div>
+      <p class="about-close">Was uns verbindet, ist eine Überzeugung: Die meisten Wunder stecken im Alltäglichen – man muss nur hinsehen.</p>
     </section>
     ${newsletter("newsletter-allgemein")}
   </main>`;
-  return page({ title: "Über uns · Renate & Chris", desc: "Renate Leeb und Chris H. Leeb.", canonical: `https://${site.domain}/ueber-uns`, body });
+  return page({ title: "Über uns · Renate & Chris", desc: "Renate Leeb und Chris H. Leeb – gemeinsam machen wir Bücher, in denen Bild und Text einander suchen.", canonical: `https://${site.domain}/ueber-uns`, body });
 }
 
 /* ---------- write ---------- */
