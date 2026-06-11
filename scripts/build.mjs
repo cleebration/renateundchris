@@ -260,14 +260,20 @@ function buildAbout() {
       <h1>Renate &amp; Chris</h1>
       <p class="lede">Wir machen gemeinsam Bücher, in denen Bild und Text einander suchen: Renates Fotografien und Chris’ Worte, nebeneinander, im Gespräch.</p>
       <div class="about-person">
-        <h2>Renate</h2>
-        <p>Renate unterrichtet seit über zwanzig Jahren Mathematik und Psychologie/Philosophie – das Beweisbare und das, was sich dem Beweis entzieht, gehören für sie zusammen. Mit der Kamera geht sie genauso durchs Leben: neugierig, mit offenen Augen, bereit, am Wegrand, an einer Mauer oder am Himmel das Kleine zu entdecken, an dem die meisten vorbeigehen.</p>
-        <p class="about-link"><a href="${site.social.renatePhotos}">→ Mehr von Renate: renateleeb.photos</a></p>
+        <img class="about-portrait" src="/assets/about/renate.jpg" alt="Renate Leeb" loading="lazy" width="640" height="640">
+        <div class="about-body">
+          <h2>Renate</h2>
+          <p>Renate unterrichtet seit über zwanzig Jahren Mathematik und Psychologie/Philosophie – das Beweisbare und das, was sich dem Beweis entzieht, gehören für sie zusammen. Mit der Kamera geht sie genauso durchs Leben: neugierig, mit offenen Augen, bereit, am Wegrand, an einer Mauer oder am Himmel das Kleine zu entdecken, an dem die meisten vorbeigehen.</p>
+          <p class="about-link"><a href="${site.social.renatePhotos}">→ Mehr von Renate: renateleeb.photos</a></p>
+        </div>
       </div>
       <div class="about-person">
-        <h2>Chris</h2>
-        <p>Chris ist Unternehmer und Keynote-Speaker und steht genauso gern auf der Konzert- wie auf der Vortragsbühne – Musik begleitet ihn, seit er denken kann. In seinen Texten verbindet er beides: den Blick fürs große Muster und die Freude am einzelnen Ton.</p>
-        <p class="about-link"><a href="${site.social.cleebration}">→ Chris solo: cleebration.com</a></p>
+        <img class="about-portrait" src="/assets/about/chris.jpg" alt="Chris H. Leeb" loading="lazy" width="640" height="640">
+        <div class="about-body">
+          <h2>Chris</h2>
+          <p>Chris ist Unternehmer und Keynote-Speaker und steht genauso gern auf der Konzert- wie auf der Vortragsbühne – Musik begleitet ihn, seit er denken kann. In seinen Texten verbindet er beides: den Blick fürs große Muster und die Freude am einzelnen Ton.</p>
+          <p class="about-link"><a href="${site.social.cleebration}">→ Chris solo: cleebration.com</a></p>
+        </div>
       </div>
       <p class="about-close">Was uns verbindet, ist eine Überzeugung: Die meisten Wunder stecken im Alltäglichen – man muss nur hinsehen.</p>
     </section>
