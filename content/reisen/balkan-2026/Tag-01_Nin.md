@@ -39,7 +39,7 @@ Zum Sonnenuntergang die Stadtmauer entlang, über der Lagune die Kette des Veleb
 
 ## Strecke
 
-- Auto: Stinica – Küstenstraße D8 (Jablanac, Karlobag, Starigrad) – Posedarje – Camping Nin, 132,7 km, berechnet mit OSRM (OpenStreetMap).
+- Auto: Stinica – Küstenstraße D8 (Jablanac, Karlobag, Starigrad) – ab Rovanjska Autobahn A1 über die Maslenica-Brücke – Posedarje – Camping Nin, 132,7 km, berechnet mit OSRM (OpenStreetMap).
 - Rad: Camping Nin – Altstadt, ca. 2,3 km (Mindestwert aus den Fotostandorten).
 - Übernachtung: Camping Nin, Put Venere Anzotike 41, 23232 Nin.
 - Abendessen: Konoba Rustica, Trg Kraljevac 3, Nin.
