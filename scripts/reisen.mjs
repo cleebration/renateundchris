@@ -297,7 +297,7 @@ function gallery(day, esc) {
     </figure>`).join("");
   return `<section class="r-gallery"><div class="h">Bilder des Tages</div>
     <div class="r-shots">${figs}</div>
-    <p class="r-credit">Fotografie: Renate Leeb</p></section>`;
+    </section>`;
 }
 
 function buildDay(day, days, ctx) {
