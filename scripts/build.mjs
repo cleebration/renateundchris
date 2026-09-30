@@ -49,6 +49,7 @@ function masthead(rel = "") {
     <label for="navtoggle" class="nav-burger" aria-hidden="true"><span></span><span></span><span></span></label>
     <nav class="mast-nav">
       <a href="/">Bücher</a>
+      <a href="/reisen">Reisen</a>
       <a href="/ueber-uns">Über uns</a>
       <a href="${site.social.renatePhotos}" target="_blank" rel="noopener">Renates Fotografie</a>
       <a href="${site.social.cleebration}" target="_blank" rel="noopener">cleebration</a>
