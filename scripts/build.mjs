@@ -3,6 +3,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { buildReisen } from "./reisen.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -413,3 +414,5 @@ for (const b of books) {
 }
 
 console.log(`✓ Build fertig: ${books.length} Buchseiten + Übersicht + Über-uns in /dist`);
+const etappen = buildReisen({ ROOT, DIST, page, newsletter, esc, site });
+console.log(`✓ Reisen: ${etappen} Etappen`);
