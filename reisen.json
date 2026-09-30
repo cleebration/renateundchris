@@ -1,0 +1,15 @@
+{
+  "trips": [
+    {
+      "slug": "balkan-2026",
+      "title": "Adria & Balkan 2026",
+      "zeitraum": "Juli – August 2026",
+      "laender": ["Kroatien", "Montenegro", "Albanien", "Griechenland"],
+      "blurb": "Mit dem Campervan von Linz die Adria hinunter: dalmatinische Inseln, venezianische Städtchen, albanische Bergstraßen – und am Ende die Meteora-Klöster.",
+      "cover": "",
+      "accent": "#1f6f74",
+      "accentInk": "#0f4a4e",
+      "wash": "#dde9e7"
+    }
+  ]
+}

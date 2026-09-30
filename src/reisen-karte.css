@@ -1,0 +1,23 @@
+/* Reisekarte – nutzt die Variablen aus styles.css (--ink, --muted, --line, --paper, --mono, --accent) */
+:root{--k-auto:#1F5A96;--k-rad:#B07A1A}
+.r-karte-h{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:40px 0 12px}
+.r-karte{margin:0 0 32px}
+.r-karte-map{height:clamp(320px,55vh,560px);border:1px solid var(--line);border-radius:6px;background:var(--wash,#eef2f0)}
+.r-karte.is-tag .r-karte-map{height:clamp(280px,45vh,460px)}
+.r-karte-kopf{font-family:var(--mono);font-size:.78rem;color:var(--muted);margin:0 0 10px}
+.r-karte-filter{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin:0 0 12px}
+.r-karte-filter label{font-family:var(--mono);font-size:.74rem;color:var(--muted);display:flex;gap:8px;align-items:center}
+.r-karte-filter select{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line-strong,var(--line));border-radius:4px;padding:6px 8px;max-width:70vw}
+.f-chips{display:flex;gap:8px;flex-wrap:wrap}
+.r-karte-legende{display:flex;gap:18px;font-family:var(--mono);font-size:.72rem;color:var(--muted);margin:8px 0 0}
+.r-karte-legende span::before{content:"";display:inline-block;width:22px;height:0;vertical-align:middle;margin-right:6px;border-top:4px solid var(--k-auto)}
+.r-karte-legende .lg-rad::before{border-top-color:var(--k-rad)}
+.r-karte-legende .lg-faehre::before{border-top:3px dotted var(--k-auto)}
+.k-pin{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 5px;border-radius:12px;
+  font:600 12px/1 var(--sans,system-ui);color:#fff;background:var(--k-auto);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35);
+  transform:translate(-50%,-50%);white-space:nowrap}
+.k-pin.k-foto{background:var(--k-rad)}
+.k-pin.k-essen{background:#fff;color:#000;border-color:var(--k-rad)}
+.k-thumb{width:100%;max-width:240px;height:auto;max-height:200px;object-fit:cover;border-radius:4px;display:block;margin-bottom:6px}
+.leaflet-container{font-family:var(--sans,system-ui)}
+.r-shot:target,.r-hero:target{outline:3px solid var(--k-rad);outline-offset:4px}
