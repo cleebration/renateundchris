@@ -213,3 +213,5 @@ footer.site .cr a:hover{color:var(--accent-ink)}
   --gal-maxwidth:var(--maxw);
 }
 @media(max-width:560px){.dubbles-page{padding-left:16px;padding-right:16px}.dubbles gallery-grid{--gal-tile:130px;--gal-gap:.45rem}}
+.gemeinsam gallery-grid{--gal-aspect:3 / 2;--gal-tile:250px;--gal-gap:1.1rem}
+@media(max-width:560px){.gemeinsam gallery-grid{--gal-tile:220px}}

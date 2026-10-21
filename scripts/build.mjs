@@ -49,8 +49,7 @@ function masthead(rel = "") {
     <label for="navtoggle" class="nav-burger" aria-hidden="true"><span></span><span></span><span></span></label>
     <nav class="mast-nav">
       <a href="/">Bücher</a>
-      <a href="/reisen">Reisen</a>
-      <a href="/dubbles">Dubbles</a>
+      <a href="/was-wir-machen">Was wir machen</a>
       <a href="/ueber-uns">Über uns</a>
       <a href="${site.social.renatePhotos}" target="_blank" rel="noopener">Renates Fotografie</a>
       <a href="${site.social.cleebration}" target="_blank" rel="noopener">cleebration</a>
@@ -312,6 +311,30 @@ function buildDubbles() {
   });
 }
 
+/* ---------- Was wir machen (Kacheln aus dem Galerie-Baukasten, Galerie „gemeinsam“) ---------- */
+// Neues gemeinsames Projekt = ein Eintrag im gallery-hub (content/medien/gemeinsam-*.md), kein Neubau hier nötig.
+function buildWasWirMachen() {
+  const body = `<main class="wrap detailwrap dubbles-page">
+    <section class="about dubbles-head">
+      <div class="eyebrow">Renate &amp; Chris</div>
+      <h1>Was wir machen</h1>
+      <p class="lede">Bücher, Reisen, Fotos, Musik – was wir gemeinsam machen, an einem Ort.</p>
+    </section>
+    <section class="dubbles gemeinsam">
+      <gallery-grid feed="${GALLERY_FEED}" gallery="gemeinsam" teaser="on" link-mode="direct"></gallery-grid>
+    </section>
+    ${newsletter("newsletter-allgemein")}
+  </main>`;
+  return page({
+    title: "Was wir machen · Renate & Chris",
+    desc: "Gemeinsame Projekte von Renate und Chris Leeb: Bücher, Reisen, Dubbles, Essen & Trinken, Chor.",
+    canonical: `https://${site.domain}/was-wir-machen`,
+    image: "https://cleebration-gallery-hub.vercel.app/media/renateundchris/gemeinsam-buecher.jpg",
+    extraHead: `<script type="module" src="/gallery-widget.js"></script>`,
+    body,
+  });
+}
+
 /* ---------- legal pages ---------- */
 function legalShell(title, subtitle, inner) {
   return `<main class="wrap detailwrap">
@@ -379,7 +402,7 @@ function buildDatenschutz() {
 
     <h2>4. Schriftarten (Google Fonts)</h2>
     <p>Zur einheitlichen Darstellung bindet diese Website die Schriftarten „Fraunces" und „Spline Sans Mono" über Google Fonts ein. Beim Aufruf der Seite wird dabei deine IP-Adresse an Server von Google (Google Ireland Limited bzw. Google LLC, USA) übertragen, damit die Schriften geladen werden können (Art. 6 Abs. 1 lit. f DSGVO – einheitliche, ansprechende Darstellung). Die Übermittlung in die USA stützt sich auf die EU-Standardvertragsklauseln. Mehr dazu: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>.</p>
-    <p>Die Bilder der Galerie „Dubbles“ werden von unserem Medienserver bei Vercel Inc. (USA) geladen. Dabei wird deine IP-Adresse an Vercel übertragen, damit die Bilder ausgeliefert werden können (Art. 6 Abs. 1 lit. f DSGVO – Darstellung der Galerie). Die Übermittlung in die USA stützt sich auf die EU-Standardvertragsklauseln. Mehr dazu: <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener">vercel.com/legal/privacy-policy</a>.</p>
+    <p>Die Bilder der Seiten „Was wir machen“ und „Dubbles“ werden von unserem Medienserver bei Vercel Inc. (USA) geladen. Dabei wird deine IP-Adresse an Vercel übertragen, damit die Bilder ausgeliefert werden können (Art. 6 Abs. 1 lit. f DSGVO – Darstellung der Galerie). Die Übermittlung in die USA stützt sich auf die EU-Standardvertragsklauseln. Mehr dazu: <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener">vercel.com/legal/privacy-policy</a>.</p>
 
     <h2>5. Cookies / Speicherung</h2>
     <p>Diese Website verwendet ausschließlich technisch notwendige Mechanismen. Es werden keine Tracking- oder Marketing-Cookies gesetzt und keine Analyse-Dienste eingebunden.</p>
@@ -437,6 +460,7 @@ if (fs.existsSync(path.join(ROOT, "tools"))) {
 fs.writeFileSync(path.join(DIST, "index.html"), buildIndex());
 fs.writeFileSync(path.join(DIST, "ueber-uns.html"), buildAbout());
 fs.writeFileSync(path.join(DIST, "dubbles.html"), buildDubbles());
+fs.writeFileSync(path.join(DIST, "was-wir-machen.html"), buildWasWirMachen());
 fs.writeFileSync(path.join(DIST, "impressum.html"), buildImpressum());
 fs.writeFileSync(path.join(DIST, "datenschutz.html"), buildDatenschutz());
 for (const b of books) {
