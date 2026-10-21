@@ -50,6 +50,7 @@ function masthead(rel = "") {
     <nav class="mast-nav">
       <a href="/">Bücher</a>
       <a href="/reisen">Reisen</a>
+      <a href="/dubbles">Dubbles</a>
       <a href="/ueber-uns">Über uns</a>
       <a href="${site.social.renatePhotos}" target="_blank" rel="noopener">Renates Fotografie</a>
       <a href="${site.social.cleebration}" target="_blank" rel="noopener">cleebration</a>
@@ -286,6 +287,31 @@ function buildAbout() {
   return page({ title: "Über uns · Renate & Chris", desc: "Renate Leeb und Chris H. Leeb – gemeinsam machen wir Bücher, in denen Bild und Text einander suchen.", canonical: `https://${site.domain}/ueber-uns`, body });
 }
 
+/* ---------- Dubbles (Galerie aus dem Galerie-Baukasten / gallery-hub) ---------- */
+// Bilder + Texte pflegt der Hub: cleebration-web/hubs/gallery-hub, Galerie „dubbles“, Site „renateundchris“.
+const GALLERY_FEED = "https://cleebration-gallery-hub.vercel.app/feed/sites/renateundchris.json";
+function buildDubbles() {
+  const body = `<main class="wrap detailwrap dubbles-page">
+    <section class="about dubbles-head">
+      <div class="eyebrow">Gemeinsames Projekt · 2018–2019</div>
+      <h1>Dubbles</h1>
+      <p class="lede">Jedes Bild hier besteht aus zwei Fotos: eines von Renate, eines von Chris, übereinandergelegt zu einem. Zwei Blicke, ein Bild – 70 Doppelbilder aus der Zeit von September 2018 bis Mai 2019, entstanden mit der App Dubble.</p>
+    </section>
+    <section class="dubbles">
+      <gallery-grid feed="${GALLERY_FEED}" gallery="dubbles"></gallery-grid>
+    </section>
+    ${newsletter("newsletter-allgemein")}
+  </main>`;
+  return page({
+    title: "Dubbles · Renate & Chris",
+    desc: "70 Doppelbilder aus je einem Foto von Renate und Chris Leeb, 2018–2019.",
+    canonical: `https://${site.domain}/dubbles`,
+    image: "https://cleebration-gallery-hub.vercel.app/media/renateundchris/dubble-52.jpg",
+    extraHead: `<script type="module" src="/gallery-widget.js"></script>`,
+    body,
+  });
+}
+
 /* ---------- legal pages ---------- */
 function legalShell(title, subtitle, inner) {
   return `<main class="wrap detailwrap">
@@ -353,6 +379,7 @@ function buildDatenschutz() {
 
     <h2>4. Schriftarten (Google Fonts)</h2>
     <p>Zur einheitlichen Darstellung bindet diese Website die Schriftarten „Fraunces" und „Spline Sans Mono" über Google Fonts ein. Beim Aufruf der Seite wird dabei deine IP-Adresse an Server von Google (Google Ireland Limited bzw. Google LLC, USA) übertragen, damit die Schriften geladen werden können (Art. 6 Abs. 1 lit. f DSGVO – einheitliche, ansprechende Darstellung). Die Übermittlung in die USA stützt sich auf die EU-Standardvertragsklauseln. Mehr dazu: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>.</p>
+    <p>Die Bilder der Galerie „Dubbles“ werden von unserem Medienserver bei Vercel Inc. (USA) geladen. Dabei wird deine IP-Adresse an Vercel übertragen, damit die Bilder ausgeliefert werden können (Art. 6 Abs. 1 lit. f DSGVO – Darstellung der Galerie). Die Übermittlung in die USA stützt sich auf die EU-Standardvertragsklauseln. Mehr dazu: <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener">vercel.com/legal/privacy-policy</a>.</p>
 
     <h2>5. Cookies / Speicherung</h2>
     <p>Diese Website verwendet ausschließlich technisch notwendige Mechanismen. Es werden keine Tracking- oder Marketing-Cookies gesetzt und keine Analyse-Dienste eingebunden.</p>
@@ -398,6 +425,7 @@ rmrf(DIST);
 fs.mkdirSync(path.join(DIST, "buch"), { recursive: true });
 fs.copyFileSync(path.join(ROOT, "src", "styles.css"), path.join(DIST, "styles.css"));
 fs.copyFileSync(path.join(ROOT, "src", "app.js"), path.join(DIST, "app.js"));
+fs.copyFileSync(path.join(ROOT, "src", "gallery-widget.js"), path.join(DIST, "gallery-widget.js"));
 // Cover/Assets mitliefern
 if (fs.existsSync(path.join(ROOT, "assets"))) {
   fs.cpSync(path.join(ROOT, "assets"), path.join(DIST, "assets"), { recursive: true });
@@ -408,6 +436,7 @@ if (fs.existsSync(path.join(ROOT, "tools"))) {
 }
 fs.writeFileSync(path.join(DIST, "index.html"), buildIndex());
 fs.writeFileSync(path.join(DIST, "ueber-uns.html"), buildAbout());
+fs.writeFileSync(path.join(DIST, "dubbles.html"), buildDubbles());
 fs.writeFileSync(path.join(DIST, "impressum.html"), buildImpressum());
 fs.writeFileSync(path.join(DIST, "datenschutz.html"), buildDatenschutz());
 for (const b of books) {

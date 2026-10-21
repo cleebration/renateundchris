@@ -200,3 +200,16 @@ footer.site .cr a:hover{color:var(--accent-ink)}
   .fgroup .flabel{width:100%}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* Dubbles – Galerie aus dem gallery-hub (Web-Component <gallery-grid>, Shadow DOM, Farben per --gal-*) */
+.dubbles-page{padding-left:24px;padding-right:24px}
+.dubbles-head{padding-bottom:8px}
+.dubbles{margin:22px 0 48px}
+.dubbles gallery-grid{
+  --gal-font-display:var(--serif); --gal-font-body:var(--sans);
+  --gal-text:var(--ink); --gal-muted:var(--muted); --gal-surface:var(--card);
+  --gal-accent:var(--accent-ink); --gal-border:var(--line);
+  --gal-aspect:1 / 1; --gal-tile:200px; --gal-gap:.6rem; --gal-radius:3px;
+  --gal-maxwidth:var(--maxw);
+}
+@media(max-width:560px){.dubbles-page{padding-left:16px;padding-right:16px}.dubbles gallery-grid{--gal-tile:130px;--gal-gap:.45rem}}
