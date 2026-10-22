@@ -51,6 +51,7 @@ function masthead(rel = "") {
       <a href="/">Bücher</a>
       <a href="/was-wir-machen">Was wir machen</a>
       <a href="/ueber-uns">Über uns</a>
+      <a href="/newsletter">Newsletter</a>
       <a href="${site.social.renatePhotos}" target="_blank" rel="noopener">Renates Fotografie</a>
       <a href="${site.social.cleebration}" target="_blank" rel="noopener">cleebration</a>
     </nav>
@@ -309,6 +310,24 @@ function buildDubbles() {
   });
 }
 
+/* ---------- Newsletter (eigene Seite für den Menüpunkt) ---------- */
+function buildNewsletter() {
+  const body = `<main class="wrap detailwrap">
+    <section class="about">
+      <div class="eyebrow">Newsletter</div>
+      <h1>Neues von Renate &amp; Chris</h1>
+      <p class="lede">Wenn ein neues Buch erscheint, eine Reise zu Ende geht oder eine neue Bildserie fertig ist, schreiben wir dir – selten, kein Spam, jederzeit abbestellbar.</p>
+    </section>
+    ${newsletter("newsletter-seite")}
+  </main>`;
+  return page({
+    title: "Newsletter · Renate & Chris",
+    desc: "Neues von Renate & Chris – Bücher, Reisen, Fotos per E-Mail.",
+    canonical: `https://${site.domain}/newsletter`,
+    body,
+  });
+}
+
 /* ---------- Was wir machen (Kacheln aus dem Galerie-Baukasten, Galerie „gemeinsam“) ---------- */
 // Neues gemeinsames Projekt = ein Eintrag im gallery-hub (content/medien/gemeinsam-*.md), kein Neubau hier nötig.
 function buildWasWirMachen() {
@@ -460,6 +479,7 @@ fs.writeFileSync(path.join(DIST, "index.html"), buildIndex());
 fs.writeFileSync(path.join(DIST, "ueber-uns.html"), buildAbout());
 fs.writeFileSync(path.join(DIST, "dubbles.html"), buildDubbles());
 fs.writeFileSync(path.join(DIST, "was-wir-machen.html"), buildWasWirMachen());
+fs.writeFileSync(path.join(DIST, "newsletter.html"), buildNewsletter());
 fs.writeFileSync(path.join(DIST, "impressum.html"), buildImpressum());
 fs.writeFileSync(path.join(DIST, "datenschutz.html"), buildDatenschutz());
 for (const b of books) {
