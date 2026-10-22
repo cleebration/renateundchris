@@ -58,20 +58,18 @@ function masthead(rel = "") {
 }
 
 function newsletter(tag) {
-  return `<section class="news"><div class="inner">
+  // Zentraler Newsletter-Baustein (newsletter.cleebration.com, Schlüssel „renateundchris“):
+  // Liste „Renate & Chris“ in EmailOctopus. Texte/Farben/Liste stehen in
+  // cleebration-web/newsletter-hub/worker/sites.config.mjs. `tag` bleibt als Seitenkennung im Markup.
+  return `<section class="news" data-seite="${esc(tag)}"><div class="inner">
     <div>
       <div class="eyebrow" style="color:rgba(236,238,236,.7)">Newsletter</div>
-      <h2>Erfahre, wenn das nächste Buch erscheint.</h2>
-      <p>Neue Bücher, Lesungen und Hintergründe – kein Spam, jederzeit abbestellbar.</p>
+      <h2>Neues von Renate &amp; Chris – Bücher, Reisen, Fotos</h2>
+      <p>Neue Bücher, Reisen und Bildserien – kein Spam, jederzeit abbestellbar.</p>
     </div>
-    <div>
-      <!-- EmailOctopus: action + Feldnamen aus dem Embed-Code deiner Liste einsetzen -->
-      <form class="nl-form" action="${site.newsletterAction}" method="post" target="_blank">
-        <input type="email" name="email_address" placeholder="deine@e-mail.at" aria-label="E-Mail-Adresse" required>
-        <input type="hidden" name="tag" value="${esc(tag)}">
-        <button type="submit">Anmelden</button>
-      </form>
-      <div class="nl-tag">Interesse-Tag: ${esc(tag)}</div>
+    <div class="nl-box">
+      <script type="module" src="https://newsletter.cleebration.com/widget.js"></script>
+      <newsletter-signup site="renateundchris" heading="" text=""></newsletter-signup>
     </div>
   </div></section>`;
 }
@@ -408,7 +406,8 @@ function buildDatenschutz() {
     <p>Diese Website verwendet ausschließlich technisch notwendige Mechanismen. Es werden keine Tracking- oder Marketing-Cookies gesetzt und keine Analyse-Dienste eingebunden.</p>
 
     <h2>6. Newsletter</h2>
-    <p>Dieser Abschnitt gilt, sobald der Newsletter aktiv ist. Solange das Anmeldeformular keine Daten an einen Dienst übermittelt, findet keine Verarbeitung statt. Bei Aktivierung verarbeiten wir deine E-Mail-Adresse, den Anmeldezeitpunkt und die Anmelde-IP zum Versand des Newsletters – auf Grundlage deiner Einwilligung im Double-Opt-in-Verfahren (Art. 6 Abs. 1 lit. a DSGVO). Ein Widerruf ist jederzeit über den Abmeldelink in jeder E-Mail möglich. Als Versanddienst kommt EmailOctopus zum Einsatz (<a href="https://emailoctopus.com/legal/privacy" target="_blank" rel="noopener">emailoctopus.com/legal/privacy</a>).</p>
+    <p>Für den Newsletter verarbeiten wir deine E-Mail-Adresse, den Anmeldezeitpunkt und die Website, über die du dich angemeldet hast. Die Anmeldung erfolgt im Double-Opt-in-Verfahren: Nach dem Absenden bekommst du eine Bestätigungs-E-Mail, erst nach deiner Bestätigung wirst du aufgenommen. Rechtsgrundlage ist deine Einwilligung (Art. 6 Abs. 1 lit. a DSGVO); du kannst sie jederzeit über den Abmeldelink in jeder E-Mail oder formlos per E-Mail widerrufen.</p>
+    <p>Das Anmeldeformular wird von newsletter.cleebration.com geladen (unser eigener Dienst, ebenfalls über Cloudflare ausgeliefert) und übermittelt die Angaben an EmailOctopus. Versanddienstleister ist EmailOctopus (Three Hearts Digital Ltd, 86–90 Paul Street, London EC2A 4NE, Vereinigtes Königreich) als Auftragsverarbeiter; die Empfängerdaten werden auf Servern in Irland gespeichert. Mehr dazu: <a href="https://emailoctopus.com/legal/privacy" target="_blank" rel="noopener">emailoctopus.com/legal/privacy</a>.</p>
 
     <h2>7. Kontaktaufnahme</h2>
     <p>Wenn du uns per E-Mail kontaktierst, verarbeiten wir deine Angaben zur Bearbeitung der Anfrage (Art. 6 Abs. 1 lit. f DSGVO). Die Daten werden gelöscht, sobald sie nicht mehr benötigt werden.</p>
