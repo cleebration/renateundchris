@@ -89,7 +89,7 @@
     </div>`);
 
     let DATA;
-    try { DATA = await fetch(`/atlas/data/${REISE}.json`).then((r) => r.json()); }
+    try { DATA = await fetch(`/atlas/data/${REISE}.json?v=${APP.dataset.v || ""}`).then((r) => r.json()); }
     catch (e) { document.getElementById("card").innerHTML = "<p>Die Reisedaten konnten nicht geladen werden. Bitte Seite neu laden.</p>"; return; }
     const DAYS = DATA.tage;
     const dayOf = (t) => DAYS.find((d) => d.tag === t);

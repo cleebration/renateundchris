@@ -73,6 +73,7 @@ function tripData(ROOT, slug) {
 
 function shell(site, trips) {
   const t = trips[0];
+  const v = Date.now().toString(36);
   return `<!doctype html><html lang="de"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Reise-Atlas · ${t.title} · Renate &amp; Chris</title>
@@ -84,14 +85,14 @@ function shell(site, trips) {
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
-<link rel="stylesheet" href="/atlas/atlas.css">
+<link rel="stylesheet" href="/atlas/atlas.css?v=${v}">
 </head><body>
-<div id="app" data-reise="${t.slug}" data-title="${t.title}"></div>
+<div id="app" data-reise="${t.slug}" data-title="${t.title}" data-v="${v}"></div>
 <noscript><p style="padding:24px">Der Reise-Atlas braucht JavaScript. Die Tagesseiten gibt es unter <a href="/reise/${t.slug}/">/reise/${t.slug}/</a>.</p></noscript>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <script src="https://unpkg.com/qrcode-generator@1.4.4/qrcode.js"></script>
-<script src="/atlas/atlas.js"></script>
+<script src="/atlas/atlas.js?v=${v}"></script>
 </body></html>`;
 }
 
