@@ -68,7 +68,7 @@
     APP.insertAdjacentHTML("beforeend", `<div id="screen">
       <div id="map" role="img" aria-label="Karte der Reiseroute ${esc(TITLE)}"></div>
       <div class="hud" id="hudTop">
-        <a class="brand" href="/reisen"><span class="eyebrow">Renate &amp; Chris · Reise-Atlas</span><h1>${esc(TITLE)}</h1></a>
+        <div class="brandRow"><a class="backBtn" href="/reisen" aria-label="Zurück zur Reise-Übersicht">← Alle Reisen</a><a class="brand" href="/reisen"><span class="eyebrow">Renate &amp; Chris · Reise-Atlas</span><h1>${esc(TITLE)}</h1></a></div>
         <div class="chips">
           <span class="chip"><i class="dot" id="linkDot"></i><b id="linkTxt">Kein iPhone verbunden</b></span>
           <button class="chip" id="chipRoleBtn" title="Rolle wechseln (R)">Rolle <b id="chipRole">–</b></button>
