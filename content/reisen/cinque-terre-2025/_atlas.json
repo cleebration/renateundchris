@@ -1,0 +1,354 @@
+{
+ "reise": "cinque-terre-2025",
+ "tage": [
+  {
+   "tag": 1,
+   "datum": "2025-10-24",
+   "land": [
+    "IT"
+   ],
+   "titel": "Ankommen in Lazise",
+   "satz": "Erster Abend am Gardasee: Abendessen im Pergolo, danach durch die beleuchtete Altstadt zur Scaligerburg.",
+   "teaser": "Die Reise beginnt am Ostufer des Gardasees. Im Pergolo, Vino e Cucina gibt es Pasta, Tartar und zum Schluss Crème brûlée und Espresso. Danach ein Spaziergang durch die nächtlichen Gassen bis zu den angestrahlten Mauern der Scaligerburg.",
+   "stationen": [
+    {
+     "name": "Pergolo, Vino e Cucina",
+     "lat": 45.5056,
+     "lon": 10.7324,
+     "art": "essen",
+     "notiz": "Abendessen, erster Abend"
+    },
+    {
+     "name": "Scaligerburg Lazise",
+     "lat": 45.505,
+     "lon": 10.733,
+     "art": "besuch",
+     "notiz": "Angestrahlte Mauern bei Nacht"
+    }
+   ],
+   "themen": [
+    "kulinarik",
+    "burg"
+   ],
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 2,
+   "datum": "2025-10-25",
+   "land": [
+    "IT"
+   ],
+   "titel": "Mincio und Monticelli",
+   "satz": "Morgennebel am Mincio, Cornetto in Monzambano, abends Bier und Tartar im Carapils in Monticelli Terme.",
+   "teaser": "Der Tag beginnt am Mincio, der Fluss liegt noch im Dunst. Frühstück mit Cornetto und Cappuccino im Caffè in Monzambano, dann über die Poebene nach Süden. Abends im Carapils in Monticelli Terme: Bier von der Tafel, Tartar und Brioche-Burger.",
+   "stationen": [
+    {
+     "name": "Mincio",
+     "lat": 45.3861,
+     "lon": 10.6927,
+     "art": "aussicht",
+     "notiz": "Morgennebel über dem Fluss (Ort genähert)"
+    },
+    {
+     "name": "Caffè in Monzambano",
+     "lat": 45.3861,
+     "lon": 10.6927,
+     "art": "essen",
+     "notiz": "Cornetto und Cappuccino"
+    },
+    {
+     "name": "Carapils, Monticelli Terme",
+     "lat": 44.7248,
+     "lon": 10.3977,
+     "art": "essen",
+     "notiz": "Bier, Tartar, Burger"
+    }
+   ],
+   "themen": [
+    "kulinarik",
+    "natur"
+   ],
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 3,
+   "datum": "2025-10-26",
+   "land": [
+    "IT"
+   ],
+   "titel": "Parma, dann über den Apennin",
+   "satz": "Vormittag in Parma mit Dom, Baptisterium und Aperol, danach über den Apennin bis Levanto an die Küste.",
+   "teaser": "In Parma: der Palazzo della Pilotta am Fluss, das achteckige Baptisterium, der ausgemalte Dom und die Piazza Garibaldi. Mittags ein Spritz unter den Arkaden. Am Nachmittag geht es über die Hügel des Apennin hinunter nach Ligurien; in Levanto gibt es abends Sardellen und Pizza.",
+   "stationen": [
+    {
+     "name": "Palazzo della Pilotta",
+     "lat": 44.804,
+     "lon": 10.326,
+     "art": "besuch",
+     "notiz": "Blick über den Fluss Parma"
+    },
+    {
+     "name": "Dom und Baptisterium Parma",
+     "lat": 44.803,
+     "lon": 10.3305,
+     "art": "besuch",
+     "notiz": "Ausgemalte Gewölbe, rosa Marmor"
+    },
+    {
+     "name": "Piazza Garibaldi",
+     "lat": 44.8015,
+     "lon": 10.328,
+     "art": "besuch",
+     "notiz": "Palazzo del Governatore"
+    },
+    {
+     "name": "Levanto",
+     "lat": 44.1703,
+     "lon": 9.6135,
+     "art": "essen",
+     "notiz": "Erster Abend an der ligurischen Küste"
+    }
+   ],
+   "themen": [
+    "geschichte",
+    "kulinarik"
+   ],
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 4,
+   "datum": "2025-10-27",
+   "land": [
+    "IT"
+   ],
+   "titel": "Durch die Tunnel nach Framura",
+   "satz": "Mit dem Rad auf der alten Bahntrasse von Levanto über Bonassola nach Framura, abends Sonnenuntergang am Strand.",
+   "teaser": "Der Radweg folgt der stillgelegten Küstenbahn: Tunnel, Felsen, Brandung und kleine Buchten. In Bonassola stehen bunte Kajaks an der Mole, in Framura geht es hinunter ans Wasser. Zurück in Levanto versinkt die Sonne im Meer.",
+   "stationen": [
+    {
+     "name": "Levanto, Start Radweg",
+     "lat": 44.1732,
+     "lon": 9.5965,
+     "art": "besuch",
+     "notiz": "Alte Bahntrasse, Tunnel"
+    },
+    {
+     "name": "Bonassola",
+     "lat": 44.1837,
+     "lon": 9.5817,
+     "art": "besuch",
+     "notiz": "Kajaks an der Mole"
+    },
+    {
+     "name": "Framura",
+     "lat": 44.2035,
+     "lon": 9.5553,
+     "art": "aussicht",
+     "notiz": "Felsküste und Bucht"
+    },
+    {
+     "name": "Strand Levanto",
+     "lat": 44.1687,
+     "lon": 9.6099,
+     "art": "aussicht",
+     "notiz": "Sonnenuntergang"
+    }
+   ],
+   "themen": [
+    "natur",
+    "eisenbahn",
+    "strand"
+   ],
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 5,
+   "datum": "2025-10-28",
+   "land": [
+    "IT"
+   ],
+   "titel": "Monterosso, Vernazza, Corniglia",
+   "satz": "Drei der fünf Dörfer an einem Tag: der Gigant von Monterosso, der Hafen von Vernazza, das Bergdorf Corniglia.",
+   "teaser": "Morgens noch in der Kirche von Levanto, dann nach Monterosso zur Riesenfigur am Felsen. Über einen schattigen Pfad zwischen Steinmauern weiter nach Vernazza mit seinem Turm und der kleinen Hafenbucht, am Nachmittag hinauf nach Corniglia. Abendessen wieder in Monterosso: Fritto misto.",
+   "stationen": [
+    {
+     "name": "Kirche in Levanto",
+     "lat": 44.1755,
+     "lon": 9.6197,
+     "art": "besuch",
+     "notiz": "Morgens"
+    },
+    {
+     "name": "Il Gigante, Monterosso",
+     "lat": 44.1447,
+     "lon": 9.645,
+     "art": "besuch",
+     "notiz": "Riesenfigur am Felsen"
+    },
+    {
+     "name": "Vernazza",
+     "lat": 44.1349,
+     "lon": 9.6826,
+     "art": "besuch",
+     "notiz": "Hafen und Turm"
+    },
+    {
+     "name": "Corniglia",
+     "lat": 44.12,
+     "lon": 9.7081,
+     "art": "besuch",
+     "notiz": "Bergdorf über dem Meer"
+    },
+    {
+     "name": "Monterosso, Abendessen",
+     "lat": 44.1453,
+     "lon": 9.6472,
+     "art": "essen",
+     "notiz": "Fritto misto"
+    }
+   ],
+   "themen": [
+    "natur",
+    "kulinarik"
+   ],
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 6,
+   "datum": "2025-10-29",
+   "land": [
+    "IT"
+   ],
+   "titel": "Manarola, Riomaggiore, La Spezia",
+   "satz": "Die bunten Häuser von Manarola, die Via dell’Amore nach Riomaggiore, abends Hafen und Bistrot in La Spezia.",
+   "teaser": "Manarola klebt in Pastellfarben am Felsen, darüber Weinterrassen und die Kirche San Lorenzo. Über die Via dell’Amore geht es am Meer entlang nach Riomaggiore mit Burg und Bootsrampe. Am Abend La Spezia: Brunnen auf der Piazza, Kanonen am Hafen, Essen im Fara Bistrot.",
+   "stationen": [
+    {
+     "name": "Manarola",
+     "lat": 44.1075,
+     "lon": 9.7276,
+     "art": "besuch",
+     "notiz": "Pastellhäuser, Weinterrassen"
+    },
+    {
+     "name": "Via dell’Amore",
+     "lat": 44.1029,
+     "lon": 9.7315,
+     "art": "aussicht",
+     "notiz": "Küstenweg nach Riomaggiore"
+    },
+    {
+     "name": "Riomaggiore",
+     "lat": 44.1002,
+     "lon": 9.7377,
+     "art": "besuch",
+     "notiz": "Burg und Bootsrampe"
+    },
+    {
+     "name": "La Spezia",
+     "lat": 44.1044,
+     "lon": 9.8223,
+     "art": "essen",
+     "notiz": "Hafen, Fara Bistrot"
+    }
+   ],
+   "themen": [
+    "natur",
+    "kulinarik"
+   ],
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 7,
+   "datum": "2025-10-30",
+   "land": [
+    "IT"
+   ],
+   "titel": "Zurück an den Gardasee",
+   "satz": "Im Regen über den Apennin zurück nach Lazise, abends Sonnenuntergang an der Seepromenade und Muscheln in der Cozzeria.",
+   "teaser": "Kaffee an der Raststätte, Regentropfen auf der Scheibe. Am Gardasee klart es auf: rosa Abendhimmel über der Promenade von Lazise. Danach Muscheln, Gamberi und Weißwein in der Cozzeria.",
+   "stationen": [
+    {
+     "name": "Seepromenade Lazise",
+     "lat": 45.5053,
+     "lon": 10.7323,
+     "art": "aussicht",
+     "notiz": "Sonnenuntergang"
+    },
+    {
+     "name": "Cozzeria Lazise",
+     "lat": 45.5055,
+     "lon": 10.7318,
+     "art": "essen",
+     "notiz": "Muscheln"
+    }
+   ],
+   "themen": [
+    "kulinarik"
+   ],
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 8,
+   "datum": "2025-10-31",
+   "land": [
+    "IT"
+   ],
+   "titel": "Ein ruhiger Tag am See",
+   "satz": "Langes Frühstück im Van, Schilf im klaren Seewasser, abends Pasta und Fisch.",
+   "teaser": "Frühstück im Campervan bei zugezogenen orangen Vorhängen. Am Ufer stehen Schilfhalme im glasklaren Gardasee. Am Abend gibt es Pappardelle und gegrillten Fisch.",
+   "stationen": [
+    {
+     "name": "Lazise, Frühstück im Van",
+     "lat": 45.5012,
+     "lon": 10.7328,
+     "art": "uebernachtung",
+     "notiz": "Ort aus Foto-GPS"
+    },
+    {
+     "name": "Lazise",
+     "lat": 45.5053,
+     "lon": 10.732,
+     "art": "essen",
+     "notiz": "Abendessen (Ort genähert)"
+    }
+   ],
+   "themen": [
+    "natur",
+    "kulinarik"
+   ],
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 9,
+   "datum": "2025-11-01",
+   "land": [
+    "IT"
+   ],
+   "titel": "Letzter Abend in Lazise",
+   "satz": "Vor dem Stadttor von Lazise, Aperitivo und ein langes Abendessen zum Abschluss.",
+   "teaser": "Ein letzter Gang entlang der Stadtmauer bis zum Tor. Zum Aperitivo zwei Spritz, dann ein mehrgängiges Abendessen bei Kerzenlicht mit Fisch, Pasta und Dessert.",
+   "stationen": [
+    {
+     "name": "Stadttor Lazise",
+     "lat": 45.5054,
+     "lon": 10.7319,
+     "art": "besuch",
+     "notiz": "Stadtmauer der Scaliger"
+    },
+    {
+     "name": "Abendessen Lazise",
+     "lat": 45.5053,
+     "lon": 10.7318,
+     "art": "essen",
+     "notiz": "Letzter Abend"
+    }
+   ],
+   "themen": [
+    "burg",
+    "kulinarik"
+   ],
+   "status": "nur-fotos"
+  }
+ ]
+}
