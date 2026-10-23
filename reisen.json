@@ -32,6 +32,22 @@
       "accentInk": "#7a3218",
       "wash": "#f3e3d6",
       "fahrzeug": "ein Campervan"
+    },
+    {
+      "slug": "dubrovnik-2023",
+      "title": "Dubrovnik 2023",
+      "zeitraum": "Oktober – November 2023",
+      "laender": [
+        "Kroatien",
+        "Bosnien und Herzegowina",
+        "Montenegro"
+      ],
+      "blurb": "Elf Herbsttage mit dem Auto an die südliche Adria: Dubrovniks Altstadt und der Berg Srđ, Ausflüge nach Mostar, in die Bucht von Kotor und nach Ston, auf dem Heimweg Split, Zadar und Karlovac.",
+      "cover": "/assets/reisen/dubrovnik-2023/atlas/tag-04/IMG_5729.jpg",
+      "accent": "#2f5f8a",
+      "accentInk": "#1b3b5a",
+      "wash": "#dfe8f1",
+      "fahrzeug": "ein Auto"
     }
   ]
 }

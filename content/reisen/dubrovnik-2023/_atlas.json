@@ -1,0 +1,525 @@
+{
+ "reise": "dubrovnik-2023",
+ "tage": [
+  {
+   "tag": 1,
+   "datum": "2023-10-26",
+   "land": [
+    "HR"
+   ],
+   "titel": "Durch Kroatien nach Dubrovnik",
+   "satz": "Morgens Regenbogen über der Autobahn bei Ogulin, mittags das Neretva-Tal, abends die erste Runde durch Dubrovniks Altstadt.",
+   "teaser": "Der Tag beginnt mit einem Regenbogen über den Wäldern an der A1 und führt durch die Lika bis ins Neretva-Tal. Am Nachmittag Ankunft im Hotel Valamar Lacroma auf der Halbinsel Babin Kuk. Am Abend geht es gleich in die Altstadt: Stradun, Sponza-Palast, Hafen im letzten Licht und ein Aperitif zum Ausklang.",
+   "stationen": [
+    {
+     "name": "A1 bei Ogulin",
+     "lat": 45.24,
+     "lon": 15.269,
+     "art": "aussicht",
+     "notiz": "Regenbogen über den Wäldern"
+    },
+    {
+     "name": "A1 in der Lika",
+     "lat": 44.922,
+     "lon": 15.169,
+     "art": "besuch",
+     "notiz": "Weiter nach Süden"
+    },
+    {
+     "name": "Neretva-Tal bei Opuzen",
+     "lat": 43.041,
+     "lon": 17.531,
+     "art": "aussicht",
+     "notiz": "Mittagshalt im Delta"
+    },
+    {
+     "name": "Hotel Valamar Lacroma, Babin Kuk",
+     "lat": 42.66,
+     "lon": 18.062,
+     "art": "uebernachtung",
+     "notiz": "Hotelname auf dem Zimmer-TV"
+    },
+    {
+     "name": "Altstadt Dubrovnik",
+     "lat": 42.641,
+     "lon": 18.11,
+     "art": "besuch",
+     "notiz": "Erster Abend: Stradun, Hafen, Sponza-Palast"
+    }
+   ],
+   "uebernachtung": "Hotel Valamar Lacroma",
+   "themen": [
+    "geschichte"
+   ],
+   "mythen": [],
+   "wien_faden": [],
+   "epochen": [],
+   "quelle_datei": "Google-Fotos-Album, Foto-GPS",
+   "hinweise": "Abfahrt und Anreise vor 08:00 unbekannt (erstes Foto 08:09 bei Ogulin) – nicht bestätigt. Ort Mittagshalt aus Foto-GPS.",
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 2,
+   "datum": "2023-10-27",
+   "land": [
+    "HR"
+   ],
+   "titel": "Altstadt bei Nacht",
+   "satz": "Abendspaziergang vom Pile-Tor über den Stradun, dann Fisch und Fleischplatte in einem Lokal in der Altstadt.",
+   "teaser": "Erst am Abend geht es in die Stadt: angestrahlte Stadtmauern und Festungen am Pile-Tor, die Gassen glänzen im Lampenlicht, Blumen in den Mauernischen. Danach Abendessen in einem Lokal in der Altstadt – Salat, Fischteller und eine große Grillplatte.",
+   "stationen": [
+    {
+     "name": "Pile-Tor",
+     "lat": 42.6416,
+     "lon": 18.1061,
+     "art": "besuch",
+     "notiz": "Angestrahlte Mauern und Festungen"
+    },
+    {
+     "name": "Altstadt Dubrovnik",
+     "lat": 42.641,
+     "lon": 18.11,
+     "art": "besuch",
+     "notiz": "Gassen bei Nacht, Abendessen"
+    }
+   ],
+   "uebernachtung": "Hotel Valamar Lacroma",
+   "themen": [
+    "geschichte",
+    "kulinarik",
+    "burg"
+   ],
+   "mythen": [],
+   "wien_faden": [],
+   "epochen": [],
+   "quelle_datei": "Google-Fotos-Album, Foto-GPS",
+   "hinweise": "Name des Restaurants nicht bekannt.",
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 3,
+   "datum": "2023-10-28",
+   "land": [
+    "HR"
+   ],
+   "titel": "Ruhetag auf Babin Kuk",
+   "satz": "Ein Tag auf der Halbinsel: Palmen, Pool und Yuccablüten, am Abend Sonnenuntergang über den Elaphiten.",
+   "teaser": "Kein Ausflug, sondern Zeit auf Babin Kuk und in Lapad: blühende Yucca und Alpenveilchen, der Hotelpool, Spaziergang entlang der Küste. Am Abend färbt sich der Himmel über den vorgelagerten Inseln orange, Abendessen mit Blick aufs Meer.",
+   "stationen": [
+    {
+     "name": "Babin Kuk",
+     "lat": 42.662,
+     "lon": 18.06,
+     "art": "besuch",
+     "notiz": "Pool, Garten, Küstenweg"
+    },
+    {
+     "name": "Bucht von Lapad",
+     "lat": 42.656,
+     "lon": 18.068,
+     "art": "aussicht",
+     "notiz": "Sonnenuntergang"
+    },
+    {
+     "name": "Hotel Valamar Lacroma, Babin Kuk",
+     "lat": 42.66,
+     "lon": 18.062,
+     "art": "uebernachtung",
+     "notiz": "Hotelname auf dem Zimmer-TV"
+    }
+   ],
+   "uebernachtung": "Hotel Valamar Lacroma",
+   "themen": [
+    "natur",
+    "strand"
+   ],
+   "mythen": [],
+   "wien_faden": [],
+   "epochen": [],
+   "quelle_datei": "Google-Fotos-Album, Foto-GPS",
+   "hinweise": "Inseln am Horizont vermutlich Elaphiten – nicht bestätigt.",
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 4,
+   "datum": "2023-10-29",
+   "land": [
+    "HR"
+   ],
+   "titel": "Altstadt und Berg Srđ",
+   "satz": "Mittags in der Altstadt, nachmittags auf den Srđ mit Blick über Stadt und Meer, abends zurück auf den Stradun.",
+   "teaser": "Vormittags Blick auf die Inseln vom Hotel, dann in die Altstadt: Schlösser am Zaun über dem Meer, Gassen, Kirchenfenster. Am Nachmittag oben auf dem Srđ mit dem großen Blick über Dubrovnik, die Sonne geht hinter dem Meer unter. Abends glänzt der Stradun, Ausklang bei einem Glas Wein. Laut Albumtitel trat an diesem Tag ein Chor auf, die Academy Singers.",
+   "stationen": [
+    {
+     "name": "Altstadt Dubrovnik",
+     "lat": 42.641,
+     "lon": 18.11,
+     "art": "besuch",
+     "notiz": "Mittags in den Gassen"
+    },
+    {
+     "name": "Berg Srđ",
+     "lat": 42.649,
+     "lon": 18.112,
+     "art": "aussicht",
+     "notiz": "Blick über Stadt und Meer"
+    },
+    {
+     "name": "Altstadt Dubrovnik",
+     "lat": 42.641,
+     "lon": 18.11,
+     "art": "besuch",
+     "notiz": "Abends am Stradun"
+    }
+   ],
+   "uebernachtung": "Hotel Valamar Lacroma",
+   "themen": [
+    "geschichte",
+    "natur"
+   ],
+   "mythen": [],
+   "wien_faden": [],
+   "epochen": [],
+   "quelle_datei": "Google-Fotos-Album, Foto-GPS",
+   "hinweise": "Srđ aus Foto-GPS (42.649, 18.112) abgeleitet – Weg hinauf (Seilbahn?) nicht bestätigt. Konzert Academy Singers nur aus Albumtitel.",
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 5,
+   "datum": "2023-10-30",
+   "land": [
+    "HR",
+    "BA"
+   ],
+   "titel": "Ausflug nach Mostar",
+   "satz": "Nach Bosnien und Herzegowina: Stari Most, Basar und Altstadt von Mostar, auf dem Rückweg Počitelj und die Pelješac-Brücke.",
+   "teaser": "Der Ausflug führt über die Grenze nach Mostar. Rund um die Alte Brücke über die Neretva: Kupferschmiede, Teppiche, steile Pflastergassen, Minarette und die Franziskanerkirche. Auf dem Rückweg ein Halt in Počitelj mit seiner Festung über dem Fluss, dann über die Pelješac-Brücke zurück nach Dubrovnik und Burger zum Abendessen.",
+   "stationen": [
+    {
+     "name": "Mostar, Stari Most",
+     "lat": 43.337,
+     "lon": 17.815,
+     "art": "besuch",
+     "notiz": "Alte Brücke, Basar, Altstadt"
+    },
+    {
+     "name": "Počitelj",
+     "lat": 43.137,
+     "lon": 17.731,
+     "art": "besuch",
+     "notiz": "Festung über der Neretva"
+    },
+    {
+     "name": "Pelješac-Brücke",
+     "lat": 42.94,
+     "lon": 17.543,
+     "art": "aussicht",
+     "notiz": "Rückweg nach Dubrovnik"
+    },
+    {
+     "name": "Hotel Valamar Lacroma, Babin Kuk",
+     "lat": 42.66,
+     "lon": 18.062,
+     "art": "uebernachtung",
+     "notiz": "Hotelname auf dem Zimmer-TV"
+    }
+   ],
+   "uebernachtung": "Hotel Valamar Lacroma",
+   "themen": [
+    "geschichte",
+    "grenze",
+    "burg"
+   ],
+   "mythen": [],
+   "wien_faden": [],
+   "epochen": [
+    "osmanisch"
+   ],
+   "quelle_datei": "Google-Fotos-Album, Foto-GPS",
+   "hinweise": "Ausflugsart (eigenes Auto oder Bustour) nicht bestätigt. Pelješac-Brücke aus Foto-GPS und Brückenfoto abgeleitet – nicht bestätigt. Grenzübergänge nicht bekannt.",
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 6,
+   "datum": "2023-10-31",
+   "land": [
+    "HR"
+   ],
+   "titel": "Sonnenuntergang in Lapad",
+   "satz": "Ein ruhiger Tag mit Feuerhimmel über dem Meer und Abendessen mit Muscheln und Paella in Lapad.",
+   "teaser": "Am späten Nachmittag brennt der Himmel über Babin Kuk: Sonnenuntergang zwischen Palmen und Hotelterrassen. Danach zum Abendessen in ein Lokal in Lapad – schwarze Muscheln, Paella, Pommes, Käse und Oliven.",
+   "stationen": [
+    {
+     "name": "Babin Kuk",
+     "lat": 42.661,
+     "lon": 18.062,
+     "art": "aussicht",
+     "notiz": "Sonnenuntergang"
+    },
+    {
+     "name": "Lokal in Lapad",
+     "lat": 42.656,
+     "lon": 18.073,
+     "art": "essen",
+     "notiz": "Muscheln und Paella"
+    },
+    {
+     "name": "Hotel Valamar Lacroma, Babin Kuk",
+     "lat": 42.66,
+     "lon": 18.062,
+     "art": "uebernachtung",
+     "notiz": "Hotelname auf dem Zimmer-TV"
+    }
+   ],
+   "uebernachtung": "Hotel Valamar Lacroma",
+   "themen": [
+    "kulinarik",
+    "natur"
+   ],
+   "mythen": [],
+   "wien_faden": [],
+   "epochen": [],
+   "quelle_datei": "Google-Fotos-Album, Foto-GPS",
+   "hinweise": "Name des Lokals nicht bekannt.",
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 7,
+   "datum": "2023-11-01",
+   "land": [
+    "HR",
+    "ME"
+   ],
+   "titel": "Bucht von Kotor",
+   "satz": "Nach Montenegro: entlang der Bucht nach Kotor, römische Mosaike in Risan und die Festung von Herceg Novi.",
+   "teaser": "Allerheiligen in Montenegro. Die Straße folgt der Bucht von Kotor zwischen Kalkbergen und Wasser. In Kotor durch die Altstadtgassen, vorbei an Kirchen und Kanonen, der Festungsweg zieht sich den Berg hinauf. Am Nachmittag die römischen Mosaike in Risan, dann Herceg Novi mit Festung und Kanonen über dem Meer. Abends Salat mit Garnelen im Hotel.",
+   "stationen": [
+    {
+     "name": "Bucht von Kotor bei Morinj",
+     "lat": 42.482,
+     "lon": 18.679,
+     "art": "aussicht",
+     "notiz": "Erste Blicke auf die Bucht"
+    },
+    {
+     "name": "Kotor, Altstadt",
+     "lat": 42.425,
+     "lon": 18.771,
+     "art": "besuch",
+     "notiz": "Gassen, Kirchen, Festungsweg"
+    },
+    {
+     "name": "Risan, römische Mosaike",
+     "lat": 42.513,
+     "lon": 18.697,
+     "art": "besuch",
+     "notiz": "Mosaikböden einer römischen Villa"
+    },
+    {
+     "name": "Herceg Novi",
+     "lat": 42.451,
+     "lon": 18.537,
+     "art": "besuch",
+     "notiz": "Festung und Kanonen"
+    },
+    {
+     "name": "Hotel Valamar Lacroma",
+     "lat": 42.66,
+     "lon": 18.062,
+     "art": "essen",
+     "notiz": "Abendessen im Hotel"
+    }
+   ],
+   "uebernachtung": "Hotel Valamar Lacroma",
+   "themen": [
+    "geschichte",
+    "burg",
+    "grenze",
+    "natur"
+   ],
+   "mythen": [],
+   "wien_faden": [],
+   "epochen": [
+    "roemisch",
+    "venezianisch"
+   ],
+   "quelle_datei": "Google-Fotos-Album, Foto-GPS",
+   "hinweise": "Reihenfolge aus Fotozeiten. Grenzübergang und Fähre Kamenari nicht bekannt.",
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 8,
+   "datum": "2023-11-02",
+   "land": [
+    "HR"
+   ],
+   "titel": "Ston und Lichter",
+   "satz": "Vormittags Ston mit seiner langen Mauer, abends Kreuzfahrtschiffe in Gruž und Lichtbilder auf den Fassaden der Altstadt.",
+   "teaser": "Ausflug nach Ston auf Pelješac: die Festungsmauer zieht sich über den Hügel, eine Kirche unter blauem Himmel, eine Katze auf der Mauer. Am Abend liegen in Gruž die großen Kreuzfahrtschiffe, in der Altstadt werden bunte Muster auf die Fassaden projiziert. Abendessen mit Fisch und Pommes.",
+   "stationen": [
+    {
+     "name": "Ston",
+     "lat": 42.838,
+     "lon": 17.696,
+     "art": "besuch",
+     "notiz": "Stadtmauer und Altstadt"
+    },
+    {
+     "name": "Hafen Gruž",
+     "lat": 42.665,
+     "lon": 18.081,
+     "art": "aussicht",
+     "notiz": "Kreuzfahrtschiffe bei Nacht"
+    },
+    {
+     "name": "Altstadt Dubrovnik",
+     "lat": 42.641,
+     "lon": 18.11,
+     "art": "besuch",
+     "notiz": "Lichtprojektionen auf den Fassaden"
+    }
+   ],
+   "uebernachtung": "Hotel Valamar Lacroma",
+   "themen": [
+    "geschichte",
+    "burg",
+    "kulinarik"
+   ],
+   "mythen": [],
+   "wien_faden": [],
+   "epochen": [],
+   "quelle_datei": "Google-Fotos-Album, Foto-GPS",
+   "hinweise": "Anlass der Lichtprojektionen nicht bekannt.",
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 9,
+   "datum": "2023-11-03",
+   "land": [
+    "HR"
+   ],
+   "titel": "Letzter Tag in Dubrovnik",
+   "satz": "Schaukel im Sonnenuntergang, Bierprobe in einer Brauerei in Gruž und Live-Musik zum Abschluss.",
+   "teaser": "Der letzte volle Tag: am Nachmittag eine Schaukel an der Küste von Babin Kuk, Selfie im Abendlicht. Danach in Gruž eine Bierprobe zwischen Braukesseln (DBC-Fässer im Bild). Abendessen mit Muscheln wieder in Lapad, später Live-Musik im Hotel.",
+   "stationen": [
+    {
+     "name": "Küste Babin Kuk",
+     "lat": 42.659,
+     "lon": 18.059,
+     "art": "aussicht",
+     "notiz": "Schaukel im Sonnenuntergang"
+    },
+    {
+     "name": "Brauerei in Gruž",
+     "lat": 42.66,
+     "lon": 18.086,
+     "art": "essen",
+     "notiz": "Bierprobe"
+    },
+    {
+     "name": "Lokal in Lapad",
+     "lat": 42.656,
+     "lon": 18.074,
+     "art": "essen",
+     "notiz": "Muscheln"
+    },
+    {
+     "name": "Hotel Valamar Lacroma, Babin Kuk",
+     "lat": 42.66,
+     "lon": 18.062,
+     "art": "uebernachtung",
+     "notiz": "Hotelname auf dem Zimmer-TV"
+    }
+   ],
+   "uebernachtung": "Hotel Valamar Lacroma",
+   "themen": [
+    "kulinarik",
+    "natur"
+   ],
+   "mythen": [],
+   "wien_faden": [],
+   "epochen": [],
+   "quelle_datei": "Google-Fotos-Album, Foto-GPS",
+   "hinweise": "Brauerei vermutlich Dubrovnik Beer Company (DBC auf Fass) – nicht bestätigt. Musik im Hotel aus Fotos und Programmblatt – nicht bestätigt.",
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 10,
+   "datum": "2023-11-04",
+   "land": [
+    "HR"
+   ],
+   "titel": "Split und Zadar",
+   "satz": "Heimweg nach Norden: Diokletianpalast in Split, abends Sv. Donat und die Altstadt von Zadar.",
+   "teaser": "Abschied von Dubrovnik. Ein Obststand im Neretva-Tal, dann Split: Riva, Gassen im Diokletianpalast, ein Foto zu zweit an der Treppe, Prokurative. Am Abend Zadar: Uhrturm und die Rundkirche Sv. Donat bei Nacht, Abendessen mit großer Grillplatte.",
+   "stationen": [
+    {
+     "name": "Neretva-Tal",
+     "lat": 43.026,
+     "lon": 17.552,
+     "art": "besuch",
+     "notiz": "Obststand an der Straße"
+    },
+    {
+     "name": "Split, Diokletianpalast",
+     "lat": 43.508,
+     "lon": 16.44,
+     "art": "besuch",
+     "notiz": "Riva, Palast, Prokurative"
+    },
+    {
+     "name": "Zadar, Altstadt",
+     "lat": 44.116,
+     "lon": 15.226,
+     "art": "besuch",
+     "notiz": "Sv. Donat, Abendessen"
+    }
+   ],
+   "uebernachtung": "Zadar (nicht bestätigt)",
+   "themen": [
+    "geschichte",
+    "kulinarik"
+   ],
+   "mythen": [],
+   "wien_faden": [],
+   "epochen": [
+    "roemisch"
+   ],
+   "quelle_datei": "Google-Fotos-Album, Foto-GPS",
+   "hinweise": "Übernachtung in Zadar angenommen – nicht bestätigt.",
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 11,
+   "datum": "2023-11-05",
+   "land": [
+    "HR"
+   ],
+   "titel": "Karlovac und heimwärts",
+   "satz": "Letzter Halt in Karlovac: Baustellen, alte Fassaden und der Park an der Stadtgrenze, dann Richtung Heimat.",
+   "teaser": "Am Vormittag ein Spaziergang durch Karlovac: die Sternfestungsstadt wird gerade umgebaut, Bagger zwischen alten Häusern, ein Bier in der Sonne, danach der Park mit dem weißen Gebäude. Von dort geht es heimwärts.",
+   "stationen": [
+    {
+     "name": "Karlovac, Zvijezda",
+     "lat": 45.494,
+     "lon": 15.555,
+     "art": "besuch",
+     "notiz": "Altstadt im Umbau, Park"
+    }
+   ],
+   "uebernachtung": "–",
+   "themen": [
+    "geschichte",
+    "habsburg"
+   ],
+   "mythen": [],
+   "wien_faden": [],
+   "epochen": [
+    "habsburg"
+   ],
+   "quelle_datei": "Google-Fotos-Album, Foto-GPS",
+   "hinweise": "Heimfahrt nach Karlovac nicht dokumentiert – Ziel Linz nicht bestätigt.",
+   "status": "nur-fotos"
+  }
+ ]
+}
