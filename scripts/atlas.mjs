@@ -78,7 +78,7 @@ function shell(site, trips) {
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Reise-Atlas · ${t.title} · Renate &amp; Chris</title>
 <meta name="description" content="${t.title} als spielbare Karte: 31 Tage, sieben Länder, ein Campervan. Am Mac oder TV ansehen, mit dem iPhone steuern.">
-<link rel="canonical" href="https://${site.domain}/atlas/">
+<link rel="canonical" href="https://${site.domain}/atlas/${t.slug}/">
 <meta property="og:title" content="Reise-Atlas · ${t.title}">
 <meta property="og:description" content="Die ganze Reise als spielbare Karte – mit dem iPhone als Controller.">
 <meta name="theme-color" content="#0a1b23">
@@ -115,10 +115,21 @@ export function buildAtlas({ ROOT, DIST, site }) {
     const src = path.join(ROOT, "src", f);
     if (fs.existsSync(src)) fs.copyFileSync(src, path.join(out, f));
   }
+  // je Reise eine eigene Seite /atlas/<reise>/; /atlas/ zeigt die neueste Reise (erste in reisen.json)
+  for (const t of trips) {
+    fs.mkdirSync(path.join(out, t.slug), { recursive: true });
+    fs.writeFileSync(path.join(out, t.slug, "index.html"), shell(site, [t]));
+  }
   fs.writeFileSync(path.join(out, "index.html"), shell(site, trips));
+  // alte Reise-Übersichten → Atlas
+  const red = path.join(DIST, "_redirects");
+  const prevR = fs.existsSync(red) ? fs.readFileSync(red, "utf8") : "";
+  const lines = trips.map((t) => `/reise/${t.slug}/ /atlas/${t.slug}/ 301\n/reise/${t.slug} /atlas/${t.slug}/ 301\n`).join("");
+  fs.writeFileSync(red, prevR + (prevR && !prevR.endsWith("\n") ? "\n" : "") + lines);
   // Cache-Regeln: Seite und Daten immer frisch prüfen, Fotos lange cachen
   const hdr = path.join(DIST, "_headers");
-  const rules = "/atlas/\n  Cache-Control: no-cache\n/atlas/index.html\n  Cache-Control: no-cache\n/atlas/data/*\n  Cache-Control: no-cache\n/atlas/atlas.*\n  Cache-Control: no-cache\n";
+  const rules = "/atlas/\n  Cache-Control: no-cache\n/atlas/index.html\n  Cache-Control: no-cache\n/atlas/data/*\n  Cache-Control: no-cache\n/atlas/atlas.*\n  Cache-Control: no-cache\n" +
+    trips.map((t) => `/atlas/${t.slug}/\n  Cache-Control: no-cache\n/atlas/${t.slug}/index.html\n  Cache-Control: no-cache\n`).join("");
   const prev = fs.existsSync(hdr) ? fs.readFileSync(hdr, "utf8") : "";
   if (!prev.includes("/atlas/data/*")) fs.writeFileSync(hdr, prev + (prev && !prev.endsWith("\n") ? "\n" : "") + rules);
   return n;

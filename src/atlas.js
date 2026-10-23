@@ -65,7 +65,7 @@
     APP.insertAdjacentHTML("beforeend", `<div id="screen">
       <div id="map" role="img" aria-label="Karte der Reiseroute ${esc(TITLE)}"></div>
       <div class="hud" id="hudTop">
-        <a class="brand" href="/reise/${REISE}/"><span class="eyebrow">Renate &amp; Chris · Reise-Atlas</span><h1>${esc(TITLE)}</h1></a>
+        <a class="brand" href="/reisen"><span class="eyebrow">Renate &amp; Chris · Reise-Atlas</span><h1>${esc(TITLE)}</h1></a>
         <div class="chips">
           <span class="chip"><i class="dot" id="linkDot"></i><b id="linkTxt">Kein iPhone verbunden</b></span>
           <button class="chip" id="chipRoleBtn" title="Rolle wechseln (R)">Rolle <b id="chipRole">–</b></button>
@@ -353,7 +353,7 @@
     let code; try { code = sessionStorage.getItem("atlasCode"); } catch (e) {}
     if (!code || !/^[a-z0-9]{6}$/.test(code)) code = newCode();
     try { sessionStorage.setItem("atlasCode", code); } catch (e) {}
-    const url = `${location.origin}/atlas/#c-${code}`;
+    const url = `${location.origin}${location.pathname}#c-${code}`;
     document.getElementById("codeTxt").textContent = code;
     try { const q = qrcode(0, "M"); q.addData(url); q.make(); document.getElementById("qr").innerHTML = q.createSvgTag({ cellSize: 3, margin: 0, scalable: true }); } catch (e) {}
     link = makeLink(code, "ctl", (m) => {

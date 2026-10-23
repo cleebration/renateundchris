@@ -263,8 +263,8 @@ function dayNav(day, days, esc) {
   const next = idx < days.length - 1 ? days[idx + 1] : null;
   const base = `/reise/${day.trip.slug}`;
   return `<nav class="bookbar" aria-label="Etappen-Navigation">
-    <a class="pg pg-back" href="${base}/">
-      <span class="pg-dir">← Übersicht</span>
+    <a class="pg pg-back" href="${hasAtlas(day.trip) ? `/atlas/${day.trip.slug}/` : `${base}/`}">
+      <span class="pg-dir">← ${hasAtlas(day.trip) ? "Reise-Atlas" : "Übersicht"}</span>
       <span class="pg-title">${esc(day.trip.title)}</span>
     </a>
     <div class="pager">
@@ -381,7 +381,7 @@ function buildTrip(t, days, ctx) {
 function buildIndex(trips, counts, ctx) {
   const { page, newsletter, esc, site } = ctx;
 
-  const cards = trips.map((t) => `<a class="r-card" href="/reise/${t.slug}/">
+  const cards = trips.map((t) => `<a class="r-card" href="${hasAtlas(t) ? `/atlas/${t.slug}/` : `/reise/${t.slug}/`}">
       <div class="r-thumb">${t.cover
         ? `<img src="${t.cover}" alt="${esc(t.title)}" loading="lazy">`
         : `<div class="fallback" style="background:${t.accent}">${esc(t.title)}</div>`}</div>
@@ -390,7 +390,7 @@ function buildIndex(trips, counts, ctx) {
         <span class="c-title">${esc(t.title)}</span>
         <span class="c-by">${(t.laender || []).join(" · ")}</span>
         <span class="r-sum">${esc(t.blurb || "")}</span>
-        <span class="c-price">${counts[t.slug] || 0} Etappen</span>
+        <span class="c-price">${hasAtlas(t) ? "Reise-Atlas öffnen →" : `${counts[t.slug] || 0} Etappen`}</span>
       </div>
     </a>`).join("");
 
@@ -413,10 +413,22 @@ function buildIndex(trips, counts, ctx) {
   });
 }
 
+/* ---------- Atlas ---------- */
+
+let ROOT_DIR = "";
+function hasAtlas(t) { return !!ROOT_DIR && fs.existsSync(path.join(ROOT_DIR, "content", "reisen", t.slug, "_atlas.json")); }
+function redirectPage(to, title, { esc }) {
+  return `<!doctype html><html lang="de"><head><meta charset="utf-8"><title>${esc(title)} · Reise-Atlas</title>
+<meta http-equiv="refresh" content="0; url=${to}"><link rel="canonical" href="${to}"><meta name="robots" content="noindex">
+<script>location.replace(${JSON.stringify(to)} + location.hash)</script></head>
+<body><p>Diese Reise gibt es jetzt als <a href="${to}">Reise-Atlas</a>.</p></body></html>`;
+}
+
 /* ---------- Einstieg ---------- */
 
 export function buildReisen(ctx) {
   const { ROOT, DIST } = ctx;
+  ROOT_DIR = ROOT;
   const file = path.join(ROOT, "reisen.json");
   if (!fs.existsSync(file)) {
     console.log("· reisen.json fehlt – Reise-Seiten übersprungen");
@@ -436,7 +448,8 @@ export function buildReisen(ctx) {
     counts[t.slug] = days.length;
     const dir = path.join(DIST, "reise", t.slug);
     fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(path.join(dir, "index.html"), buildTrip(t, days, ctx));
+    // Reisen mit Atlas: die Etappen-Übersicht entfällt, die Adresse leitet in den Atlas
+    fs.writeFileSync(path.join(dir, "index.html"), hasAtlas(t) ? redirectPage(`/atlas/${t.slug}/`, t.title, ctx) : buildTrip(t, days, ctx));
     for (const d of days) {
       fs.writeFileSync(path.join(dir, `${d.slug}.html`), buildDay(d, days, ctx));
       total++;
