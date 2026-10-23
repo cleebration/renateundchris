@@ -4,6 +4,12 @@ Der Atlas ist für jede Reise derselbe. Eine neue Reise braucht nur **Daten** un
 keinen neuen Code. Ergebnis: `renateundchris.com/atlas/<reise>/` mit 3D-Karte, Zeitleiste,
 Rollen, Fotos und iPhone-Controller.
 
+## Ablage in „1! claude“ (Drive)
+
+Rohdaten einer Reise (Fotos-web, Kontaktbögen, Stationen, Log) liegen unter
+`05 Projekte/Travel <Jahr> <Reise>/`; `05 Projekte/Tool Reise-Atlas/` hat nur Konzept und Werkzeug.
+Die Foto-Werkzeuge brauchen dafür `ZIEL=<Travel-Ordner>/Input/Fotos-web`.
+
 ## 1. Reise anlegen
 
 1. In `reisen.json` oben einen Eintrag ergänzen (die erste Reise ist die, die `/atlas/` zeigt):
