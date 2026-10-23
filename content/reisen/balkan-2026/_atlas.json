@@ -1,0 +1,2199 @@
+{
+ "reise": "balkan-2026",
+ "tage": [
+  {
+   "tag": 1,
+   "datum": "2026-07-20",
+   "land": [
+    "HR"
+   ],
+   "titel": "Von der Fähre in die Königsstadt",
+   "satz": "Fähre nach Stinica, 132 km Küstenstraße am Velebit, abends mit dem Rad in Nins Inselaltstadt.",
+   "teaser": "Nach einer Singwoche auf Rab bringt die Fähre uns nach Stinica, dann geht es unter dem Velebit nach Süden bis Nin. Mit den Rädern über die Steinbrücke in die winzige Inselstadt, zum goldenen Zeh des Grgur Ninski und zur Heilig-Kreuz-Kirche aus der Zeit um 800. Abendessen neben der Säule des römischen Tempels.",
+   "stationen": [
+    {
+     "name": "Fährhafen Stinica",
+     "lat": 44.718,
+     "lon": 14.897,
+     "art": "faehre",
+     "notiz": "Fähre von Rab, Start der eigentlichen Reise"
+    },
+    {
+     "name": "Camping Nin",
+     "lat": 44.236,
+     "lon": 15.177,
+     "art": "uebernachtung",
+     "notiz": "Camper bleibt stehen, weiter mit Rädern"
+    },
+    {
+     "name": "Nin Altstadt",
+     "lat": 44.242,
+     "lon": 15.184,
+     "art": "besuch",
+     "notiz": "Über Steinbrücke und Unteres Tor in die Inselstadt"
+    },
+    {
+     "name": "Statue Grgur Ninski",
+     "lat": 44.242,
+     "lon": 15.185,
+     "art": "besuch",
+     "notiz": "Großer Zeh golden gerieben"
+    },
+    {
+     "name": "Heilig-Kreuz-Kirche (Sv. Križ)",
+     "lat": 44.242,
+     "lon": 15.184,
+     "art": "besuch",
+     "notiz": "Um 800 erbaut, Schwalben unter der Kuppel"
+    },
+    {
+     "name": "Römischer Tempel Nin",
+     "lat": 44.242,
+     "lon": 15.183,
+     "art": "essen",
+     "notiz": "Abendessen neben der Tempelsäule"
+    }
+   ],
+   "uebernachtung": "Camping Nin, Put Venere Anzotike 41, Nin",
+   "themen": [
+    "faehre",
+    "stadt",
+    "geschichte",
+    "mythencheck",
+    "natur"
+   ],
+   "mythen": [
+    {
+     "behauptung": "Sv. Križ ist die kleinste Kathedrale der Welt",
+     "befund": "Beiname aus der Reiseliteratur; laut Inschrift Hofkapelle, Kathedrale des Bistums Nin war St. Anselm"
+    }
+   ],
+   "wien_faden": [],
+   "epochen": [
+    "antike",
+    "mittelalter",
+    "venedig",
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 2,
+   "datum": "2026-07-21",
+   "land": [
+    "HR"
+   ],
+   "titel": "Šibenik und Basislager Skradin",
+   "satz": "Šibenik mit Steinkathedrale und vier Festungen, danach Skradin als mehrtägiges Basislager am Krka-Nationalpark.",
+   "teaser": "Šibenik ist die älteste von Kroaten gegründete Stadt an der Adria, mit der mörtellosen Kathedrale sv. Jakov und vier Festungen. Basislager für die nächsten Tage wird Skradin, Feinschmecker-Städtchen an der Krka-Mündung und Tor zu den Wasserfällen.",
+   "stationen": [
+    {
+     "name": "Šibenik, Kathedrale sv. Jakov",
+     "lat": 43.737,
+     "lon": 15.889,
+     "art": "besuch",
+     "notiz": "Laut Datei Teil 1 des Tages"
+    },
+    {
+     "name": "Skradin",
+     "lat": 43.818,
+     "lon": 15.923,
+     "art": "uebernachtung",
+     "notiz": "Basis für mehrere Tage, Platz ca. 300 m vom Zentrum"
+    }
+   ],
+   "uebernachtung": "Campingplatz in Skradin (Name nicht genannt)",
+   "themen": [
+    "stadt",
+    "burg",
+    "geschichte",
+    "kulinarik",
+    "natur"
+   ],
+   "mythen": [],
+   "wien_faden": [],
+   "epochen": [
+    "antike",
+    "mittelalter",
+    "venedig",
+    "osmanisch",
+    "20jh",
+    "heute"
+   ],
+   "status": "teilweise"
+  },
+  {
+   "tag": 3,
+   "datum": "2026-07-22",
+   "land": [
+    "HR"
+   ],
+   "titel": "",
+   "satz": "",
+   "teaser": "",
+   "stationen": [],
+   "uebernachtung": "Skradin (Campingplatz, Name nicht genannt)",
+   "themen": [],
+   "mythen": [],
+   "wien_faden": [],
+   "epochen": [],
+   "status": "fehlt"
+  },
+  {
+   "tag": 4,
+   "datum": "2026-07-23",
+   "land": [
+    "HR"
+   ],
+   "titel": "Nationalpark Krka, der große Tag",
+   "satz": "11½ Stunden im Krka-Park: Skradinski buk zweimal, Bootstour nach Visovac und Roški slap.",
+   "teaser": "Mit dem ersten Boot um 8:00 von Skradin zum Skradinski buk, dessen Rundweg wir zweimal gingen, vorbei an Mühlen und dem Kraftwerk von 1895. Danach die Bootstour zur Klosterinsel Visovac, durch den Canyon Među gredama zum Roški slap. Abends Fisch in der Konoba Dalmatino.",
+   "stationen": [
+    {
+     "name": "Hafen Skradin",
+     "lat": 43.817,
+     "lon": 15.923,
+     "art": "faehre",
+     "notiz": "Erstes Boot 08:00"
+    },
+    {
+     "name": "Skradinski buk",
+     "lat": 43.804,
+     "lon": 15.963,
+     "art": "besuch",
+     "notiz": "Rundweg zweimal, Mühlen, Kraftwerk von 1895"
+    },
+    {
+     "name": "Klosterinsel Visovac",
+     "lat": 43.861,
+     "lon": 15.972,
+     "art": "besuch",
+     "notiz": "Franziskanerkloster seit 1445"
+    },
+    {
+     "name": "Canyon Među gredama",
+     "lat": 43.885,
+     "lon": 15.975,
+     "art": "aussicht",
+     "notiz": "Enge Canyon-Passage per Boot"
+    },
+    {
+     "name": "Roški slap",
+     "lat": 43.904,
+     "lon": 15.976,
+     "art": "besuch",
+     "notiz": "Längster Wasserfall des Parks, Ogrlice"
+    },
+    {
+     "name": "Konoba Dalmatino, Skradin",
+     "lat": 43.818,
+     "lon": 15.923,
+     "art": "essen",
+     "notiz": "Fisch selbst ausgesucht, am Tisch filetiert"
+    }
+   ],
+   "uebernachtung": "Skradin (Campingplatz, Name nicht genannt)",
+   "themen": [
+    "natur",
+    "kloster",
+    "geschichte",
+    "kulinarik",
+    "faehre"
+   ],
+   "mythen": [],
+   "wien_faden": [],
+   "epochen": [
+    "mittelalter",
+    "osmanisch",
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 5,
+   "datum": "2026-07-24",
+   "land": [
+    "HR"
+   ],
+   "titel": "Šibenik → Seget Donji",
+   "satz": "Museum, Affogato und Meeresfrüchte in Šibenik, Festungen per Oldtimer-E-Auto, abends Ankunft im Kamp Seget.",
+   "teaser": "Vormittags Affogato und das Kathedralen-Museum in Šibenik, mittags Scampi- und Oktopus-Salat. Statt Festungsaufstieg in der Hitze eine 50-minütige Tour im Oldtimer-E-Fahrzeug. Dann weiter nach Seget Donji bei Trogir, Baden und Kochen am Kamp Seget.",
+   "stationen": [
+    {
+     "name": "Šibenik, Kathedralen-Museum",
+     "lat": 43.737,
+     "lon": 15.889,
+     "art": "besuch",
+     "notiz": "Affogato und Museum am Vormittag"
+    },
+    {
+     "name": "Šibenik Altstadt",
+     "lat": 43.736,
+     "lon": 15.89,
+     "art": "essen",
+     "notiz": "Scampi-Salat und Oktopus-Salat"
+    },
+    {
+     "name": "Šibenik Festungen (E-Auto-Tour)",
+     "lat": 43.74,
+     "lon": 15.894,
+     "art": "aussicht",
+     "notiz": "50 Min. zu zwei Festungen und Strand"
+    },
+    {
+     "name": "Kamp Seget, Seget Donji",
+     "lat": 43.519,
+     "lon": 16.229,
+     "art": "uebernachtung",
+     "notiz": "Tipp von Karl, Strand direkt am Platz"
+    }
+   ],
+   "uebernachtung": "Kamp Seget, Ul. Hrvatskih žrtava 121, Seget Donji",
+   "themen": [
+    "stadt",
+    "burg",
+    "kulinarik",
+    "strand",
+    "geschichte"
+   ],
+   "mythen": [],
+   "wien_faden": [],
+   "epochen": [
+    "venedig",
+    "osmanisch",
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 6,
+   "datum": "2026-07-25",
+   "land": [
+    "HR"
+   ],
+   "titel": "Faulenzen und Trogir bei Nacht",
+   "satz": "Ein Tag ohne Programm am Kamp Seget, abends mit dem Rad nach Trogir auf einen Aperol Spritz.",
+   "teaser": "Tagsüber Faulenzen und Kochen am Platz. Um 19:30 auf der beleuchteten Uferpromenade mit dem Rad nach Trogir, dessen griechischer Stadtplan seit Tragurion fast unverändert ist. Bummel über Riva und Hauptplatz, dann heimradeln und lesen.",
+   "stationen": [
+    {
+     "name": "Kamp Seget",
+     "lat": 43.519,
+     "lon": 16.229,
+     "art": "uebernachtung",
+     "notiz": "Faulenzen und Kochen"
+    },
+    {
+     "name": "Trogir Altstadt und Riva",
+     "lat": 43.517,
+     "lon": 16.25,
+     "art": "besuch",
+     "notiz": "Abendbummel, Aperol Spritz"
+    }
+   ],
+   "uebernachtung": "Kamp Seget, Seget Donji",
+   "themen": [
+    "stadt",
+    "geschichte",
+    "kulinarik",
+    "habsburg"
+   ],
+   "mythen": [],
+   "wien_faden": [
+    {
+     "person_oder_thema": "Spritz",
+     "bezug": "Laut Datei habsburgische Erfindung österreichischer Soldaten im Veneto"
+    }
+   ],
+   "epochen": [
+    "antike",
+    "venedig",
+    "habsburg",
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 7,
+   "datum": "2026-07-26",
+   "land": [
+    "HR"
+   ],
+   "titel": "Trogir am Morgen",
+   "satz": "Früh mit dem Rad nach Trogir zu Kamerlengo und Kathedrale, abends Fischplatte mit Wein aufs Haus.",
+   "teaser": "Vor den Ausflugsbooten in Trogir: Festung Kamerlengo und die Kathedrale sv. Lovro mit dem Radovan-Portal von 1240. Mittags kurzer Regen am Platz. Abends die beste Fischplatte der Reise im Campingplatz-Restaurant, ein halber Liter Wein vom Cousin des Wirts.",
+   "stationen": [
+    {
+     "name": "Festung Kamerlengo, Trogir",
+     "lat": 43.516,
+     "lon": 16.247,
+     "art": "besuch",
+     "notiz": "Venezianische Festung des 15. Jahrhunderts"
+    },
+    {
+     "name": "Kathedrale sv. Lovro, Trogir",
+     "lat": 43.517,
+     "lon": 16.251,
+     "art": "besuch",
+     "notiz": "Radovan-Portal, Adam und Eva, Monatszyklus"
+    },
+    {
+     "name": "Restaurant Kamp Seget",
+     "lat": 43.519,
+     "lon": 16.229,
+     "art": "essen",
+     "notiz": "Fischplatte für zwei, Wein aufs Haus"
+    }
+   ],
+   "uebernachtung": "Kamp Seget, Seget Donji",
+   "themen": [
+    "stadt",
+    "burg",
+    "geschichte",
+    "kulinarik"
+   ],
+   "mythen": [],
+   "wien_faden": [],
+   "epochen": [
+    "mittelalter",
+    "venedig",
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 8,
+   "datum": "2026-07-27",
+   "land": [
+    "HR"
+   ],
+   "titel": "Volle Plätze, Rettung in Stanići",
+   "satz": "Renate fährt, Einkauf im Interspar Split, vier volle Campingplätze in Omiš, Ankunft im Autocamp Linda.",
+   "teaser": "Abreise vom Kamp Seget, Split wird bis auf den Großeinkauf samt Sodastream ausgelassen. In Omiš sind alle vier angefahrenen Campingplätze voll. Die Rettung liegt an der Omiš-Riviera: Autocamp Linda in Stanići, direkt am Meer, mit Würsten und Ripperl am Abend.",
+   "stationen": [
+    {
+     "name": "Interspar Split",
+     "lat": 43.513,
+     "lon": 16.47,
+     "art": "besuch",
+     "notiz": "Großeinkauf, Sodastream gefunden"
+    },
+    {
+     "name": "Omiš Campingplätze",
+     "lat": 43.444,
+     "lon": 16.689,
+     "art": "besuch",
+     "notiz": "Vier Plätze angefahren, alle voll"
+    },
+    {
+     "name": "Autocamp Linda, Stanići",
+     "lat": 43.432,
+     "lon": 16.721,
+     "art": "uebernachtung",
+     "notiz": "Direkt am Meer, verwinkelte Terrassenplätze"
+    }
+   ],
+   "uebernachtung": "Autocamp Linda, Stanići",
+   "themen": [
+    "strand",
+    "kulinarik",
+    "stadt"
+   ],
+   "mythen": [],
+   "wien_faden": [],
+   "epochen": [
+    "antike",
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 9,
+   "datum": "2026-07-28",
+   "land": [
+    "HR"
+   ],
+   "titel": "Nichtstun in Stanići",
+   "satz": "Ein Faulenztag am Meer in Stanići, abends Adlerfisch-Steak mit Salat wie auf der Liebesinsel Rab.",
+   "teaser": "Mittags kalte Platte, tagsüber Meer und Sonne am Autocamp Linda. Abends ein Steak vom Adlerfisch, einem der größten Knochenfische der Adria, mit Salat und Käse. Morgen ist Vollmond.",
+   "stationen": [
+    {
+     "name": "Autocamp Linda, Stanići",
+     "lat": 43.432,
+     "lon": 16.721,
+     "art": "uebernachtung",
+     "notiz": "Faulenzen, Adlerfisch-Steak am Abend"
+    }
+   ],
+   "uebernachtung": "Autocamp Linda, Stanići",
+   "themen": [
+    "strand",
+    "kulinarik",
+    "natur"
+   ],
+   "mythen": [],
+   "wien_faden": [],
+   "epochen": [
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 10,
+   "datum": "2026-07-29",
+   "land": [
+    "HR"
+   ],
+   "titel": "Piratenburg Mirabela und Vollmond",
+   "satz": "Aufstieg zur Piratenfestung Mirabela in Omiš, Bergfahrt, Abendessen in der Konoba Berekin bei Vollmond.",
+   "teaser": "Parken per Bmove-App, dann hinauf zur Festung Mirabela, von der die Piraten von Omiš den Brač-Kanal überwachten. Danach Altstadt und eine Serpentinenfahrt ins Poljica-Hinterland mit Blick zurück aufs Meer. Abends Craft-Bier und regionale Küche in der Konoba Berekin unter dem einzigen Vollmond des Juli.",
+   "stationen": [
+    {
+     "name": "Festung Mirabela, Omiš",
+     "lat": 43.445,
+     "lon": 16.69,
+     "art": "aussicht",
+     "notiz": "Aufstieg über Stufen und Leitern"
+    },
+    {
+     "name": "Omiš Altstadt",
+     "lat": 43.444,
+     "lon": 16.689,
+     "art": "besuch",
+     "notiz": "Altstadt und Einkaufen"
+    },
+    {
+     "name": "Poljica-Hinterland Richtung Gata",
+     "lat": 43.47,
+     "lon": 16.73,
+     "art": "aussicht",
+     "notiz": "Serpentinen, Blick auf Cetina-Mündung und Brač"
+    },
+    {
+     "name": "Konoba Berekin, Lokva Rogoznica",
+     "lat": 43.413,
+     "lon": 16.771,
+     "art": "essen",
+     "notiz": "Eigenes Craft-Bier, Vollmondnacht"
+    }
+   ],
+   "uebernachtung": null,
+   "themen": [
+    "burg",
+    "stadt",
+    "geschichte",
+    "kulinarik",
+    "astronomie",
+    "mythencheck"
+   ],
+   "mythen": [
+    {
+     "behauptung": "1537 täuschte das Echo der Schlucht osmanische Angreifer über die Zahl der Verteidiger",
+     "befund": "Legende, nicht belegt; die Akustik der Schlucht ist tatsächlich außergewöhnlich"
+    }
+   ],
+   "wien_faden": [],
+   "epochen": [
+    "byzanz",
+    "mittelalter",
+    "venedig",
+    "osmanisch",
+    "20jh",
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 11,
+   "datum": "2026-07-30",
+   "land": [
+    "HR"
+   ],
+   "titel": "Fähre nach Hvar, Camp Kopito",
+   "satz": "Fähre Drvenik–Sućuraj, 77 km quer über Hvar zum Camp Kopito, nachts mit Stirnlampen bergauf.",
+   "teaser": "Nach Einkauf und Tanken um 12:00 die kurze Fähre nach Sućuraj, dann die lange, teils einspurige Querung der Insel. Am Camp Kopito im Olivenhain Pool und offener Inselwein. Abends mit dem Rad in die Stadt zur Bar Aloha, zurück zu Fuß mit Stirnlampen von der Kova Beach den Hang hinauf.",
+   "stationen": [
+    {
+     "name": "Fährhafen Drvenik",
+     "lat": 43.153,
+     "lon": 17.252,
+     "art": "faehre",
+     "notiz": "Linie 632 um 12:00"
+    },
+    {
+     "name": "Sućuraj",
+     "lat": 43.124,
+     "lon": 17.193,
+     "art": "faehre",
+     "notiz": "Ankunft an der Ostspitze Hvars"
+    },
+    {
+     "name": "Camping Kopito, Hvar",
+     "lat": 43.176,
+     "lon": 16.452,
+     "art": "uebernachtung",
+     "notiz": "Olivenhain, Pool, Wein in Mineralwasserflasche"
+    },
+    {
+     "name": "Bar Aloha, Hvar-Stadt",
+     "lat": 43.171,
+     "lon": 16.443,
+     "art": "essen",
+     "notiz": "Abendgetränk am Wasser"
+    },
+    {
+     "name": "Kova Beach",
+     "lat": 43.17,
+     "lon": 16.455,
+     "art": "besuch",
+     "notiz": "Räder geparkt, 30 Min. bergauf zu Fuß"
+    }
+   ],
+   "uebernachtung": "Camping Kopito, Hvar",
+   "themen": [
+    "faehre",
+    "stadt",
+    "geschichte",
+    "kulinarik"
+   ],
+   "mythen": [],
+   "wien_faden": [],
+   "epochen": [
+    "antike",
+    "venedig",
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 12,
+   "datum": "2026-07-31",
+   "land": [
+    "HR"
+   ],
+   "titel": "Badetag auf den Pakleni otoci",
+   "satz": "Mit Rad und Taxiboot zu den Buchten Ždrilca und Mlini, heimwärts platter Reifen und Trampelpfad.",
+   "teaser": "Zu Fuß zur Kova Beach, mit dem Rad nach Hvar-Stadt und per Taxiboot nach Marinkovac. Badetag im türkisen Flachwasser von Ždrilca und Mlini bei 29 °C. Abends ist ein Hinterreifen platt; statt 20 € Taxi geht es zu Fuß über Zaun, Olivenhain und zwei Mauern in den Sonnenuntergang.",
+   "stationen": [
+    {
+     "name": "Kova Beach",
+     "lat": 43.17,
+     "lon": 16.455,
+     "art": "besuch",
+     "notiz": "Räder abholen"
+    },
+    {
+     "name": "Hvar-Stadt, Riva",
+     "lat": 43.172,
+     "lon": 16.442,
+     "art": "faehre",
+     "notiz": "Taxiboot zu den Pakleni otoci"
+    },
+    {
+     "name": "Bucht Ždrilca, Marinkovac",
+     "lat": 43.159,
+     "lon": 16.393,
+     "art": "besuch",
+     "notiz": "Geschützter Ankerplatz, Restaurants"
+    },
+    {
+     "name": "Bucht Mlini, Marinkovac",
+     "lat": 43.156,
+     "lon": 16.389,
+     "art": "besuch",
+     "notiz": "Badetag, bootsfrei, Kiefernschatten"
+    },
+    {
+     "name": "Hvar-Stadt",
+     "lat": 43.172,
+     "lon": 16.442,
+     "art": "panne",
+     "notiz": "Hinterreifen des Fahrrads platt"
+    },
+    {
+     "name": "Camping Kopito, Hvar",
+     "lat": 43.176,
+     "lon": 16.452,
+     "art": "uebernachtung",
+     "notiz": "Pool, Melone mit Prosciutto"
+    }
+   ],
+   "uebernachtung": "Camping Kopito, Hvar",
+   "themen": [
+    "strand",
+    "natur",
+    "faehre",
+    "panne",
+    "mythencheck",
+    "habsburg"
+   ],
+   "mythen": [
+    {
+     "behauptung": "Pakleni otoci heißt Hölleninseln",
+     "befund": "Name kommt von 'paklina', Kiefernharz-Pech zum Abdichten von Schiffen"
+    }
+   ],
+   "wien_faden": [
+    {
+     "person_oder_thema": "Seeschlacht von Lissa 1866",
+     "bezug": "Tegetthoff schlug vor Vis die italienische Flotte"
+    },
+    {
+     "person_oder_thema": "Kirche Sv. Klement",
+     "bezug": "Lokal mit Gedenken an Lissa und Fregatte Radetzky verbunden"
+    }
+   ],
+   "epochen": [
+    "antike",
+    "venedig",
+    "habsburg",
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 13,
+   "datum": "2026-08-01",
+   "land": [
+    "HR"
+   ],
+   "titel": "Fort Napoleon und Španjola",
+   "satz": "Radschlauch erneuert, Fort Napoleon mit Sternwarte, Festung Španjola über Hvar, nachts Renates Mondaufnahmen.",
+   "teaser": "Die Werkstatt findet kein Loch: Jemand hatte nur die Luft abgelassen, trotzdem ein neuer Schlauch für 15 €. Mittags zum Fort Napoleon mit dem österreichisch-kroatischen 1-Meter-Teleskop, dann zur venezianischen Španjola. Abends Stadtrundgang, Pool um 22:00 und fantastische Mondfotos.",
+   "stationen": [
+    {
+     "name": "Radwerkstatt (Hvar)",
+     "lat": 43.175,
+     "lon": 16.448,
+     "art": "panne",
+     "notiz": "Luft abgelassen, neuer Schlauch 15 €"
+    },
+    {
+     "name": "Fort Napoleon, Hvar",
+     "lat": 43.178,
+     "lon": 16.447,
+     "art": "aussicht",
+     "notiz": "Observatorium, traumhafte Aussicht"
+    },
+    {
+     "name": "Festung Španjola (Fortica)",
+     "lat": 43.176,
+     "lon": 16.441,
+     "art": "besuch",
+     "notiz": "Venezianische Festung über der Altstadt"
+    },
+    {
+     "name": "Camping Kopito, Hvar",
+     "lat": 43.176,
+     "lon": 16.452,
+     "art": "uebernachtung",
+     "notiz": "Pool um 22:00, Mondaufnahmen"
+    }
+   ],
+   "uebernachtung": "Camping Kopito, Hvar",
+   "themen": [
+    "burg",
+    "astronomie",
+    "geschichte",
+    "habsburg",
+    "panne"
+   ],
+   "mythen": [],
+   "wien_faden": [
+    {
+     "person_oder_thema": "Universitätssternwarte Wien",
+     "bezug": "1997 österreichisch-kroatisches 1-Meter-Teleskop am Fort Napoleon"
+    },
+    {
+     "person_oder_thema": "Österreichische Herrschaft ab 1815",
+     "bezug": "Habsburger bauten Befestigungen aus, Španjola als Kaserne"
+    },
+    {
+     "person_oder_thema": "Lissa 1866",
+     "bezug": "Nach Tegetthoffs Sieg verlor die Anlage an Bedeutung"
+    }
+   ],
+   "epochen": [
+    "venedig",
+    "osmanisch",
+    "habsburg",
+    "20jh",
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 14,
+   "datum": "2026-08-02",
+   "land": [
+    "HR",
+    "ME"
+   ],
+   "titel": "Stari Grad, Fähre, Grenze, Zelenika",
+   "satz": "Stari Grad, quer über Hvar zur Fähre, zwei Stunden Grenze und Calamari in Zelenika.",
+   "teaser": "Morgens mit dem Rad durch Stari Grad, die älteste Stadt Kroatiens. Punktlandung an der Fähre Sućuraj um 13:00, dann die Küste hinunter an Dubrovnik vorbei. Stau, Umkehr und eine Sackgasse an der montenegrinischen Grenze kosten zwei Stunden, am Abend Calamari am südlichsten Bahnhof der Donaumonarchie.",
+   "stationen": [
+    {
+     "name": "Stari Grad, Hvar",
+     "lat": 43.184,
+     "lon": 16.597,
+     "art": "besuch",
+     "notiz": "Altstadt per Rad, Café am Meer"
+    },
+    {
+     "name": "Fährhafen Sućuraj",
+     "lat": 43.124,
+     "lon": 17.193,
+     "art": "faehre",
+     "notiz": "Punktlandung um 13:00, Linie 632"
+    },
+    {
+     "name": "Fährhafen Drvenik",
+     "lat": 43.153,
+     "lon": 17.252,
+     "art": "faehre",
+     "notiz": "Ankunft Festland"
+    },
+    {
+     "name": "Grenze Karasovići / Debeli Brijeg",
+     "lat": 42.462,
+     "lon": 18.493,
+     "art": "grenze",
+     "notiz": "Stau, Umweg, Sackgasse, rund zwei Stunden"
+    },
+    {
+     "name": "Autocamp Zelenika",
+     "lat": 42.451,
+     "lon": 18.578,
+     "art": "uebernachtung",
+     "notiz": "Kurz nach Herceg Novi"
+    },
+    {
+     "name": "Sirena Bay Restaurant, Zelenika",
+     "lat": 42.45,
+     "lon": 18.579,
+     "art": "essen",
+     "notiz": "Calamari fritti und Garnelen"
+    }
+   ],
+   "uebernachtung": "Autocamp Zelenika",
+   "themen": [
+    "faehre",
+    "grenze",
+    "eisenbahn",
+    "habsburg",
+    "geschichte",
+    "stadt",
+    "kulinarik"
+   ],
+   "mythen": [],
+   "wien_faden": [
+    {
+     "person_oder_thema": "Dalmatinerbahn",
+     "bezug": "Zelenika war südlichster Bahnhof der Donaumonarchie, eröffnet 1901"
+    }
+   ],
+   "epochen": [
+    "antike",
+    "venedig",
+    "osmanisch",
+    "habsburg",
+    "20jh"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 15,
+   "datum": "2026-08-03",
+   "land": [
+    "ME"
+   ],
+   "titel": "Budva und der lange Strand",
+   "satz": "Kotor im Vorbeifahren, Altstadt von Budva mit Dreifaltigkeitskirche, abends Camping Miami Beach in Ulcinj.",
+   "teaser": "Herceg Novi fällt dem Stau zum Opfer, an Kotor liegen zwei Kreuzfahrtschiffe. In Budvas nach dem Erdbeben 1979 rekonstruierter Altstadt besuchen wir die orthodoxe Dreifaltigkeitskirche, deren Bau 1797 Österreich genehmigte. Abends seichter Sandstrand und gegrillte Kalamari am Camping Miami Beach in Ulcinj.",
+   "stationen": [
+    {
+     "name": "Autocamp Zelenika",
+     "lat": 42.451,
+     "lon": 18.578,
+     "art": "uebernachtung",
+     "notiz": "Abfahrt am Vormittag"
+    },
+    {
+     "name": "Kotor",
+     "lat": 42.425,
+     "lon": 18.771,
+     "art": "aussicht",
+     "notiz": "Nur vorbeigefahren, zwei Kreuzfahrtschiffe"
+    },
+    {
+     "name": "Budva Altstadt",
+     "lat": 42.278,
+     "lon": 18.837,
+     "art": "besuch",
+     "notiz": "Altstadtbummel zwischen Hochhäusern"
+    },
+    {
+     "name": "Crkva Svete Trojice, Budva",
+     "lat": 42.278,
+     "lon": 18.838,
+     "art": "besuch",
+     "notiz": "Ikonostas von Naum Zetiri, 1833"
+    },
+    {
+     "name": "Camping Miami Beach, Ulcinj",
+     "lat": 41.89,
+     "lon": 19.29,
+     "art": "uebernachtung",
+     "notiz": "Sandstrand sehr seicht, Kalamari gegrillt"
+    }
+   ],
+   "uebernachtung": "Camping Miami Beach, Ulcinj",
+   "themen": [
+    "stadt",
+    "geschichte",
+    "habsburg",
+    "strand",
+    "kulinarik"
+   ],
+   "mythen": [],
+   "wien_faden": [
+    {
+     "person_oder_thema": "Budva 1814–1918",
+     "bezug": "Rund ein Jahrhundert unter österreichischer Herrschaft"
+    },
+    {
+     "person_oder_thema": "Crkva Svete Trojice",
+     "bezug": "Österreichische Verwaltung erteilte 1797 die Baugenehmigung"
+    },
+    {
+     "person_oder_thema": "Stefan Mitrov Ljubiša",
+     "bezug": "Abgeordneter im Reichsrat in Wien, Grab vor der Kirche"
+    }
+   ],
+   "epochen": [
+    "antike",
+    "byzanz",
+    "mittelalter",
+    "venedig",
+    "osmanisch",
+    "habsburg",
+    "20jh",
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 16,
+   "datum": "2026-08-04",
+   "land": [
+    "ME"
+   ],
+   "titel": "Valdanos und Fisherman Hari",
+   "satz": "Badetag in der Olivenbucht Valdanos, abends Altstadt Ulcinj und Fischplatte bei Fisherman Hari.",
+   "teaser": "Durch die riesigen Olivenhaine nach Valdanos, Kiesbucht der Korsaren mit verfallener JNA-Ferienanlage. Liegen unter Pinien bei 30 °C, während Wien 41 °C misst. Abends in der Altstadt von Ulcinj Miesmuscheln und Fischplatte zum Sonnenuntergang.",
+   "stationen": [
+    {
+     "name": "Bäckerei Ulcinj",
+     "lat": 41.928,
+     "lon": 19.215,
+     "art": "essen",
+     "notiz": "Proviant für den Tag"
+    },
+    {
+     "name": "Valdanos",
+     "lat": 41.954,
+     "lon": 19.157,
+     "art": "besuch",
+     "notiz": "Kiesbucht, Pinienschatten, 30 °C"
+    },
+    {
+     "name": "Altstadt Ulcinj",
+     "lat": 41.921,
+     "lon": 19.201,
+     "art": "besuch",
+     "notiz": "Um 19:00, Balšić-Turm"
+    },
+    {
+     "name": "Fisherman Hari, Ulcinj",
+     "lat": 41.921,
+     "lon": 19.2,
+     "art": "essen",
+     "notiz": "Miesmuscheln, Fischplatte für 2, 70 €"
+    },
+    {
+     "name": "Camping Miami Beach, Ulcinj",
+     "lat": 41.89,
+     "lon": 19.29,
+     "art": "uebernachtung",
+     "notiz": "Zweite Nacht"
+    }
+   ],
+   "uebernachtung": "Camping Miami Beach, Ulcinj",
+   "themen": [
+    "strand",
+    "natur",
+    "geschichte",
+    "kulinarik",
+    "stadt",
+    "mythencheck"
+   ],
+   "mythen": [
+    {
+     "behauptung": "Valdanos-Olivenbäume im Schnitt 800 Jahre, viele über 2000",
+     "befund": "Andere Quellen vorsichtiger: Mehrzahl etwa 300 Jahre"
+    },
+    {
+     "behauptung": "Cervantes war in Ulcinj gefangen, Dulcinea kommt von Dulcigno",
+     "befund": "Überlieferung ohne Beleg; dokumentierte Gefangenschaft in Algier"
+    }
+   ],
+   "wien_faden": [
+    {
+     "person_oder_thema": "Hitzerekord Österreich",
+     "bezug": "Wien-Stammersdorf misst am selben Tag 41,0 °C"
+    }
+   ],
+   "epochen": [
+    "antike",
+    "venedig",
+    "osmanisch",
+    "20jh",
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 17,
+   "datum": "2026-08-05",
+   "land": [
+    "ME",
+    "AL"
+   ],
+   "titel": "Über Shkodra und Durrës nach Berat",
+   "satz": "Grenze ohne Wartezeit, Blick vom Tarabosh auf die Rozafa, Bauboom in Durrës, abends Berat.",
+   "teaser": "Nach dem Einkauf über die Buna nach Albanien, ganz ohne Wartezeit. Auf einer Schotterstraße den Tarabosh hinauf mit Blick auf die Festung Rozafa, dann ein ungeplanter Abstecher ins boomende Durrës. Um 18:30 Camping Veno in Berat, Getränk mit Blick auf die tausend Fenster und Lamm im Traditionell Grill.",
+   "stationen": [
+    {
+     "name": "Camping Miami Beach, Ulcinj",
+     "lat": 41.89,
+     "lon": 19.29,
+     "art": "uebernachtung",
+     "notiz": "Abfahrt 11:00"
+    },
+    {
+     "name": "Grenze Sukobin – Muriqan",
+     "lat": 41.951,
+     "lon": 19.383,
+     "art": "grenze",
+     "notiz": "Keine Wartezeit"
+    },
+    {
+     "name": "Tarabosh gegenüber Rozafa",
+     "lat": 42.05,
+     "lon": 19.475,
+     "art": "aussicht",
+     "notiz": "Bis die Straße schottrig wurde"
+    },
+    {
+     "name": "Durrës",
+     "lat": 41.317,
+     "lon": 19.446,
+     "art": "besuch",
+     "notiz": "Ungeplanter Abstecher, Bauboom"
+    },
+    {
+     "name": "Camping Veno, Berat",
+     "lat": 40.7,
+     "lon": 19.96,
+     "art": "uebernachtung",
+     "notiz": "Ankunft 18:30"
+    },
+    {
+     "name": "Bohem Terrasse View, Berat",
+     "lat": 40.706,
+     "lon": 19.951,
+     "art": "aussicht",
+     "notiz": "Getränk mit Altstadtblick"
+    },
+    {
+     "name": "Traditionell Grill, Berat",
+     "lat": 40.705,
+     "lon": 19.952,
+     "art": "essen",
+     "notiz": "Lamm, Gemüse, gefüllte Paprika"
+    }
+   ],
+   "uebernachtung": "Camping Veno, Berat",
+   "themen": [
+    "grenze",
+    "burg",
+    "geschichte",
+    "habsburg",
+    "eisenbahn",
+    "stadt",
+    "kulinarik"
+   ],
+   "mythen": [],
+   "wien_faden": [
+    {
+     "person_oder_thema": "Flottendemonstration 1913",
+     "bezug": "Wien zwang Montenegro, Shkodra zu räumen"
+    },
+    {
+     "person_oder_thema": "k.u.k. Heeresfeldbahn Albanien",
+     "bezug": "Schmalspurstrecke Shkodra–Berat, Route des Tages"
+    },
+    {
+     "person_oder_thema": "Franz Seiner, Volkszählung 1918",
+     "bezug": "Ausgewertet von der Akademie der Wissenschaften in Wien"
+    }
+   ],
+   "epochen": [
+    "antike",
+    "byzanz",
+    "venedig",
+    "osmanisch",
+    "habsburg",
+    "20jh",
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 18,
+   "datum": "2026-08-06",
+   "land": [
+    "AL"
+   ],
+   "titel": "Osumi Canyon und Offroad-Odyssee",
+   "satz": "Burg Berat, Osumi Canyon, dann 25 km Offroad mit Steckenbleiben, Reifenplatzer und Ankunft um 23:00.",
+   "teaser": "Vormittags die bewohnte Burg von Berat mit Zisterne und Dreifaltigkeitskirche, nachmittags der Osumi Canyon bei Çorovodë. Zwei Sackgassen später führt die beschilderte Straße nach Përmet als 25 km Offroad-Trail weiter. Steckenbleiben, gelöster Fahrradträger, aufgeschlitzter Reifen und zwei albanische Helfer, Ankunft in Gjirokastër erst um 23:00.",
+   "stationen": [
+    {
+     "name": "Burg von Berat (Kalaja)",
+     "lat": 40.709,
+     "lon": 19.946,
+     "art": "besuch",
+     "notiz": "Zisterne, Dreifaltigkeitskirche, Kaffee oben"
+    },
+    {
+     "name": "Viewpoint Osumi Canyon",
+     "lat": 40.495,
+     "lon": 20.23,
+     "art": "aussicht",
+     "notiz": "Pause um 15:00"
+    },
+    {
+     "name": "Osumi Canyon Bridge",
+     "lat": 40.5,
+     "lon": 20.226,
+     "art": "aussicht",
+     "notiz": "Gegen 16:00, tolle Fotos"
+    },
+    {
+     "name": "Offroad Çorovodë–Përmet",
+     "lat": 40.4,
+     "lon": 20.3,
+     "art": "panne",
+     "notiz": "Festgefahren, Fahrradträger lose, Vorderreifen aufgeschlitzt"
+    },
+    {
+     "name": "Ora RV Camping, Gjirokastër",
+     "lat": 40.088,
+     "lon": 20.16,
+     "art": "uebernachtung",
+     "notiz": "Ankunft 23:00, Mitternachtsjause"
+    }
+   ],
+   "uebernachtung": "Ora RV Camping, Gjirokastër",
+   "themen": [
+    "burg",
+    "natur",
+    "panne",
+    "geschichte",
+    "habsburg"
+   ],
+   "mythen": [],
+   "wien_faden": [
+    {
+     "person_oder_thema": "k.u.k. Besatzung ab 1916",
+     "bezug": "Österreich-Ungarn trat als Schutzmacht albanischer Interessen auf"
+    },
+    {
+     "person_oder_thema": "Franz Nopcsa",
+     "bezug": "Albanologische Forschung zu Geologie, Ethnographie, Gewohnheitsrecht"
+    }
+   ],
+   "epochen": [
+    "antike",
+    "byzanz",
+    "mittelalter",
+    "osmanisch",
+    "habsburg",
+    "20jh"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 19,
+   "datum": "2026-08-07",
+   "land": [
+    "AL"
+   ],
+   "titel": "Reifensuche und Stadt aus Stein",
+   "satz": "Drei Stunden Reifensuche an der SH4, nachmittags Burg Gjirokastër, abends Festival Restaurant mit Musik.",
+   "teaser": "ÖAMTC, albanischer Autoclub und drei Werkstätten – die Lösung liegt 200 Meter vom Campingplatz bei Gomisteri Shehu: Räder umgesteckt, Gebrauchtreifen gekauft, rund 52 €. Ab 16:00 die Burg mit Gefängnis und T-33. Abends Bier im Hangover, Essen im Festival Restaurant, nebenan Iso-Polyphonie.",
+   "stationen": [
+    {
+     "name": "Gomisteri Shehu Sh.p.k., SH4",
+     "lat": 40.089,
+     "lon": 20.161,
+     "art": "panne",
+     "notiz": "Räder umgesteckt, Gebrauchtreifen 4.000 Lek"
+    },
+    {
+     "name": "Restaurant Ora RV Camping",
+     "lat": 40.088,
+     "lon": 20.16,
+     "art": "essen",
+     "notiz": "Extra gekocht, Klimaanlage eingeschaltet"
+    },
+    {
+     "name": "Burg von Gjirokastër",
+     "lat": 40.073,
+     "lon": 20.139,
+     "art": "besuch",
+     "notiz": "Gefängnis, Lockheed T-33, Festivalplatz"
+    },
+    {
+     "name": "Hangover Cocktail Bar, Rruga Ismail Kadare 8",
+     "lat": 40.074,
+     "lon": 20.14,
+     "art": "essen",
+     "notiz": "Bier um 18:30"
+    },
+    {
+     "name": "Festival Restaurant, Gjirokastër",
+     "lat": 40.074,
+     "lon": 20.141,
+     "art": "essen",
+     "notiz": "Byrek, Qifqi, nebenan Iso-Polyphonie"
+    },
+    {
+     "name": "Ora RV Camping, Gjirokastër",
+     "lat": 40.088,
+     "lon": 20.16,
+     "art": "uebernachtung",
+     "notiz": "Gastgeber Arbi"
+    }
+   ],
+   "uebernachtung": "Ora RV Camping, Gjirokastër",
+   "themen": [
+    "burg",
+    "panne",
+    "stadt",
+    "geschichte",
+    "kulinarik",
+    "mythencheck",
+    "habsburg"
+   ],
+   "mythen": [
+    {
+     "behauptung": "Die T-33 in der Burg ist ein abgeschossenes US-Spionageflugzeug",
+     "befund": "1957 zur Landung gezwungen, nicht abgeschossen; Spionage oder Verirrung offen"
+    },
+    {
+     "behauptung": "Gjirokastër ist nach Prinzessin Argjiro benannt",
+     "befund": "Volksetymologie; Argyrokastron ist schon 1336 belegt"
+    },
+    {
+     "behauptung": "Der Lek ist nach Alexander dem Großen benannt",
+     "befund": "Zwei konkurrierende Herleitungen, auch Lekë Dukagjini; nicht entschieden"
+    },
+    {
+     "behauptung": "Ora RV Camping ist nach dem Schutzgeist Ora benannt",
+     "befund": "Ora ist nordalbanisch belegt; wahrscheinlich bedeutet der Name 'Stunde'"
+    },
+    {
+     "behauptung": "Der grüne Stein der Kette ist Serpentinit",
+     "befund": "Eigene Vermutung korrigiert: vermutlich synthetischer Opal"
+    }
+   ],
+   "wien_faden": [
+    {
+     "person_oder_thema": "Eqrem Çabej",
+     "bezug": "Schule in St. Pölten und Klagenfurt, 1933 Dissertation in Wien"
+    },
+    {
+     "person_oder_thema": "Norbert Jokl",
+     "bezug": "Wiener Albanologe, Lehrer Çabejs, 1942 deportiert"
+    },
+    {
+     "person_oder_thema": "Johann Georg von Hahn",
+     "bezug": "Österreichischer Vizekonsul in Janina, Begründer der Albanologie"
+    },
+    {
+     "person_oder_thema": "ÖAMTC und Raiffeisen",
+     "bezug": "Österreichischer Autoclub und Bankomat halfen beim Reifen nicht"
+    }
+   ],
+   "epochen": [
+    "byzanz",
+    "osmanisch",
+    "habsburg",
+    "20jh",
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 20,
+   "datum": "2026-08-08",
+   "land": [
+    "AL",
+    "GR"
+   ],
+   "titel": "Über Kakavia und Pindos nach Meteora",
+   "satz": "Zügige Grenze bei Kakavia, Einkauf in Ioannina, über den Katara-Pass nach Kastraki unter den Meteora-Felsen.",
+   "teaser": "Die Ali-Pascha-Brücke lassen wir aus, durch das Dropull-Tal geht es zur Grenze Kakavia. Ioannina bleibt ein Supermarktstopp, dann bewusst ohne Autobahn über Metsovo und den Katara-Pass. Um 17:30 Camping Meteora Garden in Kastraki, Griechischer Salat und Garnelen am Abend.",
+   "stationen": [
+    {
+     "name": "Ora RV Camping, Gjirokastër",
+     "lat": 40.088,
+     "lon": 20.16,
+     "art": "uebernachtung",
+     "notiz": "Abfahrt 10:15"
+    },
+    {
+     "name": "Grenze Kakavia",
+     "lat": 39.912,
+     "lon": 20.33,
+     "art": "grenze",
+     "notiz": "Zügiger Übertritt"
+    },
+    {
+     "name": "Ioannina",
+     "lat": 39.665,
+     "lon": 20.853,
+     "art": "besuch",
+     "notiz": "Supermarkt, der See überzeugt nicht"
+    },
+    {
+     "name": "Metsovo",
+     "lat": 39.77,
+     "lon": 21.183,
+     "art": "aussicht",
+     "notiz": "Alte EO6 durch den Pindos"
+    },
+    {
+     "name": "Katara-Pass",
+     "lat": 39.796,
+     "lon": 21.226,
+     "art": "aussicht",
+     "notiz": "Durchgehend asphaltiert, gut befahrbar"
+    },
+    {
+     "name": "Camping Meteora Garden, Kastraki",
+     "lat": 39.713,
+     "lon": 21.616,
+     "art": "uebernachtung",
+     "notiz": "Ankunft 17:30, Griechischer Salat, Garnelen"
+    }
+   ],
+   "uebernachtung": "Camping Meteora Garden, Kastraki",
+   "themen": [
+    "grenze",
+    "geschichte",
+    "natur",
+    "kulinarik",
+    "mythencheck",
+    "habsburg"
+   ],
+   "mythen": [
+    {
+     "behauptung": "Katara-Pass seit 2011 gesperrt, Asphalt aufgebrochen",
+     "befund": "Am 8.8.2026 durchgehend asphaltiert und normal befahrbar"
+    },
+    {
+     "behauptung": "Griechischer Salat wurde um 1970 in der Plaka erfunden",
+     "befund": "Oft erzählt, nie belegt; Gericht entstand im frühen 20. Jh."
+    },
+    {
+     "behauptung": "Ali-Pascha-Aquädukt 1932 durch Erdbeben zerstört",
+     "befund": "Konkurrierende Version: gezielter Abtrag; keine Quelle belegt eine"
+    }
+   ],
+   "wien_faden": [
+    {
+     "person_oder_thema": "Wiener Griechen",
+     "bezug": "Händler aus Epirus, Makedonien, Thessalien nach Passarowitz 1718"
+    },
+    {
+     "person_oder_thema": "Georg Simon von Sina",
+     "bezug": "Aromunischer Bankier in Wien, Kettenbrücke, Grundstück der TU Wien"
+    },
+    {
+     "person_oder_thema": "Theophil Hansen",
+     "bezug": "Umbau der Griechenkirche am Fleischmarkt, finanziert von Simon Sina"
+    }
+   ],
+   "epochen": [
+    "antike",
+    "osmanisch",
+    "habsburg",
+    "20jh",
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 21,
+   "datum": "2026-08-09",
+   "land": [
+    "GR"
+   ],
+   "titel": "Meteora: drei Klöster, eine Kirche",
+   "satz": "Agios Stefanos, Agia Triada, Agios Nikolaos Anapafsas und die Panagia-Kirche in Kalambaka an einem Tag.",
+   "teaser": "Am Sonntag sind alle Klöster offen: Agios Stefanos um 10:00, die 140 Stufen nach Agia Triada um 12:00, die Fresken des Theophanes in Agios Nikolaos Anapafsas um 15:00. Zum Abschluss die byzantinische Panagia in Kalambaka mit ihrem Marmor-Ambo. Abends Canasta, ein Gewitter ohne Regen und Mezedes in der Taverne To Kalami.",
+   "stationen": [
+    {
+     "name": "Kloster Agios Stefanos",
+     "lat": 39.714,
+     "lon": 21.639,
+     "art": "besuch",
+     "notiz": "Frauenkloster, Schädelreliquie des Charalambos"
+    },
+    {
+     "name": "Kloster Agia Triada",
+     "lat": 39.716,
+     "lon": 21.638,
+     "art": "besuch",
+     "notiz": "140 Stufen, Bond-Drehort 1981"
+    },
+    {
+     "name": "Camping Meteora Garden, Kastraki",
+     "lat": 39.713,
+     "lon": 21.616,
+     "art": "essen",
+     "notiz": "Kaltes Mittagessen"
+    },
+    {
+     "name": "Kloster Agios Nikolaos Anapafsas",
+     "lat": 39.723,
+     "lon": 21.627,
+     "art": "besuch",
+     "notiz": "Fresken des Theophanes Bathas, 1527"
+    },
+    {
+     "name": "Kirche Panagia (Koimisis), Kalambaka",
+     "lat": 39.708,
+     "lon": 21.628,
+     "art": "besuch",
+     "notiz": "Marmor-Ambo, Fresken 12. Jh. und 1573"
+    },
+    {
+     "name": "Taverne To Kalami, Kastraki",
+     "lat": 39.713,
+     "lon": 21.618,
+     "art": "essen",
+     "notiz": "Set griechischer Vorspeisen"
+    }
+   ],
+   "uebernachtung": "Camping Meteora Garden, Kastraki",
+   "themen": [
+    "kloster",
+    "geschichte",
+    "natur",
+    "mythencheck",
+    "kulinarik"
+   ],
+   "mythen": [
+    {
+     "behauptung": "Meteora-Felsen entstanden vor 60 Mio. Jahren in einem See",
+     "befund": "Oligozän bis Miozän, 30–10 Mio. Jahre, marines Becken mit Gilbert-Deltas"
+    },
+    {
+     "behauptung": "Abt: Seil wird gewechselt, 'wenn es reißt' (Curzon)",
+     "befund": "Wandernde Anekdote, auch Leigh Fermor zugeschrieben; Herkunft ungeklärt"
+    },
+    {
+     "behauptung": "Mönche hängten beim Bond-Dreh Wäsche aus Protest auf",
+     "befund": "Viele Varianten, anhand gängiger Quellen nicht entscheidbar"
+    },
+    {
+     "behauptung": "Panagia steht auf einem Apollon-Tempel",
+     "befund": "Belegt ist nur Wiederverwendung antiken Baumaterials"
+    }
+   ],
+   "wien_faden": [
+    {
+     "person_oder_thema": "Donauhandelsachse",
+     "bezug": "Meteora, Moschopolis, Fleischmarkt: dieselbe Linie wie die Wiener Griechen"
+    }
+   ],
+   "epochen": [
+    "byzanz",
+    "mittelalter",
+    "osmanisch",
+    "20jh",
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 22,
+   "datum": "2026-08-10",
+   "land": [
+    "GR"
+   ],
+   "titel": "Varlaam, Großes Meteoron, Roussanou",
+   "satz": "Gegen den Busstrom zu Varlaam, Großem Meteoron und Roussanou, Sonnenuntergang am Observation Deck, Moussaka.",
+   "teaser": "Weil oben alles voll ist, parken wir vor Varlaam und drehen die Reihenfolge um, zu Fuß weiter zum Großen Meteoron, dann nach Roussanou. Nach Pool und kalter Jause der Sonnenuntergang am Main Observation Deck. Um 21:12 Käsebällchen, Lamm und Moussaka in der Taverna Bakaliarakia.",
+   "stationen": [
+    {
+     "name": "Kloster Varlaam",
+     "lat": 39.723,
+     "lon": 21.627,
+     "art": "besuch",
+     "notiz": "Windenturm 1536, Fass-Zisterne"
+    },
+    {
+     "name": "Großes Meteoron",
+     "lat": 39.722,
+     "lon": 21.631,
+     "art": "besuch",
+     "notiz": "Zu Fuß, Refektorium, Beinhaus, Sultansfirmane"
+    },
+    {
+     "name": "Kloster Roussanou",
+     "lat": 39.719,
+     "lon": 21.628,
+     "art": "besuch",
+     "notiz": "Frauenkloster seit 1988, zwei Brücken"
+    },
+    {
+     "name": "Camping Meteora Garden, Kastraki",
+     "lat": 39.713,
+     "lon": 21.616,
+     "art": "uebernachtung",
+     "notiz": "Kalte Jause, Pool"
+    },
+    {
+     "name": "Main Observation Deck",
+     "lat": 39.716,
+     "lon": 21.628,
+     "art": "aussicht",
+     "notiz": "Sonnenuntergang gegen 20:35"
+    },
+    {
+     "name": "Taverna Bakaliarakia",
+     "lat": 39.712,
+     "lon": 21.619,
+     "art": "essen",
+     "notiz": "Käsebällchen, Lamm, Moussaka"
+    }
+   ],
+   "uebernachtung": "Camping Meteora Garden, Kastraki",
+   "themen": [
+    "kloster",
+    "geschichte",
+    "kulinarik",
+    "mythencheck",
+    "natur"
+   ],
+   "mythen": [
+    {
+     "behauptung": "'Wenn es reißt' – Seilanekdote eines Abts",
+     "befund": "Wird an mehreren Klöstern erzählt, bleibt wandernde Anekdote"
+    },
+    {
+     "behauptung": "Malername Katelanos verweist auf die Katalanische Kompanie",
+     "befund": "Plausibel, nicht belegt"
+    },
+    {
+     "behauptung": "Moussaka mit Béchamel ist altgriechische Tradition",
+     "befund": "Béchamel erst von Tselementes in den 1920ern eingeführt"
+    }
+   ],
+   "wien_faden": [
+    {
+     "person_oder_thema": "Kaufleute aus Ioannina",
+     "bezug": "Gleiches Milieu stiftete später in Wien Griechenkirche und Kettenbrücke"
+    }
+   ],
+   "epochen": [
+    "byzanz",
+    "mittelalter",
+    "osmanisch",
+    "20jh",
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 23,
+   "datum": "2026-08-11",
+   "land": [
+    "GR"
+   ],
+   "titel": "Vom Fels ans Wasser",
+   "satz": "Über Trikala, Larissa und Volos nach Kato Gatzea, eine Woche Camping Hellas am Pagasitischen Golf.",
+   "teaser": "Mittags Abfahrt aus Meteora, dreieinhalb Stunden später im Olivenhain des Camping Hellas. Spätes Mittagessen mit Melitzanosalata, gefüllten Zucchini und Beefteki, dann Schwimmen und Schlaf. Abends 45 Minuten am Golf entlang, in dem die Argo gebaut worden sein soll.",
+   "stationen": [
+    {
+     "name": "Trikala",
+     "lat": 39.556,
+     "lon": 21.768,
+     "art": "besuch",
+     "notiz": "Durchfahrt"
+    },
+    {
+     "name": "Larissa",
+     "lat": 39.639,
+     "lon": 22.419,
+     "art": "besuch",
+     "notiz": "Durchfahrt"
+    },
+    {
+     "name": "Volos",
+     "lat": 39.362,
+     "lon": 22.942,
+     "art": "besuch",
+     "notiz": "Durchfahrt"
+    },
+    {
+     "name": "Camping Hellas, Kato Gatzea",
+     "lat": 39.31,
+     "lon": 23.109,
+     "art": "uebernachtung",
+     "notiz": "Ankunft 15:30, Platz nahe Sanitär"
+    },
+    {
+     "name": "Restaurant Camping Hellas",
+     "lat": 39.31,
+     "lon": 23.109,
+     "art": "essen",
+     "notiz": "Melitzanosalata, gefüllte Zucchini, Beefteki"
+    },
+    {
+     "name": "Ufer Kato Gatzea",
+     "lat": 39.309,
+     "lon": 23.108,
+     "art": "aussicht",
+     "notiz": "Abendspaziergang am Golf"
+    }
+   ],
+   "uebernachtung": "Camping Hellas, Kato Gatzea",
+   "themen": [
+    "kulinarik",
+    "eisenbahn",
+    "geschichte",
+    "habsburg",
+    "mythencheck",
+    "strand"
+   ],
+   "mythen": [
+    {
+     "behauptung": "Pagasai heißt nach der Argo 'die Zusammengefügte'",
+     "befund": "Schon antik umstritten; Herleitung von pēgē (Quelle) nüchterner"
+    },
+    {
+     "behauptung": "Melanzana kommt von 'mela insana'",
+     "befund": "Volksetymologie, widerlegt"
+    }
+   ],
+   "wien_faden": [
+    {
+     "person_oder_thema": "Gyula Andrássy, Berliner Kongress 1878",
+     "bezug": "Thessalien kam 1881 an Griechenland, Wien bekam Bosnien"
+    }
+   ],
+   "epochen": [
+    "antike",
+    "osmanisch",
+    "habsburg",
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 24,
+   "datum": "2026-08-12",
+   "land": [
+    "GR"
+   ],
+   "titel": "Perseiden am Golf der Argonauten",
+   "satz": "Ruhetag am Camping Hellas, Sonnenfinsternis nur in Linz, nachts Perseiden und Renate rücklings im Meer.",
+   "teaser": "Ein Tag absichtlich ohne Programm, während daheim in Linz 87,7 Prozent der Sonne verfinstert werden. Abends Pasta mit Sugo und der letzte Limoncello Spritz. Nachts mit Stativ am Strand: Sternschnuppen fürs Auge, keine auf dem Chip, und Renate kippt mit der Liege ins Meer.",
+   "stationen": [
+    {
+     "name": "Camping Hellas, Kato Gatzea",
+     "lat": 39.31,
+     "lon": 23.109,
+     "art": "uebernachtung",
+     "notiz": "Ruhetag, Pasta mit Sugo"
+    },
+    {
+     "name": "Strand Kato Gatzea",
+     "lat": 39.309,
+     "lon": 23.108,
+     "art": "aussicht",
+     "notiz": "Perseiden bis 02:30"
+    }
+   ],
+   "uebernachtung": "Camping Hellas, Kato Gatzea",
+   "themen": [
+    "astronomie",
+    "strand",
+    "kulinarik",
+    "habsburg",
+    "mythencheck"
+   ],
+   "mythen": [
+    {
+     "behauptung": "Spritz entstand, weil österreichische Soldaten Wein verdünnen ließen",
+     "befund": "Populärste Hypothese, Wortherleitung plausibel, Anekdote unbelegt"
+    },
+    {
+     "behauptung": "Perseiden sind die Tränen des heiligen Laurentius",
+     "befund": "Volkstümliche Zuschreibung, astronomisch ist es Staub von Swift-Tuttle"
+    }
+   ],
+   "wien_faden": [
+    {
+     "person_oder_thema": "Edmund Weiss",
+     "bezug": "Direktor der k.k. Sternwarte, berechnete Sternschnuppen und Finsternisse"
+    },
+    {
+     "person_oder_thema": "Sonnenfinsternis Linz",
+     "bezug": "87,7 Prozent Bedeckung daheim, in Griechenland nicht sichtbar"
+    }
+   ],
+   "epochen": [
+    "antike",
+    "habsburg",
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 25,
+   "datum": "2026-08-13",
+   "land": [
+    "GR"
+   ],
+   "titel": "",
+   "satz": "",
+   "teaser": "",
+   "stationen": [],
+   "uebernachtung": "Camping Hellas, Kato Gatzea",
+   "themen": [],
+   "mythen": [],
+   "wien_faden": [],
+   "epochen": [],
+   "status": "fehlt"
+  },
+  {
+   "tag": 26,
+   "datum": "2026-08-14",
+   "land": [
+    "GR"
+   ],
+   "titel": "Moutzouris und Milies",
+   "satz": "Die Pilion-Schmalspurbahn von außen fotografiert, auf dem Gleis zur De-Chirico-Brücke, Mittagessen in Milies.",
+   "teaser": "Ohne Fahrkarten wird der Tag umgedreht: den Moutzouris fotografieren statt mitfahren. Die Abfahrt in Ano Lechonia und die Einfahrt in Milies gelingen, Ano Gatzea nicht. Zu Fuß auf dem Gleis zur Taxiarchis-Brücke, dann Gkioulbasi unter dem Blauregen im Salkimi und das Dorf der Wiener Aufklärer.",
+   "stationen": [
+    {
+     "name": "Camping Hellas, Kato Gatzea",
+     "lat": 39.31,
+     "lon": 23.109,
+     "art": "uebernachtung",
+     "notiz": "Aufbruch 09:30"
+    },
+    {
+     "name": "Bahnhof Ano Lechonia",
+     "lat": 39.336,
+     "lon": 23.042,
+     "art": "besuch",
+     "notiz": "Abfahrt des Moutzouris, Foto und Video"
+    },
+    {
+     "name": "Bahnhof Ano Gatzea",
+     "lat": 39.317,
+     "lon": 23.106,
+     "art": "besuch",
+     "notiz": "Fotoposition misslungen"
+    },
+    {
+     "name": "Bahnhof Milies",
+     "lat": 39.329,
+     "lon": 23.15,
+     "art": "besuch",
+     "notiz": "Einfahrt, bester Take des Tages"
+    },
+    {
+     "name": "Taxiarchis-Brücke (De-Chirico-Brücke)",
+     "lat": 39.326,
+     "lon": 23.146,
+     "art": "aussicht",
+     "notiz": "Zu Fuß auf dem Gleis"
+    },
+    {
+     "name": "Taverne To Salkimi, Milies",
+     "lat": 39.33,
+     "lon": 23.154,
+     "art": "essen",
+     "notiz": "Dolmadakia, Gkioulbasi"
+    },
+    {
+     "name": "Dorfkern Milies",
+     "lat": 39.33,
+     "lon": 23.155,
+     "art": "besuch",
+     "notiz": "Platz, Taxiarchen-Kirche, Bibliothek Psychis Akos"
+    }
+   ],
+   "uebernachtung": "Camping Hellas, Kato Gatzea",
+   "themen": [
+    "eisenbahn",
+    "kulinarik",
+    "geschichte",
+    "mythencheck",
+    "habsburg"
+   ],
+   "mythen": [
+    {
+     "behauptung": "Taxiarchis-Brücke ist die einzige Konstruktion dieser Art weltweit",
+     "befund": "Gekrümmte Gleise auf gerader Brücke sind selten, aber nicht einzigartig"
+    },
+    {
+     "behauptung": "De Chiricos Bildzüge gehen auf die Pilion-Bahn zurück",
+     "befund": "Kunsthistorische Deutung, keine Selbstaussage, aber plausibel"
+    }
+   ],
+   "wien_faden": [
+    {
+     "person_oder_thema": "Anthimos Gazis",
+     "bezug": "Predigte in Wien, gab 'Hermes o Logios' 1811–1821 heraus"
+    },
+    {
+     "person_oder_thema": "Wien als Druckzentrum",
+     "bezug": "Griechischer Buchdruck seit 1783 erlaubt, Bücher in Milies' Bibliothek"
+    }
+   ],
+   "epochen": [
+    "osmanisch",
+    "habsburg",
+    "20jh",
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 27,
+   "datum": "2026-08-15",
+   "land": [
+    "GR"
+   ],
+   "titel": "",
+   "satz": "",
+   "teaser": "",
+   "stationen": [],
+   "uebernachtung": "Camping Hellas, Kato Gatzea",
+   "themen": [],
+   "mythen": [],
+   "wien_faden": [],
+   "epochen": [],
+   "status": "fehlt"
+  },
+  {
+   "tag": 28,
+   "datum": "2026-08-16",
+   "land": [
+    "GR"
+   ],
+   "titel": "",
+   "satz": "",
+   "teaser": "",
+   "stationen": [],
+   "uebernachtung": "Camping Hellas, Kato Gatzea",
+   "themen": [],
+   "mythen": [],
+   "wien_faden": [],
+   "epochen": [],
+   "status": "fehlt"
+  },
+  {
+   "tag": 29,
+   "datum": "2026-08-17",
+   "land": [
+    "GR",
+    "MK"
+   ],
+   "titel": "Vom Golf an den Ohridsee",
+   "satz": "Olivenbaum und Bougainvillea aus Agriá, Grenze bei Niki, durch Bitola zum Camping Lira am Ohridsee.",
+   "teaser": "Nach sieben Tagen am Golf beginnt die Heimreise: In Agriá kommen ein Olivenbaum und eine violette Bougainvillea an Bord. Über Florina und den Grenzübergang Niki/Medžitlija nach Nordmazedonien, durch Bitola, das einstige Monastir. Renate fährt das letzte Stück bis Kališta, abends Ćevapčići und Pljeskavica.",
+   "stationen": [
+    {
+     "name": "Camping Hellas, Kato Gatzea",
+     "lat": 39.31,
+     "lon": 23.109,
+     "art": "uebernachtung",
+     "notiz": "Abfahrt 08:30"
+    },
+    {
+     "name": "Gärtnerei Anthokipia Koutra, Agriá",
+     "lat": 39.344,
+     "lon": 23.01,
+     "art": "besuch",
+     "notiz": "Olivenbaum und violette Bougainvillea gekauft"
+    },
+    {
+     "name": "Florina",
+     "lat": 40.781,
+     "lon": 21.409,
+     "art": "besuch",
+     "notiz": "Letzte griechische Stadt vor der Grenze"
+    },
+    {
+     "name": "Grenze Niki / Medžitlija",
+     "lat": 40.895,
+     "lon": 21.418,
+     "art": "grenze",
+     "notiz": "Nach Nordmazedonien, Duty-Free"
+    },
+    {
+     "name": "Bitola",
+     "lat": 41.031,
+     "lon": 21.335,
+     "art": "besuch",
+     "notiz": "Durchfahrt durch die Stadt der Konsuln"
+    },
+    {
+     "name": "Camping Lira, Kališta",
+     "lat": 41.163,
+     "lon": 20.648,
+     "art": "uebernachtung",
+     "notiz": "Ankunft 17:30, 12 €"
+    },
+    {
+     "name": "Restaurant Camping Lira",
+     "lat": 41.163,
+     "lon": 20.648,
+     "art": "essen",
+     "notiz": "Ćevapčići und Pljeskavica"
+    }
+   ],
+   "uebernachtung": "Camping Lira, Kališta",
+   "themen": [
+    "grenze",
+    "geschichte",
+    "kulinarik",
+    "mythencheck",
+    "habsburg",
+    "natur"
+   ],
+   "mythen": [
+    {
+     "behauptung": "Die Bougainvillea ist eine Mittelmeerpflanze",
+     "befund": "Stammt aus Südamerika, 1767 bei Rio entdeckt, Blüten sind Hochblätter"
+    },
+    {
+     "behauptung": "Bitola kommt von 'Bi Tolo, do bi Toljo'",
+     "befund": "Volksetymologie; von altkirchenslawisch obitělь, Kloster"
+    },
+    {
+     "behauptung": "Ohridsee ist bis zu 1.600 m tief",
+     "befund": "Falsch, maximal 288 Meter"
+    },
+    {
+     "behauptung": "Ohridsee ist der älteste See Europas",
+     "befund": "Gängig, durch Bohrungen gestützt, aber definitionsabhängig"
+    },
+    {
+     "behauptung": "Heraclea Lyncestis belegt Kontinuität zum heutigen Mazedonien",
+     "befund": "Nur geografische, keine ethnische oder sprachliche Kontinuität"
+    }
+   ],
+   "wien_faden": [
+    {
+     "person_oder_thema": "Mürzsteger Programm 1903",
+     "bezug": "Franz Joseph und Zar beschlossen Reformen für Vilayet Monastir"
+    },
+    {
+     "person_oder_thema": "k.u.k. Konsulat Monastir",
+     "bezug": "Österreich-Ungarn unterhielt Vertretung in Bitola"
+    },
+    {
+     "person_oder_thema": "Konstantin Miladinov",
+     "bezug": "Traf 1861 in Wien Bischof Strossmayer, Liederdruck in Zagreb"
+    }
+   ],
+   "epochen": [
+    "antike",
+    "byzanz",
+    "osmanisch",
+    "habsburg",
+    "20jh",
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 30,
+   "datum": "2026-08-18",
+   "land": [
+    "MK",
+    "RS",
+    "HR"
+   ],
+   "titel": "Transit durch drei Länder",
+   "satz": "735 km von Kališta über Skopje, Niš und Belgrad nach Vinkovci, Zöllner beanstandet den Olivenbaum.",
+   "teaser": "Ein reiner Transittag auf dem Korridor X: viele kleine Mautstellen in Nordmazedonien, eine Viertelstunde Grenze bei Tabanovce. Statt Batrovci über Šid/Tovarnik zurück in die EU, wo der kroatische Zöllner ein Zertifikat für den Olivenbaum vermisst. Nach schlechten Landstraßen um 21:30 ein Appartement in Vinkovci.",
+   "stationen": [
+    {
+     "name": "Camping Lira, Kališta",
+     "lat": 41.163,
+     "lon": 20.648,
+     "art": "uebernachtung",
+     "notiz": "Abfahrt 09:00"
+    },
+    {
+     "name": "Skopje (Umfahrung)",
+     "lat": 41.998,
+     "lon": 21.425,
+     "art": "besuch",
+     "notiz": "Nur umfahren"
+    },
+    {
+     "name": "Grenze Tabanovce / Preševo",
+     "lat": 42.214,
+     "lon": 21.704,
+     "art": "grenze",
+     "notiz": "12:30–12:45, eine Viertelstunde"
+    },
+    {
+     "name": "Niš",
+     "lat": 43.321,
+     "lon": 21.896,
+     "art": "besuch",
+     "notiz": "Durchfahrt, Geburtsort Konstantins"
+    },
+    {
+     "name": "Belgrad",
+     "lat": 44.787,
+     "lon": 20.457,
+     "art": "besuch",
+     "notiz": "Wechsel A1 auf A3"
+    },
+    {
+     "name": "Grenze Šid / Tovarnik",
+     "lat": 45.15,
+     "lon": 19.18,
+     "art": "grenze",
+     "notiz": "Ca. 18:15, Zöllner und Olivenbaum"
+    },
+    {
+     "name": "Appartement Ul. A. G. Matoša 9, Vinkovci",
+     "lat": 45.288,
+     "lon": 18.8,
+     "art": "uebernachtung",
+     "notiz": "Ankunft 21:30, Essen aus dem Kühlschrank"
+    }
+   ],
+   "uebernachtung": "Appartement, Ul. Antuna Gustava Matoša 9, Vinkovci",
+   "themen": [
+    "grenze",
+    "geschichte",
+    "habsburg",
+    "mythencheck",
+    "stadt"
+   ],
+   "mythen": [
+    {
+     "behauptung": "Vinkovci ist die älteste Stadt Europas",
+     "befund": "Neolithische Besiedlung belegt, Superlativ ist Marketing"
+    },
+    {
+     "behauptung": "Orion-Gefäß ist der erste indoeuropäische Kalender",
+     "befund": "Interpretation, keine gesicherte Erkenntnis"
+    }
+   ],
+   "wien_faden": [
+    {
+     "person_oder_thema": "Prinz Eugen, Belgrad 1717",
+     "bezug": "Sieg vor Belgrad, Stadt 1718–1739 österreichisch"
+    },
+    {
+     "person_oder_thema": "Antun Gustav Matoš",
+     "bezug": "Kurz in Wien studiert, 1894 Deserteur der k.u.k. Armee"
+    },
+    {
+     "person_oder_thema": "Ban Josip Šokčević",
+     "bezug": "In Vinkovci geborener k.u.k. General, Hauptplatz trägt seinen Namen"
+    }
+   ],
+   "epochen": [
+    "antike",
+    "habsburg",
+    "20jh",
+    "heute"
+   ],
+   "status": "voll"
+  },
+  {
+   "tag": 31,
+   "datum": "2026-08-19",
+   "land": [
+    "HR",
+    "SI",
+    "AT"
+   ],
+   "titel": "Vinkovci → Linz",
+   "satz": "Vormittag im Šokčević-Park von Vinkovci, dann 715 km über Zagreb, Ptuj und Spielfeld nach Linz.",
+   "teaser": "Im Stadtpark von Vinkovci stehen Glocke von 1925, Maria-Theresia-Kirche, Dreifaltigkeitsdenkmal, ein neuer Šokac aus Bronze und eine rote Telefonzelle aus Yorkshire nebeneinander. Dann A3 und A2 bis Macelj, in Slowenien wegen der teuren 2B-Vignette über Landstraße durch Ptuj. Um 17:32 Spielfeld, danach Linz.",
+   "stationen": [
+    {
+     "name": "Excellent Pub, Vinkovci",
+     "lat": 45.288,
+     "lon": 18.805,
+     "art": "essen",
+     "notiz": "Kaffee, Parken per bmove"
+    },
+    {
+     "name": "Spomenik Zvono, Trg bana Šokčevića",
+     "lat": 45.288,
+     "lon": 18.806,
+     "art": "besuch",
+     "notiz": "Glocke von 1925, 1991 abgestürzt"
+    },
+    {
+     "name": "Crkva sv. Euzebija i Poliona",
+     "lat": 45.288,
+     "lon": 18.806,
+     "art": "besuch",
+     "notiz": "Erbaut 1772–1777 auf Dekret Maria Theresias"
+    },
+    {
+     "name": "Zavjetni kip Presvetog Trojstva",
+     "lat": 45.288,
+     "lon": 18.805,
+     "art": "besuch",
+     "notiz": "Drei Säulen, 1845"
+    },
+    {
+     "name": "Denkmal Osnivač",
+     "lat": 45.288,
+     "lon": 18.804,
+     "art": "besuch",
+     "notiz": "Šokac in Bronze, 2025"
+    },
+    {
+     "name": "British Telephone Box",
+     "lat": 45.288,
+     "lon": 18.804,
+     "art": "besuch",
+     "notiz": "Geschenk von Steve Gaunt aus Leeds"
+    },
+    {
+     "name": "Odmorište Sava, Babina Greda",
+     "lat": 45.14,
+     "lon": 18.54,
+     "art": "besuch",
+     "notiz": "Tankstopp 11:06"
+    },
+    {
+     "name": "Plodine Zabok",
+     "lat": 46.026,
+     "lon": 15.91,
+     "art": "besuch",
+     "notiz": "Einkauf 14:44"
+    },
+    {
+     "name": "Grenze Macelj / Gruškovje",
+     "lat": 46.258,
+     "lon": 15.863,
+     "art": "grenze",
+     "notiz": "16:10"
+    },
+    {
+     "name": "Ptuj",
+     "lat": 46.42,
+     "lon": 15.87,
+     "art": "besuch",
+     "notiz": "Landstraße statt Autobahn"
+    },
+    {
+     "name": "Grenze Šentilj / Spielfeld",
+     "lat": 46.704,
+     "lon": 15.646,
+     "art": "grenze",
+     "notiz": "17:32, nach Österreich"
+    },
+    {
+     "name": "Linz",
+     "lat": 48.306,
+     "lon": 14.286,
+     "art": "uebernachtung",
+     "notiz": "Ankunft, Uhrzeit offen"
+    }
+   ],
+   "uebernachtung": "Linz (zu Hause)",
+   "themen": [
+    "grenze",
+    "geschichte",
+    "habsburg",
+    "mythencheck",
+    "stadt",
+    "eisenbahn"
+   ],
+   "mythen": [
+    {
+     "behauptung": "Euzebius-und-Polion-Kirche ist die älteste Kirche Vinkovcis, 'United Church'",
+     "befund": "Falsch; älteste ist sv. Ilija in Meraja, Beiname existiert nicht"
+    },
+    {
+     "behauptung": "Das Dreifaltigkeitsdenkmal ist eine Pestsäule",
+     "befund": "Verwechslung mit Osijek; klassizistisches Votivdenkmal ohne Pestbezug"
+    },
+    {
+     "behauptung": "Josip Runjanin komponierte die kroatische Hymne",
+     "befund": "Nicht gesichert, auch Josip Wendl genannt; Noten verloren"
+    },
+    {
+     "behauptung": "In Macelj wurden 12.000 Menschen ermordet",
+     "befund": "Schätzung; belastbar sind 1.163 exhumierte Opfer"
+    }
+   ],
+   "wien_faden": [
+    {
+     "person_oder_thema": "Maria Theresia",
+     "bezug": "Dekret zum Kirchenbau für die Brodska graničarska pukovnija"
+    },
+    {
+     "person_oder_thema": "Josip Šokčević",
+     "bezug": "Militärakademie Wiener Neustadt, später kroatischer Ban"
+    },
+    {
+     "person_oder_thema": "Herman Bollé",
+     "bezug": "In Wien ausgebildeter Architekt der Brodska imovna općina"
+    },
+    {
+     "person_oder_thema": "Kaiser Franz I.",
+     "bezug": "Logierte 1817 im Kommandogebäude in Vinkovci"
+    },
+    {
+     "person_oder_thema": "Südbahn bei Spielfeld",
+     "bezug": "Wien–Triest, wirtschaftliche Wirbelsäule der Monarchie"
+    }
+   ],
+   "epochen": [
+    "antike",
+    "habsburg",
+    "20jh",
+    "heute"
+   ],
+   "status": "voll"
+  }
+ ]
+}
