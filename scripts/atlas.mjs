@@ -38,16 +38,34 @@ function tripData(ROOT, slug) {
     seiten[tag] = { slug: s, url: `/reise/${slug}/${s}` };
   }
 
+  const fotosAuto = readJson(path.join(dir, "_fotos.json")) || { tage: {} };
+  const nearest = (stationen, lat, lon) => {
+    let best = null, bd = Infinity;
+    for (const s of stationen || []) {
+      if (typeof s.lat !== "number" || typeof lat !== "number") continue;
+      const d = (s.lat - lat) ** 2 + ((s.lon - lon) * Math.cos(lat * Math.PI / 180)) ** 2;
+      if (d < bd) { bd = d; best = s; }
+    }
+    return best && bd < 0.0009 ? best.name : null; // ~3 km
+  };
+
   const tage = atlas.tage.map((t) => {
     const k = (karte.tage || []).find((x) => x.datum === t.datum);
     const seite = seiten[t.tag];
-    const fotos = ((k && k.fotos) || [])
+    let fotos = ((k && k.fotos) || [])
       .filter((f) => f.web)
       .map((f) => ({
         url: seite ? `/assets/reisen/${slug}/${seite.slug}/${f.datei}` : null,
         lat: f.lat, lon: f.lon, text: f.text || "", zeit: f.zeit || "", gps: f.gps || "",
       }))
       .filter((f) => f.url);
+    if (!fotos.length) {
+      fotos = (fotosAuto.tage[String(t.tag)] || []).map((f) => ({
+        url: `${fotosAuto.pfad}/tag-${String(t.tag).padStart(2, "0")}/${f.datei}`,
+        lat: f.lat, lon: f.lon, zeit: f.zeit || "", gps: f.gps || "", hoch: !!f.hoch,
+        text: nearest(t.stationen, f.lat, f.lon) || t.titel || "",
+      }));
+    }
     return { ...t, route: routen.tage[String(t.tag)] || null, seite: seite ? seite.url : null, fotos };
   });
   return { reise: slug, quelleRouten: routen.quelle || "", tage };

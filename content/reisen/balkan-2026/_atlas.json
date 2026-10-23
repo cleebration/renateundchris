@@ -128,16 +128,24 @@
    "land": [
     "HR"
    ],
-   "titel": "",
-   "satz": "",
+   "titel": "Skradin – Tag ohne Tagebucheintrag",
+   "satz": "Für diesen Tag gibt es Fotos, aber noch keinen Tagebucheintrag.",
    "teaser": "",
-   "stationen": [],
+   "stationen": [
+    {
+     "name": "Skradin",
+     "lat": 43.8189,
+     "lon": 15.9221,
+     "art": "besuch",
+     "notiz": "Position aus Foto-GPS"
+    }
+   ],
    "uebernachtung": "Skradin (Campingplatz, Name nicht genannt)",
    "themen": [],
    "mythen": [],
    "wien_faden": [],
    "epochen": [],
-   "status": "fehlt"
+   "status": "nur-fotos"
   },
   {
    "tag": 4,
@@ -1682,16 +1690,24 @@
    "land": [
     "GR"
    ],
-   "titel": "",
-   "satz": "",
+   "titel": "Camping Hellas – Tag ohne Tagebucheintrag",
+   "satz": "Für diesen Tag gibt es Fotos, aber noch keinen Tagebucheintrag.",
    "teaser": "",
-   "stationen": [],
+   "stationen": [
+    {
+     "name": "Camping Hellas, Kato Gatzea",
+     "lat": 39.31,
+     "lon": 23.109,
+     "art": "uebernachtung",
+     "notiz": "wie Tag 24 (Albumtitel „Tag 23 bis 25 – Camping Hellas“)"
+    }
+   ],
    "uebernachtung": "Camping Hellas, Kato Gatzea",
    "themen": [],
    "mythen": [],
    "wien_faden": [],
    "epochen": [],
-   "status": "fehlt"
+   "status": "nur-fotos"
   },
   {
    "tag": 26,
@@ -1795,16 +1811,24 @@
    "land": [
     "GR"
    ],
-   "titel": "",
-   "satz": "",
+   "titel": "Camping Hellas – Tag ohne Tagebucheintrag",
+   "satz": "Für diesen Tag gibt es Fotos, aber noch keinen Tagebucheintrag.",
    "teaser": "",
-   "stationen": [],
+   "stationen": [
+    {
+     "name": "Camping Hellas, Kato Gatzea",
+     "lat": 39.3095,
+     "lon": 23.1084,
+     "art": "uebernachtung",
+     "notiz": "Position aus Foto-GPS"
+    }
+   ],
    "uebernachtung": "Camping Hellas, Kato Gatzea",
    "themen": [],
    "mythen": [],
    "wien_faden": [],
    "epochen": [],
-   "status": "fehlt"
+   "status": "nur-fotos"
   },
   {
    "tag": 28,
@@ -1812,16 +1836,31 @@
    "land": [
     "GR"
    ],
-   "titel": "",
-   "satz": "",
+   "titel": "Camping Hellas und Vizitsa – Tag ohne Tagebucheintrag",
+   "satz": "Für diesen Tag gibt es Fotos, aber noch keinen Tagebucheintrag.",
    "teaser": "",
-   "stationen": [],
+   "stationen": [
+    {
+     "name": "Pilion (Fotostandort)",
+     "lat": 39.3326,
+     "lon": 23.1316,
+     "art": "besuch",
+     "notiz": "Mittelpunkt der Foto-GPS-Daten; Albumtitel nennt Vizitsa"
+    },
+    {
+     "name": "Camping Hellas, Kato Gatzea",
+     "lat": 39.31,
+     "lon": 23.109,
+     "art": "uebernachtung",
+     "notiz": "laut Albumtitel"
+    }
+   ],
    "uebernachtung": "Camping Hellas, Kato Gatzea",
    "themen": [],
    "mythen": [],
    "wien_faden": [],
    "epochen": [],
-   "status": "fehlt"
+   "status": "nur-fotos"
   },
   {
    "tag": 29,

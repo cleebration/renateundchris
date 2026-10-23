@@ -264,7 +264,7 @@
       if (S.tiefe >= 2) {
         if (d.teaser) h += `<p>${esc(d.teaser)}</p>`;
         if (fotos.length) h += S.tiefe >= 3 ? `<div class="gal">${fotos.map((f, k) => `<button data-f="${k}" aria-label="${esc(f.text)}"><img src="${esc(f.url)}" alt="" loading="lazy"></button>`).join("")}</div>`
-                                            : `<button class="hero" data-f="0" aria-label="${esc(fotos[0].text)}"><img src="${esc(fotos[0].url)}" alt="${esc(fotos[0].text)}"></button>`;
+                                            : ((hi) => `<button class="hero" data-f="${hi}" aria-label="${esc(fotos[hi].text)}"><img src="${esc(fotos[hi].url)}" alt="${esc(fotos[hi].text)}"></button>`)(Math.max(0, fotos.findIndex((f) => !f.hoch)));
         else h += `<div class="photo-ph">Fotos folgen</div>`;
         h += `<div class="tags">${(d.themen || []).map((t) => `<span class="tag ${t === S.thema ? "hit" : ""}">${esc(themaName(t))}</span>`).join("")}</div>`;
       }
