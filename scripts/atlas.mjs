@@ -116,5 +116,10 @@ export function buildAtlas({ ROOT, DIST, site }) {
     if (fs.existsSync(src)) fs.copyFileSync(src, path.join(out, f));
   }
   fs.writeFileSync(path.join(out, "index.html"), shell(site, trips));
+  // Cache-Regeln: Seite und Daten immer frisch prüfen, Fotos lange cachen
+  const hdr = path.join(DIST, "_headers");
+  const rules = "/atlas/\n  Cache-Control: no-cache\n/atlas/index.html\n  Cache-Control: no-cache\n/atlas/data/*\n  Cache-Control: no-cache\n/atlas/atlas.*\n  Cache-Control: no-cache\n";
+  const prev = fs.existsSync(hdr) ? fs.readFileSync(hdr, "utf8") : "";
+  if (!prev.includes("/atlas/data/*")) fs.writeFileSync(hdr, prev + (prev && !prev.endsWith("\n") ? "\n" : "") + rules);
   return n;
 }
