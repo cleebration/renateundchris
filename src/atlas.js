@@ -339,8 +339,8 @@
   }
 
   // ---------- Weiterleitung: zwei öffentliche Broker parallel, Nachrichten mit ID gegen Doppelte ----------
-  const BROKERS = ["wss://broker.emqx.io:8084/mqtt", "wss://broker.hivemq.com:8884/mqtt"];
   function makeLink(code, listen, onMsg, onStatus) {
+    const BROKERS = ["wss://broker.emqx.io:8084/mqtt", "wss://broker.hivemq.com:8884/mqtt"];
     const base = `rcatlas/v1/${code}/`;
     const seen = new Set(); const clients = [];
     if (!window.mqtt) { onStatus && onStatus(); return { send() {}, up: () => false }; }
