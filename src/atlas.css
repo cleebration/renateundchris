@@ -148,7 +148,7 @@ button.chip{cursor:pointer}
 
 @media (max-width:900px){
   #side{display:none}
-  #card{top:auto;bottom:calc(122px + env(safe-area-inset-bottom,0px));max-height:40%;padding:14px 16px}
+  #card{top:auto;bottom:calc(150px + env(safe-area-inset-bottom,0px));max-height:38%;padding:14px 16px}
   #card h2{font-size:26px}
   #hudTop .chips .chip.opt{display:none}
 }
