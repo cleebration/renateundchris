@@ -110,6 +110,13 @@ button.chip{cursor:pointer}
 #lightbox img{max-width:100%;max-height:80vh;object-fit:contain;border-radius:8px}
 #lightbox figcaption{font-size:16px;color:var(--ink);max-width:70ch}
 #lightbox figcaption span{font-family:var(--mono);font-size:12px;color:var(--muted);margin-right:8px}
+.lbNav{all:unset;position:absolute;top:50%;transform:translateY(-50%);width:56px;height:96px;display:grid;place-items:center;font-size:48px;line-height:1;color:var(--ink);background:rgba(255,255,255,.08);border-radius:12px;cursor:pointer;z-index:2;touch-action:manipulation}
+.lbNav:hover,.lbNav:focus-visible{background:rgba(224,145,58,.35)}
+#lbPrev{left:max(12px,env(safe-area-inset-left,0px))}
+#lbNext{right:max(12px,env(safe-area-inset-right,0px))}
+#lightbox{touch-action:pan-y}
+#bFoto{width:100%}
+@media (max-width:700px){.lbNav{width:44px;height:72px;font-size:36px;top:auto;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:none}}
 #lbClose{position:absolute;top:calc(16px + env(safe-area-inset-top,0px));right:max(16px,env(safe-area-inset-right,0px))}
 
 /* ---------- Controller ---------- */

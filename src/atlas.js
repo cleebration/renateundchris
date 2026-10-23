@@ -85,7 +85,7 @@
       <div id="roles"><div class="rolesIn"><h2>Wie willst du reisen?</h2>
         <p>31 Tage, sieben Länder, ein Campervan. Wähle, wie viel du sehen willst – mit Maus, Tastatur oder dem iPhone. Jederzeit wechselbar.</p>
         <div class="roleGrid" id="roleGrid"></div></div></div>
-      <div id="lightbox" hidden><button class="big" id="lbClose">Schließen</button><figure><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure></div>
+      <div id="lightbox" hidden role="dialog" aria-label="Foto groß"><button class="big" id="lbClose">Schließen</button><button class="lbNav" id="lbPrev" aria-label="Vorheriges Foto">‹</button><figure><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure><button class="lbNav" id="lbNext" aria-label="Nächstes Foto">›</button></div>
     </div>`);
 
     let DATA;
@@ -137,9 +137,27 @@
 
     // Lightbox
     const lb = document.getElementById("lightbox");
-    const openPhoto = (f) => { document.getElementById("lbImg").src = f.url; document.getElementById("lbImg").alt = f.text; document.getElementById("lbCap").innerHTML = `${f.zeit ? `<span>${esc(f.zeit)}</span>` : ""}${esc(f.text)}`; lb.hidden = false; };
-    document.getElementById("lbClose").onclick = () => { lb.hidden = true; };
-    lb.addEventListener("click", (e) => { if (e.target === lb) lb.hidden = true; });
+    // alle Fotos der Reise in Reihenfolge – Blättern läuft über Tagesgrenzen weiter
+    const ALLF = []; DAYS.forEach((d) => (d.fotos || []).forEach((f, i) => ALLF.push({ day: d.tag, i, n: d.fotos.length, f })));
+    let lbIdx = -1, lbStartDay = null;
+    const preload = (k) => { const x = ALLF[k]; if (x) { const im = new Image(); im.src = x.f.url; } };
+    function showLb(k) {
+      if (!ALLF.length) return; k = (k + ALLF.length) % ALLF.length; lbIdx = k; const x = ALLF[k];
+      const img = document.getElementById("lbImg"); img.src = x.f.url; img.alt = x.f.text || "";
+      document.getElementById("lbCap").innerHTML = `<span>Tag ${x.day} · ${x.i + 1}/${x.n}${x.f.zeit ? " · " + esc(x.f.zeit) : ""}</span>${esc(x.f.text)}`;
+      lb.hidden = false; preload(k + 1); preload(k - 1); broadcast();
+    }
+    const openPhoto = (f) => { lbStartDay = (go.last || {}).day; const k = ALLF.findIndex((x) => x.f.url === f.url); showLb(k < 0 ? 0 : k); };
+    const lbStep = (n) => showLb(lbIdx + n);
+    function closeLb() { if (lb.hidden) return; lb.hidden = true; const x = ALLF[lbIdx]; lbIdx = -1;
+      if (x && x.day !== lbStartDay) gotoDay(x.day); else broadcast(); }
+    document.getElementById("lbClose").onclick = closeLb;
+    document.getElementById("lbPrev").onclick = (e) => { e.stopPropagation(); lbStep(-1); };
+    document.getElementById("lbNext").onclick = (e) => { e.stopPropagation(); lbStep(1); };
+    let swX = null;
+    lb.addEventListener("pointerdown", (e) => { swX = e.clientX; });
+    lb.addEventListener("pointerup", (e) => { if (swX == null) return; const dx = e.clientX - swX; swX = null; if (Math.abs(dx) > 50) lbStep(dx < 0 ? 1 : -1); });
+    lb.addEventListener("click", (e) => { if (e.target === lb) closeLb(); });
 
     setTimeout(() => { if (!van) render(); }, 0);
     // ---------- Karte ----------
@@ -285,7 +303,12 @@
     // ---------- Tastatur ----------
     addEventListener("keydown", (e) => {
       if (e.target.closest && e.target.closest("input,textarea")) return;
-      if (e.key === "Escape") { lb.hidden = true; return; }
+      if (!lb.hidden) {
+        if (e.key === "Escape") closeLb();
+        else if (e.key === "ArrowRight" || e.key === " ") { lbStep(1); e.preventDefault(); }
+        else if (e.key === "ArrowLeft") { lbStep(-1); e.preventDefault(); }
+        return;
+      }
       if (e.key === "ArrowRight") { e.shiftKey ? dayStep(1) : step(1); e.preventDefault(); }
       else if (e.key === "ArrowLeft") { e.shiftKey ? dayStep(-1) : step(-1); e.preventDefault(); }
       else if (e.key === " ") { setPlay(!S.playing); e.preventDefault(); }
@@ -298,11 +321,15 @@
     // ---------- Kopplung (Weiterleitung über öffentliche MQTT-Broker) ----------
     const ctlSeen = new Map();
     function stateMsg() { const s = track()[S.idx]; const d = s ? dayOf(s.day) : DAYS[0];
-      return { t: "state", tag: d.tag, datum: d.datum, ort: (s && s.name) || "", satz: d.satz || "", playing: S.playing, tempo: S.tempo, breite: S.breite, tiefe: S.tiefe, thema: S.thema, rolle: S.rolle }; }
+      return { t: "state", tag: d.tag, datum: d.datum, ort: (s && s.name) || "", satz: d.satz || "", playing: S.playing, tempo: S.tempo, breite: S.breite, tiefe: S.tiefe, thema: S.thema, rolle: S.rolle, foto: lbIdx >= 0 ? { tag: ALLF[lbIdx].day, i: ALLF[lbIdx].i + 1, n: ALLF[lbIdx].n } : null }; }
     let link = null;
     function broadcast() { if (link) link.send("state", stateMsg(), true); }
     function apply(m) {
       if (!m || typeof m !== "object") return;
+      if (m.foto === "auf") { const d = dayOf((go.last || ST[0]).day); if (d && d.fotos && d.fotos.length) openPhoto(d.fotos[0]); return; }
+      if (m.foto === "zu") { closeLb(); return; }
+      if (!lb.hidden && (m.step === 1 || m.step === -1)) { lbStep(m.step); return; }
+      if (!lb.hidden && (m.day === 1 || m.day === -1)) { const cur = ALLF[lbIdx].day; const k = m.day > 0 ? ALLF.findIndex((x) => x.day > cur) : (() => { const prev = [...ALLF].reverse().find((x) => x.day < cur); return prev ? ALLF.findIndex((x) => x.day === prev.day) : -1; })(); if (k >= 0) showLb(k); return; }
       document.getElementById("roles").hidden = true;
       if (m.rolle && ROLLEN[m.rolle]) { setRole(m.rolle); return; }
       let redraw = false;
@@ -379,6 +406,7 @@
         <button class="big" id="bMore">Mehr<small>tiefer</small></button>
         <button class="big" id="bDayNext">»<small>Tag</small></button>
       </div>
+      <button class="big" id="bFoto">Fotos<small>groß ansehen</small></button>
       <div class="secTitle">Regler</div>
       <div class="sliders">
         <div class="sl"><label>Tempo</label><div class="seg" style="--n:3" data-k="tempo"><button data-v="1">langsam</button><button data-v="2">mittel</button><button data-v="3">schnell</button></div></div>
@@ -402,6 +430,7 @@
     $("bDayPrev").onclick = () => send({ day: -1 }); $("bDayNext").onclick = () => send({ day: 1 });
     $("bPlay").onclick = () => send({ playing: !(scr && scr.playing) });
     $("bMore").onclick = () => send({ tiefe: Math.min(3, ((scr && scr.tiefe) || 0) + 1) });
+    $("bFoto").onclick = () => send({ foto: scr && scr.foto ? "zu" : "auf" });
     $("bZoomIn").onclick = () => send({ zoom: 1 }); $("bZoomOut").onclick = () => send({ zoom: -1 });
     document.querySelectorAll("#ctl .seg").forEach((g) => g.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) send({ [g.dataset.k]: +b.dataset.v }); }));
     tp.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) send({ thema: b.dataset.v || null }); });
@@ -412,6 +441,9 @@
     function show(p) { scr = p;
       $("cDay").textContent = "Tag " + p.tag + " · " + fmtDate(p.datum); $("cOrt").textContent = p.ort || ""; $("cSatz").textContent = p.tiefe >= 1 ? (p.satz || "") : "";
       $("bPlay").firstChild.textContent = p.playing ? "Anhalten" : "Fahren";
+      const fo = p.foto; $("bFoto").firstChild.textContent = fo ? "Foto schließen" : "Fotos";
+      $("bFoto").querySelector("small").textContent = fo ? `Tag ${fo.tag} · ${fo.i}/${fo.n} – ◀ ▶ blättern` : "groß ansehen";
+      $("bPrev").querySelector("small").textContent = fo ? "Foto" : "Station"; $("bNext").querySelector("small").textContent = fo ? "Foto" : "Station";
       document.querySelectorAll("#ctl .seg").forEach((g) => [...g.children].forEach((b) => b.classList.toggle("on", +b.dataset.v === p[g.dataset.k])));
       [...tp.children].forEach((b) => b.classList.toggle("on", (b.dataset.v || null) === (p.thema || null)));
       [...rp.children].forEach((b) => b.classList.toggle("on", b.dataset.v === p.rolle)); }
