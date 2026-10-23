@@ -90,7 +90,7 @@ function shell(site, trips) {
 <div id="app" data-reise="${t.slug}" data-title="${t.title}" data-v="${v}"></div>
 <noscript><p style="padding:24px">Der Reise-Atlas braucht JavaScript. Die Tagesseiten gibt es unter <a href="/reise/${t.slug}/">/reise/${t.slug}/</a>.</p></noscript>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js"></script>
 <script src="https://unpkg.com/qrcode-generator@1.4.4/qrcode.js"></script>
 <script src="/atlas/atlas.js?v=${v}"></script>
 </body></html>`;

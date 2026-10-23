@@ -1,5 +1,5 @@
 /* Reise-Atlas – Bildschirm + iPhone-Controller.
-   Kopplung: der Bildschirm öffnet einen PeerJS-Kanal „rcatlas-<code>“, das iPhone verbindet sich über
+   Kopplung: Bildschirm und iPhone treffen sich über zwei öffentliche MQTT-Broker unter „rcatlas/v1/<code>/…“; das iPhone öffnet
    /atlas/#c-<code> (QR-Code). Keine Anmeldung, kein eigener Server. */
 (function () {
   "use strict";
@@ -295,11 +295,12 @@
       else if (e.key === "f" || e.key === "F") { if (!document.fullscreenElement) document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(() => {}); else document.exitFullscreen(); }
     });
 
-    // ---------- Kopplung (PeerJS) ----------
-    const conns = new Set();
+    // ---------- Kopplung (Weiterleitung über öffentliche MQTT-Broker) ----------
+    const ctlSeen = new Map();
     function stateMsg() { const s = track()[S.idx]; const d = s ? dayOf(s.day) : DAYS[0];
       return { t: "state", tag: d.tag, datum: d.datum, ort: (s && s.name) || "", satz: d.satz || "", playing: S.playing, tempo: S.tempo, breite: S.breite, tiefe: S.tiefe, thema: S.thema, rolle: S.rolle }; }
-    function broadcast() { const m = stateMsg(); conns.forEach((c) => { try { c.open && c.send(m); } catch (e) {} }); }
+    let link = null;
+    function broadcast() { if (link) link.send("state", stateMsg(), true); }
     function apply(m) {
       if (!m || typeof m !== "object") return;
       document.getElementById("roles").hidden = true;
@@ -318,23 +319,51 @@
       if (m.zoom === 1 || m.zoom === -1) map.easeTo({ zoom: map.getZoom() + m.zoom, duration: 300 });
       render();
     }
-    function linkUi() { const n = [...conns].filter((c) => c.open).length; document.getElementById("linkDot").classList.toggle("on", n > 0);
-      document.getElementById("linkTxt").textContent = n ? (n === 1 ? "iPhone verbunden" : n + " Controller verbunden") : "Kein iPhone verbunden"; }
+    function linkUi() { const now = Date.now(); for (const [k, t] of ctlSeen) if (now - t > 25000) ctlSeen.delete(k);
+      const n = ctlSeen.size; document.getElementById("linkDot").classList.toggle("on", n > 0);
+      document.getElementById("linkTxt").textContent = n ? (n === 1 ? "iPhone verbunden" : n + " Controller verbunden") : (link && link.up() ? "Kein iPhone verbunden" : "Verbinde …"); }
     function newCode() { const a = "abcdefghjkmnpqrstuvwxyz23456789"; let s = ""; const r = crypto.getRandomValues(new Uint8Array(6)); r.forEach((x) => s += a[x % a.length]); return s; }
     let code; try { code = sessionStorage.getItem("atlasCode"); } catch (e) {}
     if (!code || !/^[a-z0-9]{6}$/.test(code)) code = newCode();
-    function openPeer(tries) {
-      if (!window.Peer) { document.getElementById("linkTxt").textContent = "Controller nicht verfügbar"; return; }
-      const peer = new Peer(PEER_PREFIX + code, { debug: 0 });
-      peer.on("open", () => { try { sessionStorage.setItem("atlasCode", code); } catch (e) {}
-        const url = `${location.origin}/atlas/#c-${code}`;
-        document.getElementById("codeTxt").textContent = code;
-        try { const q = qrcode(0, "M"); q.addData(url); q.make(); document.getElementById("qr").innerHTML = q.createSvgTag({ cellSize: 3, margin: 0, scalable: true }); } catch (e) {} });
-      peer.on("connection", (c) => { conns.add(c); c.on("open", () => { linkUi(); c.send(stateMsg()); }); c.on("data", apply); c.on("close", () => { conns.delete(c); linkUi(); }); c.on("error", () => { conns.delete(c); linkUi(); }); });
-      peer.on("error", (e) => { if (e && e.type === "unavailable-id" && tries < 3) { peer.destroy(); code = newCode(); openPeer(tries + 1); } });
-      peer.on("disconnected", () => { try { peer.reconnect(); } catch (e) {} });
+    try { sessionStorage.setItem("atlasCode", code); } catch (e) {}
+    const url = `${location.origin}/atlas/#c-${code}`;
+    document.getElementById("codeTxt").textContent = code;
+    try { const q = qrcode(0, "M"); q.addData(url); q.make(); document.getElementById("qr").innerHTML = q.createSvgTag({ cellSize: 3, margin: 0, scalable: true }); } catch (e) {}
+    link = makeLink(code, "ctl", (m) => {
+      if (!m || typeof m !== "object") return;
+      if (m.t === "hi") { const neu = !ctlSeen.has(m.id); ctlSeen.set(m.id, Date.now()); linkUi(); if (neu) broadcast(); return; }
+      if (m.id) ctlSeen.set(m.id, Date.now());
+      apply(m);
+    }, linkUi);
+    setInterval(linkUi, 5000);
+  }
+
+  // ---------- Weiterleitung: zwei öffentliche Broker parallel, Nachrichten mit ID gegen Doppelte ----------
+  const BROKERS = ["wss://broker.emqx.io:8084/mqtt", "wss://broker.hivemq.com:8884/mqtt"];
+  function makeLink(code, listen, onMsg, onStatus) {
+    const base = `rcatlas/v1/${code}/`;
+    const seen = new Set(); const clients = [];
+    if (!window.mqtt) { onStatus && onStatus(); return { send() {}, up: () => false }; }
+    for (const u of BROKERS) {
+      let c; try { c = mqtt.connect(u, { clientId: "rca-" + Math.random().toString(36).slice(2, 10), clean: true, connectTimeout: 8000, reconnectPeriod: 3000, keepalive: 30 }); } catch (e) { continue; }
+      c.on("connect", () => { c.subscribe(base + listen, { qos: 0 }); onStatus && onStatus(); });
+      c.on("close", () => onStatus && onStatus());
+      c.on("error", () => {});
+      c.on("message", (topic, payload) => {
+        let m; try { m = JSON.parse(payload.toString()); } catch (e) { return; }
+        if (!m || !m._i || seen.has(m._i)) return; seen.add(m._i); if (seen.size > 500) seen.clear();
+        onMsg(m);
+      });
+      clients.push(c);
     }
-    openPeer(0);
+    return {
+      up: () => clients.some((c) => c.connected),
+      send(topic, m, retain) {
+        const msg = JSON.stringify(Object.assign({}, m, { _i: Math.random().toString(36).slice(2) + Date.now().toString(36) }));
+        let ok = false; clients.forEach((c) => { if (c.connected) { c.publish(base + topic, msg, { qos: 0, retain: !!retain }); ok = true; } });
+        return ok;
+      },
+    };
   }
 
   // =========================================================== CONTROLLER
@@ -363,10 +392,12 @@
       <div class="pad" style="grid-template-columns:1fr 1fr"><button class="big" id="bZoomOut">−<small>weiter weg</small></button><button class="big" id="bZoomIn">+<small>näher</small></button></div>
     </div>`);
     const $ = (id) => document.getElementById(id);
-    let conn = null, scr = null;
+    let scr = null;
     const tp = $("cThemen"); tp.insertAdjacentHTML("beforeend", `<button data-v="">alle</button>` + THEMEN.map(([k, n]) => `<button data-v="${k}">${n}</button>`).join(""));
     const rp = $("cRollen"); rp.innerHTML = Object.entries(ROLLEN).map(([k, r]) => `<button data-v="${k}">${r.n}</button>`).join("");
-    const send = (m) => { if (!conn || !conn.open) { $("ctlStatus").textContent = "nicht verbunden"; return; } conn.send(m); try { navigator.vibrate && navigator.vibrate(8); } catch (e) {} };
+    const myId = Math.random().toString(36).slice(2, 10);
+    let link = null;
+    const send = (m) => { if (!link || !link.send("ctl", Object.assign({ id: myId }, m))) { $("ctlStatus").textContent = "nicht verbunden – bitte kurz warten"; return; } try { navigator.vibrate && navigator.vibrate(8); } catch (e) {} };
     $("bPrev").onclick = () => send({ step: -1 }); $("bNext").onclick = () => send({ step: 1 });
     $("bDayPrev").onclick = () => send({ day: -1 }); $("bDayNext").onclick = () => send({ day: 1 });
     $("bPlay").onclick = () => send({ playing: !(scr && scr.playing) });
@@ -384,18 +415,10 @@
       document.querySelectorAll("#ctl .seg").forEach((g) => [...g.children].forEach((b) => b.classList.toggle("on", +b.dataset.v === p[g.dataset.k])));
       [...tp.children].forEach((b) => b.classList.toggle("on", (b.dataset.v || null) === (p.thema || null)));
       [...rp.children].forEach((b) => b.classList.toggle("on", b.dataset.v === p.rolle)); }
-    if (!window.Peer) { $("ctlStatus").textContent = "Verbindung nicht möglich"; return; }
-    const peer = new Peer({ debug: 0 });
-    let tries = 0, pending = null;
-    function retry(ms) { clearTimeout(pending); pending = setTimeout(connect, ms); }
-    function connect() {
-      if (conn) { try { conn.close(); } catch (e) {} }
-      conn = peer.connect(PEER_PREFIX + code, { reliable: true });
-      conn.on("open", () => { $("ctlStatus").textContent = "verbunden"; tries = 0; });
-      conn.on("data", (m) => { if (m && m.t === "state") show(m); });
-      conn.on("close", () => { $("ctlStatus").textContent = "getrennt – verbinde neu …"; retry(1500); });
-    }
-    peer.on("open", connect);
-    peer.on("error", (e) => { if (e && e.type === "peer-unavailable") { $("ctlStatus").textContent = "Bildschirm nicht gefunden"; $("cSatz").textContent = "Ist der Atlas am Mac offen? Stimmt der Code " + code + "?"; if (++tries < 20) retry(3000); } });
+    let lastState = 0;
+    const status = () => { const up = link && link.up(); $("ctlStatus").textContent = !up ? "verbinde …" : (Date.now() - lastState < 30000 ? "verbunden" : "Bildschirm nicht gefunden");
+      if (up && Date.now() - lastState >= 30000) $("cSatz").textContent = "Ist der Atlas am Mac offen? Code am Bildschirm: " + code + "."; };
+    link = makeLink(code, "state", (m) => { if (m.t === "state") { lastState = Date.now(); show(m); status(); } }, () => { status(); if (link && link.up()) link.send("ctl", { t: "hi", id: myId }); });
+    setInterval(() => { if (link && link.up()) link.send("ctl", { t: "hi", id: myId }); status(); }, 8000);
   }
 })();
