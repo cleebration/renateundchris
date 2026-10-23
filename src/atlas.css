@@ -160,3 +160,9 @@ button.chip{cursor:pointer}
   #hudTop .chips .chip.opt{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* Foto am iPhone-Controller */
+#cFoto{display:flex;flex-direction:column;gap:10px}
+#cFotoBox{border-radius:14px;overflow:hidden;background:#13303b;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+#cFotoBox img{display:block;width:100%;max-height:60vh;object-fit:contain;pointer-events:none;-webkit-user-drag:none}
+.cFotoCap{font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.4}

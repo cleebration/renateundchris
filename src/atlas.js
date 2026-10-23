@@ -321,7 +321,7 @@
     // ---------- Kopplung (Weiterleitung über öffentliche MQTT-Broker) ----------
     const ctlSeen = new Map();
     function stateMsg() { const s = track()[S.idx]; const d = s ? dayOf(s.day) : DAYS[0];
-      return { t: "state", tag: d.tag, datum: d.datum, ort: (s && s.name) || "", satz: d.satz || "", playing: S.playing, tempo: S.tempo, breite: S.breite, tiefe: S.tiefe, thema: S.thema, rolle: S.rolle, foto: lbIdx >= 0 ? { tag: ALLF[lbIdx].day, i: ALLF[lbIdx].i + 1, n: ALLF[lbIdx].n } : null }; }
+      return { t: "state", tag: d.tag, datum: d.datum, ort: (s && s.name) || "", satz: d.satz || "", playing: S.playing, tempo: S.tempo, breite: S.breite, tiefe: S.tiefe, thema: S.thema, rolle: S.rolle, foto: lbIdx >= 0 ? { tag: ALLF[lbIdx].day, i: ALLF[lbIdx].i + 1, n: ALLF[lbIdx].n, url: ALLF[lbIdx].f.url, text: (ALLF[lbIdx].f.text || "").slice(0, 120), zeit: ALLF[lbIdx].f.zeit || "" } : null }; }
     let link = null;
     function broadcast() { if (link) link.send("state", stateMsg(), true); }
     function apply(m) {
@@ -407,6 +407,11 @@
         <button class="big" id="bDayNext">»<small>Tag</small></button>
       </div>
       <button class="big" id="bFoto">Fotos<small>groß ansehen</small></button>
+      <div id="cFoto" hidden>
+        <div id="cFotoBox" aria-label="Foto – wischen zum Blättern"><img id="cFotoImg" alt=""></div>
+        <div class="cFotoCap" id="cFotoCap"></div>
+        <div class="pad" style="grid-template-columns:1fr 1fr 1fr"><button class="big" id="cFPrev">◀<small>Foto</small></button><button class="big" id="cFClose">✕<small>schließen</small></button><button class="big" id="cFNext">▶<small>Foto</small></button></div>
+      </div>
       <div class="secTitle">Regler</div>
       <div class="sliders">
         <div class="sl"><label>Tempo</label><div class="seg" style="--n:3" data-k="tempo"><button data-v="1">langsam</button><button data-v="2">mittel</button><button data-v="3">schnell</button></div></div>
@@ -431,6 +436,11 @@
     $("bPlay").onclick = () => send({ playing: !(scr && scr.playing) });
     $("bMore").onclick = () => send({ tiefe: Math.min(3, ((scr && scr.tiefe) || 0) + 1) });
     $("bFoto").onclick = () => send({ foto: scr && scr.foto ? "zu" : "auf" });
+    $("cFPrev").onclick = () => send({ step: -1 }); $("cFNext").onclick = () => send({ step: 1 }); $("cFClose").onclick = () => send({ foto: "zu" });
+    const fb = $("cFotoBox"); let fx = null, fy = null;
+    fb.addEventListener("pointerdown", (e) => { fx = e.clientX; fy = e.clientY; });
+    fb.addEventListener("pointerup", (e) => { if (fx == null) return; const dx = e.clientX - fx, dy = e.clientY - fy; fx = null;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) send({ step: dx < 0 ? 1 : -1 }); });
     $("bZoomIn").onclick = () => send({ zoom: 1 }); $("bZoomOut").onclick = () => send({ zoom: -1 });
     document.querySelectorAll("#ctl .seg").forEach((g) => g.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) send({ [g.dataset.k]: +b.dataset.v }); }));
     tp.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) send({ thema: b.dataset.v || null }); });
@@ -441,7 +451,12 @@
     function show(p) { scr = p;
       $("cDay").textContent = "Tag " + p.tag + " · " + fmtDate(p.datum); $("cOrt").textContent = p.ort || ""; $("cSatz").textContent = p.tiefe >= 1 ? (p.satz || "") : "";
       $("bPlay").firstChild.textContent = p.playing ? "Anhalten" : "Fahren";
-      const fo = p.foto; $("bFoto").firstChild.textContent = fo ? "Foto schließen" : "Fotos";
+      const fo = p.foto; $("cFoto").hidden = !fo;
+      if (fo) { if ($("cFotoImg").getAttribute("src") !== fo.url) $("cFotoImg").src = fo.url; $("cFotoImg").alt = fo.text || "";
+        $("cFotoCap").textContent = `Tag ${fo.tag} · ${fo.i}/${fo.n}${fo.zeit ? " · " + fo.zeit : ""}${fo.text ? " · " + fo.text : ""}`;
+        if (!show.fotoWasOpen) $("cFoto").scrollIntoView({ behavior: "smooth", block: "start" }); }
+      show.fotoWasOpen = !!fo;
+      $("bFoto").firstChild.textContent = fo ? "Foto schließen" : "Fotos";
       $("bFoto").querySelector("small").textContent = fo ? `Tag ${fo.tag} · ${fo.i}/${fo.n} – ◀ ▶ blättern` : "groß ansehen";
       $("bPrev").querySelector("small").textContent = fo ? "Foto" : "Station"; $("bNext").querySelector("small").textContent = fo ? "Foto" : "Station";
       document.querySelectorAll("#ctl .seg").forEach((g) => [...g.children].forEach((b) => b.classList.toggle("on", +b.dataset.v === p[g.dataset.k])));
