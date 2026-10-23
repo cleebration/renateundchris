@@ -141,6 +141,7 @@
     document.getElementById("lbClose").onclick = () => { lb.hidden = true; };
     lb.addEventListener("click", (e) => { if (e.target === lb) lb.hidden = true; });
 
+    setTimeout(() => { if (!van) render(); }, 0);
     // ---------- Karte ----------
     const map = new maplibregl.Map({
       container: "map", style: "https://tiles.openfreemap.org/styles/liberty",
@@ -167,7 +168,7 @@
         pinEls[k] = e; new maplibregl.Marker({ element: e }).setLngLat([s.lon, s.lat]).addTo(map); });
       const ve = document.createElement("div"); ve.className = "van"; ve.innerHTML = '<svg viewBox="0 0 24 24" fill="#0a1b23" aria-hidden="true"><path d="M3 7h11l4 4h3v5h-2a2 2 0 1 1-4 0H9a2 2 0 1 1-4 0H3z"/></svg>';
       van = new maplibregl.Marker({ element: ve }).setLngLat([ST[0].lon, ST[0].lat]).addTo(map);
-      drawDone(); render();
+      drawDone(); if (track()[S.idx]) go(true); else render();
     });
     function firstSymbol() { const l = (map.getStyle().layers || []).find((x) => x.type === "symbol"); return l && l.id; }
     function fc(f) { return { type: "FeatureCollection", features: f }; }
@@ -208,6 +209,7 @@
       S.seen.add(s.day);
       const d = dayOf(s.day);
       if (S.tiefe >= 2) { (d.mythen || []).forEach((m, k) => S.mythen.add(d.tag + "-" + k)); (d.wien_faden || []).forEach((m, k) => S.wien.add(d.tag + "-" + k)); }
+      if (!van) { render(); return; } // Karte lädt noch
       const zoom = S.tiefe >= 2 ? 10.2 : 8.4, pitch = narrow ? 45 : (S.tiefe >= 2 ? 68 : 58);
       const finish = () => { van.setLngLat([s.lon, s.lat]); drawDone(); map.easeTo({ center: [s.lon, s.lat], zoom, pitch, duration: reduced ? 0 : 900 }); showFotos(d); render(); afterArrive(); };
       // fahren entlang der Straße, wenn möglich
