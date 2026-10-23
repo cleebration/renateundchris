@@ -8,7 +8,10 @@
   const TITLE = APP.dataset.title;
   const PEER_PREFIX = "rcatlas-";
 
-  const COUNTRY = {AT:{n:"Österreich",c:"#c9b38a"},SI:{n:"Slowenien",c:"#b9c08a"},HR:{n:"Kroatien",c:"#7fb7c9"},ME:{n:"Montenegro",c:"#a68fc2"},AL:{n:"Albanien",c:"#d86b5a"},GR:{n:"Griechenland",c:"#6fa0d8"},MK:{n:"Nordmazedonien",c:"#e0b13a"},RS:{n:"Serbien",c:"#9aa65a"}};
+  const COUNTRY = {AT:{n:"Österreich",c:"#c9b38a"},SI:{n:"Slowenien",c:"#b9c08a"},HR:{n:"Kroatien",c:"#7fb7c9"},ME:{n:"Montenegro",c:"#a68fc2"},AL:{n:"Albanien",c:"#d86b5a"},GR:{n:"Griechenland",c:"#6fa0d8"},MK:{n:"Nordmazedonien",c:"#e0b13a"},RS:{n:"Serbien",c:"#9aa65a"},
+    BA:{n:"Bosnien und Herzegowina",c:"#c98f6a"},XK:{n:"Kosovo",c:"#8fb3a0"},BG:{n:"Bulgarien",c:"#b98fb0"},RO:{n:"Rumänien",c:"#d9a05b"},HU:{n:"Ungarn",c:"#a7c07a"},SK:{n:"Slowakei",c:"#8aa8c9"},CZ:{n:"Tschechien",c:"#c97f7f"},PL:{n:"Polen",c:"#d4b05e"},
+    DE:{n:"Deutschland",c:"#b0a090"},CH:{n:"Schweiz",c:"#d97a6a"},IT:{n:"Italien",c:"#7fb08a"},FR:{n:"Frankreich",c:"#7f9ad0"},ES:{n:"Spanien",c:"#e0a050"},PT:{n:"Portugal",c:"#90b070"},TR:{n:"Türkei",c:"#d0706a"},NL:{n:"Niederlande",c:"#e09a50"},
+    BE:{n:"Belgien",c:"#c0b060"},LU:{n:"Luxemburg",c:"#90a0c0"},DK:{n:"Dänemark",c:"#d08080"},NO:{n:"Norwegen",c:"#80a0c8"},SE:{n:"Schweden",c:"#7fa8d8"},FI:{n:"Finnland",c:"#a0c0d8"},GB:{n:"Großbritannien",c:"#a090c0"},IE:{n:"Irland",c:"#80b080"}};
   const THEMEN = [["geschichte","Geschichte"],["habsburg","Wien-Faden"],["mythencheck","Legenden"],["kulinarik","Essen"],["kloster","Klöster"],["burg","Burgen"],["natur","Natur"],["strand","Strand"],["grenze","Grenzen"],["panne","Pannen"],["eisenbahn","Eisenbahn"],["faehre","Fähren"]];
   const ROLLEN = {
     zuschauer:{n:"Zuschauer",k:"im Flug",d:"Die ganze Route am Stück. Nur Orte und ein Satz pro Tag.",s:{tempo:3,breite:1,tiefe:1,thema:null,play:true}},
@@ -83,7 +86,7 @@
       <div class="hud" id="rail"><div id="railRow" role="group" aria-label="Reisetage"></div>
         <div id="railMeta"><span><b id="metaDay">Tag 1</b> · <span id="metaDate"></span> · <span id="metaMode"></span></span><span class="legend" id="legend"></span></div></div>
       <div id="roles"><div class="rolesIn"><h2>Wie willst du reisen?</h2>
-        <p>31 Tage, sieben Länder, ein Campervan. Wähle, wie viel du sehen willst – mit Maus, Tastatur oder dem iPhone. Jederzeit wechselbar.</p>
+        <p id="rolesLead">Wähle, wie viel du sehen willst – mit Maus, Tastatur oder dem iPhone. Jederzeit wechselbar.</p>
         <div class="roleGrid" id="roleGrid"></div></div></div>
       <div id="lightbox" hidden role="dialog" aria-label="Foto groß"><button class="big" id="lbClose">Schließen</button><button class="lbNav" id="lbPrev" aria-label="Vorheriges Foto">‹</button><figure><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure><button class="lbNav" id="lbNext" aria-label="Nächstes Foto">›</button></div>
     </div>`);
@@ -113,6 +116,10 @@
       });
     });
     const kmTotal = DAYS.reduce((a, d) => a + ((d.route && d.route.km) || 0), 0);
+    { const nL = new Set(DAYS.flatMap((d) => d.land || [])).size; const fz = DATA.fahrzeug || "";
+      document.getElementById("rolesLead").textContent = `${DAYS.length} Tage, ${nL} ${nL === 1 ? "Land" : "Länder"}${fz ? ", " + fz : ""}${kmTotal ? `, rund ${Math.round(kmTotal / 10) * 10 >= 1000 ? Math.round(kmTotal).toLocaleString("de-AT") : Math.round(kmTotal)} km` : ""}. Wähle, wie viel du sehen willst – mit Maus, Tastatur oder dem iPhone. Jederzeit wechselbar.`; }
+    // Rollen ohne passende Inhalte ausblenden (z. B. keine Wien-Fäden)
+    if (!DAYS.some((d) => (d.wien_faden || []).length)) delete ROLLEN.wien;
 
     const S = { rolle:null, idx:0, playing:false, tempo:2, breite:2, tiefe:1, thema:null, seen:new Set(), mythen:new Set(), wien:new Set() };
     const visible = (s) => { const a = s.art || "besuch";
@@ -163,7 +170,7 @@
     // ---------- Karte ----------
     const map = new maplibregl.Map({
       container: "map", style: "https://tiles.openfreemap.org/styles/liberty",
-      center: [16.5, 43.3], zoom: narrow ? 5.2 : 5.6, pitch: narrow ? 35 : 55, bearing: -10, maxPitch: 80, attributionControl: false
+      bounds: (() => { const la = ST.map((x) => x.lat), lo = ST.map((x) => x.lon); return [[Math.min(...lo), Math.min(...la)], [Math.max(...lo), Math.max(...la)]]; })(), fitBoundsOptions: { padding: narrow ? 30 : 120 }, pitch: narrow ? 35 : 55, bearing: -10, maxPitch: 80, attributionControl: false
     });
     map.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: 'Höhen: <a href="https://registry.opendata.aws/terrain-tiles" target="_blank" rel="noopener">Terrain Tiles (AWS Open Data)</a> · Routen: <a href="https://project-osrm.org" target="_blank" rel="noopener">OSRM</a> (Näherung)' }), "bottom-left");
     map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "bottom-right");

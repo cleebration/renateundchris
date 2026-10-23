@@ -1,0 +1,23 @@
+{
+ "reise": "SLUG-DER-REISE",
+ "tage": [
+  {
+   "tag": 1,
+   "datum": "2027-07-01",
+   "land": ["AT", "IT"],
+   "titel": "Kurzer Tagestitel",
+   "satz": "Ein Satz für Tiefe 1 (max. 20 Wörter).",
+   "teaser": "Zwei bis drei Sätze für Tiefe 2.",
+   "stationen": [
+    {"name": "Start", "lat": 48.306, "lon": 14.286, "art": "besuch", "notiz": "max. 12 Wörter"},
+    {"name": "Campingplatz XY", "lat": 46.5, "lon": 13.8, "art": "uebernachtung", "notiz": ""}
+   ],
+   "uebernachtung": "Campingplatz XY",
+   "themen": ["geschichte", "kulinarik"],
+   "mythen": [{"behauptung": "Was überall steht", "befund": "Was belegt ist"}],
+   "wien_faden": [{"person_oder_thema": "Name", "bezug": "Bezug nach Wien, max. 15 Wörter"}],
+   "epochen": ["habsburg"],
+   "status": "voll"
+  }
+ ]
+}

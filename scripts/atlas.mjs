@@ -108,6 +108,7 @@ export function buildAtlas({ ROOT, DIST, site }) {
     const data = tripData(ROOT, t.slug);
     if (!data) continue;
     data.title = t.title;
+    data.fahrzeug = t.fahrzeug || "";
     fs.writeFileSync(path.join(out, "data", `${t.slug}.json`), JSON.stringify(data));
     n += data.tage.length;
   }
