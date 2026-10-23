@@ -1,0 +1,977 @@
+{
+ "reise": "cinque-terre-2025",
+ "pfad": "/assets/reisen/cinque-terre-2025/atlas",
+ "quelle": "Google-Fotos-Alben 2025 10 24 – 2025 10 30-11 01, Auswahl Claude 2026-10-23",
+ "tage": {
+  "1": [
+   {
+    "datei": "IMG_2865.jpg",
+    "zeit": "21:41",
+    "lat": 45.505578,
+    "lon": 10.732467,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_2866.jpg",
+    "zeit": "21:41",
+    "lat": 45.505592,
+    "lon": 10.732428,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_4995.jpg",
+    "zeit": "21:41",
+    "lat": 45.505592,
+    "lon": 10.732428,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_2867.jpg",
+    "zeit": "21:42",
+    "lat": 45.505597,
+    "lon": 10.732411,
+    "gps": "exakt",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_2868.jpg",
+    "zeit": "22:04",
+    "lat": 45.5056,
+    "lon": 10.732408,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_4999.jpg",
+    "zeit": "22:04",
+    "lat": 45.505597,
+    "lon": 10.732403,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_2869.jpg",
+    "zeit": "22:04",
+    "lat": 45.505597,
+    "lon": 10.732403,
+    "gps": "exakt",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_2871.jpg",
+    "zeit": "22:29",
+    "lat": 45.505592,
+    "lon": 10.73235,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5003.jpg",
+    "zeit": "22:29",
+    "lat": 45.505592,
+    "lon": 10.732353,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_2873.jpg",
+    "zeit": "22:59",
+    "lat": 45.505611,
+    "lon": 10.732403,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5004.jpg",
+    "zeit": "23:18",
+    "lat": 45.505611,
+    "lon": 10.732403,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5005.jpg",
+    "zeit": "23:19",
+    "lat": 45.505611,
+    "lon": 10.732403,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5006.jpg",
+    "zeit": "23:53",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_5007.jpg",
+    "zeit": "23:53",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": false
+   }
+  ],
+  "2": [
+   {
+    "datei": "IMG_5008.jpg",
+    "zeit": "08:16",
+    "lat": 45.386108,
+    "lon": 10.692808,
+    "gps": "geschätzt",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_5010.jpg",
+    "zeit": "08:25",
+    "lat": 45.386108,
+    "lon": 10.692808,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_2874.jpg",
+    "zeit": "08:34",
+    "lat": 45.386108,
+    "lon": 10.692808,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5011.jpg",
+    "zeit": "08:34",
+    "lat": 45.386108,
+    "lon": 10.692808,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_2875.jpg",
+    "zeit": "08:52",
+    "lat": 45.386128,
+    "lon": 10.692728,
+    "gps": "exakt",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_2876.jpg",
+    "zeit": "08:52",
+    "lat": 45.386142,
+    "lon": 10.692611,
+    "gps": "exakt",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_5013.jpg",
+    "zeit": "20:54",
+    "lat": 44.724822,
+    "lon": 10.397742,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_2878.jpg",
+    "zeit": "20:55",
+    "lat": 44.724822,
+    "lon": 10.397742,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_2879.jpg",
+    "zeit": "20:55",
+    "lat": 44.724817,
+    "lon": 10.397725,
+    "gps": "exakt",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_2880.jpg",
+    "zeit": "20:56",
+    "lat": 44.724861,
+    "lon": 10.397722,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5016.jpg",
+    "zeit": "20:56",
+    "lat": 44.724853,
+    "lon": 10.39775,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_2882.jpg",
+    "zeit": "21:46",
+    "lat": 44.724778,
+    "lon": 10.397692,
+    "gps": "exakt",
+    "hoch": false
+   }
+  ],
+  "3": [
+   {
+    "datei": "IMG_5018.jpg",
+    "zeit": "11:01",
+    "lat": 44.804803,
+    "lon": 10.326297,
+    "gps": "geschätzt",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_5020.jpg",
+    "zeit": "11:20",
+    "lat": 44.803089,
+    "lon": 10.330736,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5025.jpg",
+    "zeit": "11:26",
+    "lat": 44.803289,
+    "lon": 10.330792,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_2923.jpg",
+    "zeit": "11:41",
+    "lat": 44.802722,
+    "lon": 10.327369,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_2933.jpg",
+    "zeit": "11:49",
+    "lat": 44.802758,
+    "lon": 10.327647,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_2942.jpg",
+    "zeit": "12:00",
+    "lat": 44.801258,
+    "lon": 10.327983,
+    "gps": "exakt",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_2948.jpg",
+    "zeit": "12:15",
+    "lat": 44.800583,
+    "lon": 10.326828,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5039.jpg",
+    "zeit": "12:29",
+    "lat": 44.800381,
+    "lon": 10.327864,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_2958.jpg",
+    "zeit": "13:36",
+    "lat": 44.803028,
+    "lon": 10.329389,
+    "gps": "exakt",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_5047.jpg",
+    "zeit": "15:08",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_5054.jpg",
+    "zeit": "16:28",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_5061.jpg",
+    "zeit": "19:48",
+    "lat": 44.170278,
+    "lon": 9.613519,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5064.jpg",
+    "zeit": "20:58",
+    "lat": 44.170278,
+    "lon": 9.613519,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_2972.jpg",
+    "zeit": "21:33",
+    "lat": 44.170053,
+    "lon": 9.612219,
+    "gps": "exakt",
+    "hoch": false
+   }
+  ],
+  "4": [
+   {
+    "datei": "IMG_5078.jpg",
+    "zeit": "12:04",
+    "lat": 44.173008,
+    "lon": 9.599478,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5094.jpg",
+    "zeit": "12:43",
+    "lat": 44.199761,
+    "lon": 9.556917,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5100.jpg",
+    "zeit": "12:58",
+    "lat": 44.199872,
+    "lon": 9.556539,
+    "gps": "geschätzt",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_5109.jpg",
+    "zeit": "13:23",
+    "lat": 44.203414,
+    "lon": 9.555803,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5122.jpg",
+    "zeit": "13:31",
+    "lat": 44.203819,
+    "lon": 9.554822,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5127.jpg",
+    "zeit": "13:41",
+    "lat": 44.204322,
+    "lon": 9.554903,
+    "gps": "geschätzt",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_5132.jpg",
+    "zeit": "13:43",
+    "lat": 44.203592,
+    "lon": 9.554931,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5143.jpg",
+    "zeit": "13:54",
+    "lat": 44.202122,
+    "lon": 9.555206,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5147.jpg",
+    "zeit": "14:29",
+    "lat": 44.190278,
+    "lon": 9.569753,
+    "gps": "geschätzt",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_5150.jpg",
+    "zeit": "15:02",
+    "lat": 44.183506,
+    "lon": 9.580667,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5153.jpg",
+    "zeit": "15:39",
+    "lat": 44.174653,
+    "lon": 9.590142,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5162.jpg",
+    "zeit": "15:52",
+    "lat": 44.172947,
+    "lon": 9.600042,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5165.jpg",
+    "zeit": "17:15",
+    "lat": 44.168736,
+    "lon": 9.609908,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5166.jpg",
+    "zeit": "17:15",
+    "lat": 44.168736,
+    "lon": 9.609908,
+    "gps": "geschätzt",
+    "hoch": false
+   }
+  ],
+  "5": [
+   {
+    "datei": "IMG_3080.jpg",
+    "zeit": "10:14",
+    "lat": 44.175492,
+    "lon": 9.619528,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_3091.jpg",
+    "zeit": "11:02",
+    "lat": 44.144722,
+    "lon": 9.645044,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5241.jpg",
+    "zeit": "12:40",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5267.jpg",
+    "zeit": "13:30",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5268.jpg",
+    "zeit": "13:30",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5302.jpg",
+    "zeit": "14:24",
+    "lat": 44.1347,
+    "lon": 9.683167,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5332.jpg",
+    "zeit": "15:00",
+    "lat": 44.134442,
+    "lon": 9.682281,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_3259.jpg",
+    "zeit": "15:35",
+    "lat": 44.135114,
+    "lon": 9.682561,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_3263.jpg",
+    "zeit": "16:08",
+    "lat": 44.135125,
+    "lon": 9.682569,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_3277.jpg",
+    "zeit": "17:05",
+    "lat": 44.120064,
+    "lon": 9.711239,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_3287.jpg",
+    "zeit": "17:16",
+    "lat": 44.119961,
+    "lon": 9.707972,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5389.jpg",
+    "zeit": "17:47",
+    "lat": 44.120133,
+    "lon": 9.710897,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5401.jpg",
+    "zeit": "19:13",
+    "lat": 44.145292,
+    "lon": 9.647214,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5402.jpg",
+    "zeit": "19:58",
+    "lat": 44.145267,
+    "lon": 9.647189,
+    "gps": "geschätzt",
+    "hoch": true
+   }
+  ],
+  "6": [
+   {
+    "datei": "IMG_3329.jpg",
+    "zeit": "10:07",
+    "lat": 44.106828,
+    "lon": 9.728397,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_3340.jpg",
+    "zeit": "10:48",
+    "lat": 44.106883,
+    "lon": 9.726917,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_3361.jpg",
+    "zeit": "11:11",
+    "lat": 44.107467,
+    "lon": 9.726411,
+    "gps": "exakt",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_3370.jpg",
+    "zeit": "11:27",
+    "lat": 44.108331,
+    "lon": 9.726911,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_3382.jpg",
+    "zeit": "11:48",
+    "lat": 44.107614,
+    "lon": 9.728669,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_3417.jpg",
+    "zeit": "13:22",
+    "lat": 44.101669,
+    "lon": 9.733397,
+    "gps": "exakt",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_3441.jpg",
+    "zeit": "14:57",
+    "lat": 44.099872,
+    "lon": 9.737381,
+    "gps": "exakt",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_3444.jpg",
+    "zeit": "15:00",
+    "lat": 44.099842,
+    "lon": 9.737619,
+    "gps": "exakt",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_3466.jpg",
+    "zeit": "16:32",
+    "lat": 44.098786,
+    "lon": 9.737878,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5639.jpg",
+    "zeit": "17:35",
+    "lat": 44.108606,
+    "lon": 9.816764,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_3482.jpg",
+    "zeit": "18:41",
+    "lat": 44.104558,
+    "lon": 9.827458,
+    "gps": "exakt",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_3486.jpg",
+    "zeit": "19:17",
+    "lat": 44.104369,
+    "lon": 9.822161,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5658.jpg",
+    "zeit": "20:19",
+    "lat": 44.104361,
+    "lon": 9.822147,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_3495.jpg",
+    "zeit": "21:37",
+    "lat": 44.104406,
+    "lon": 9.822247,
+    "gps": "exakt",
+    "hoch": true
+   }
+  ],
+  "7": [
+   {
+    "datei": "IMG_5663.jpg",
+    "zeit": "10:19",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_5664.jpg",
+    "zeit": "12:14",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_5667.jpg",
+    "zeit": "15:53",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5677.jpg",
+    "zeit": "17:14",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5682.jpg",
+    "zeit": "17:17",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5685.jpg",
+    "zeit": "17:20",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5691.jpg",
+    "zeit": "17:23",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_5696.jpg",
+    "zeit": "17:25",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5699.jpg",
+    "zeit": "18:16",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_5709.jpg",
+    "zeit": "19:59",
+    "lat": 45.506836,
+    "lon": 10.732261,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_3512.jpg",
+    "zeit": "20:18",
+    "lat": 45.507031,
+    "lon": 10.732586,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_3519.jpg",
+    "zeit": "21:24",
+    "lat": 45.507039,
+    "lon": 10.732633,
+    "gps": "exakt",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_5717.jpg",
+    "zeit": "21:58",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_3537.jpg",
+    "zeit": "22:31",
+    "lat": 45.503708,
+    "lon": 10.733397,
+    "gps": "exakt",
+    "hoch": false
+   }
+  ],
+  "8": [
+   {
+    "datei": "IMG_3541.jpg",
+    "zeit": "11:48",
+    "lat": 45.501247,
+    "lon": 10.732753,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_3542.jpg",
+    "zeit": "11:48",
+    "lat": 45.501228,
+    "lon": 10.732733,
+    "gps": "exakt",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_5719.jpg",
+    "zeit": "11:48",
+    "lat": 45.501228,
+    "lon": 10.732733,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5721.jpg",
+    "zeit": "17:03",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5723.jpg",
+    "zeit": "19:32",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5724.jpg",
+    "zeit": "19:32",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5725.jpg",
+    "zeit": "20:13",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5726.jpg",
+    "zeit": "20:14",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5729.jpg",
+    "zeit": "20:57",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": true
+   }
+  ],
+  "9": [
+   {
+    "datei": "IMG_5730.jpg",
+    "zeit": "16:57",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_5731.jpg",
+    "zeit": "17:00",
+    "lat": null,
+    "lon": null,
+    "gps": "keins",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_3553.jpg",
+    "zeit": "17:34",
+    "lat": 45.505353,
+    "lon": 10.731861,
+    "gps": "exakt",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_3555.jpg",
+    "zeit": "20:03",
+    "lat": 45.505256,
+    "lon": 10.731847,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5733.jpg",
+    "zeit": "20:03",
+    "lat": 45.505342,
+    "lon": 10.731675,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5736.jpg",
+    "zeit": "20:09",
+    "lat": 45.505272,
+    "lon": 10.731878,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_3557.jpg",
+    "zeit": "20:11",
+    "lat": 45.505272,
+    "lon": 10.731878,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_3558.jpg",
+    "zeit": "20:11",
+    "lat": 45.505253,
+    "lon": 10.731839,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_5740.jpg",
+    "zeit": "21:00",
+    "lat": 45.505333,
+    "lon": 10.731714,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_3559.jpg",
+    "zeit": "21:00",
+    "lat": 45.505333,
+    "lon": 10.731714,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_3561.jpg",
+    "zeit": "21:45",
+    "lat": 45.505264,
+    "lon": 10.731881,
+    "gps": "exakt",
+    "hoch": false
+   },
+   {
+    "datei": "IMG_5742.jpg",
+    "zeit": "21:47",
+    "lat": 45.505242,
+    "lon": 10.731722,
+    "gps": "geschätzt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_3563.jpg",
+    "zeit": "21:47",
+    "lat": 45.505189,
+    "lon": 10.731642,
+    "gps": "exakt",
+    "hoch": true
+   },
+   {
+    "datei": "IMG_3564.jpg",
+    "zeit": "21:47",
+    "lat": 45.505172,
+    "lon": 10.731633,
+    "gps": "exakt",
+    "hoch": false
+   }
+  ]
+ }
+}
