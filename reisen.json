@@ -1,20 +1,6 @@
 {
   "trips": [
     {
-      "slug": "cinque-terre-2025",
-      "title": "Cinque Terre 2025",
-      "zeitraum": "Oktober – November 2025",
-      "laender": [
-        "Italien"
-      ],
-      "blurb": "Herbst in Italien: Gardasee, Parma, mit dem Rad durch die alten Bahntunnel bei Levanto und zu Fuß durch die fünf Dörfer der Cinque Terre.",
-      "cover": "/assets/reisen/cinque-terre-2025/atlas/tag-06/IMG_3417.jpg",
-      "accent": "#b5532f",
-      "accentInk": "#7a3218",
-      "wash": "#f3e3d6",
-      "fahrzeug": "ein Campervan"
-    },
-    {
       "slug": "balkan-2026",
       "title": "Adria & Balkan 2026",
       "zeitraum": "Juli – August 2026",
@@ -31,6 +17,20 @@
       "accent": "#1f6f74",
       "accentInk": "#0f4a4e",
       "wash": "#dde9e7",
+      "fahrzeug": "ein Campervan"
+    },
+    {
+      "slug": "cinque-terre-2025",
+      "title": "Cinque Terre 2025",
+      "zeitraum": "Oktober – November 2025",
+      "laender": [
+        "Italien"
+      ],
+      "blurb": "Herbst in Italien: Gardasee, Parma, mit dem Rad durch die alten Bahntunnel bei Levanto und zu Fuß durch die fünf Dörfer der Cinque Terre.",
+      "cover": "/assets/reisen/cinque-terre-2025/atlas/tag-06/IMG_3417.jpg",
+      "accent": "#b5532f",
+      "accentInk": "#7a3218",
+      "wash": "#f3e3d6",
       "fahrzeug": "ein Campervan"
     }
   ]

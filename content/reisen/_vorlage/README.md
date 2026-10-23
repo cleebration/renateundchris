@@ -12,7 +12,7 @@ Die Foto-Werkzeuge brauchen dafür `ZIEL=<Travel-Ordner>/Input/Fotos-web`.
 
 ## 1. Reise anlegen
 
-1. In `reisen.json` oben einen Eintrag ergänzen (die erste Reise ist die, die `/atlas/` zeigt):
+1. In `reisen.json` oben einen Eintrag ergänzen (Reihenfolge egal: /reisen und /atlas/ sortieren automatisch nach Startdatum, neueste zuerst):
    ```json
    { "slug": "italien-2027", "title": "Italien 2027", "zeitraum": "Juli 2027",
      "laender": ["Italien"], "blurb": "Ein Satz zur Reise.", "fahrzeug": "ein Campervan",

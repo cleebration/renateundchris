@@ -11,6 +11,7 @@
 //
 // Aufruf aus build.mjs:  buildAtlas({ ROOT, DIST, site })
 
+import { neuesteZuerst } from "./reisen-sort.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import { slugify } from "./reisen.mjs";
@@ -99,7 +100,7 @@ function shell(site, trips) {
 export function buildAtlas({ ROOT, DIST, site }) {
   const reisen = readJson(path.join(ROOT, "reisen.json"));
   if (!reisen) return 0;
-  const trips = reisen.trips.filter((t) => fs.existsSync(path.join(ROOT, "content", "reisen", t.slug, "_atlas.json")));
+  const trips = neuesteZuerst(ROOT, reisen.trips.filter((t) => fs.existsSync(path.join(ROOT, "content", "reisen", t.slug, "_atlas.json"))));
   if (!trips.length) return 0;
   const out = path.join(DIST, "atlas");
   fs.mkdirSync(path.join(out, "data"), { recursive: true });

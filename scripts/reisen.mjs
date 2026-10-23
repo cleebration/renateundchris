@@ -12,6 +12,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { karteTrip, karteTag, karteAssets } from "./reisen-karte.mjs";
+import { neuesteZuerst } from "./reisen-sort.mjs";
 
 /* ---------- Hilfen ---------- */
 
@@ -435,7 +436,7 @@ export function buildReisen(ctx) {
     return 0;
   }
 
-  const { trips } = JSON.parse(fs.readFileSync(file, "utf8"));
+  const trips = neuesteZuerst(ROOT, JSON.parse(fs.readFileSync(file, "utf8")).trips);
   const css = path.join(ROOT, "src", "reisen.css");
   if (fs.existsSync(css)) fs.copyFileSync(css, path.join(DIST, "reisen.css"));
   karteAssets(ROOT, DIST);
