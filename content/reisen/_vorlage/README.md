@@ -71,3 +71,12 @@ Test: `/atlas/<slug>/` am Mac öffnen, QR mit dem Smartphone scannen.
 ## Fahrzeug auf der Karte
 
 `reisen.json` → `"fahrzeugTyp": "l3"` (Peugeot Traveller L3, schwarz) · `"l2"` (Traveller L2, orange) · `"mietauto"`. Einzelne Tage abweichend: in `_atlas.json` bei `tage[]` `"fahrzeug": "mietauto"`. Ohne Angabe: L3.
+
+## Wetter und Höhen (Reise-Statistik)
+
+Nach Stationen und Routen einmal ausführen, dann werden Wetter und Höhen fest in die Website gespeichert:
+
+- Höhen: `NODE_USE_ENV_PROXY=1 node tools/wetter-hoehen.mjs <reise>` → `_hoehe.json`
+- Wetter: Tageswerte je Übernachtungsort vom Open-Meteo-Archiv holen (Format siehe Kopf von `tools/wetter-hoehen.mjs`), dann `node tools/wetter-hoehen.mjs --wetter <datei>` → `_wetter.json`
+
+Ohne diese Dateien lädt die Statistik Wetter und Höhen im Browser der Besucher nach (langsamer, abhängig von Open-Meteo).
