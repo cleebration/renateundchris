@@ -19,6 +19,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { slugify } from "./reisen.mjs";
 import { buildStatistik, tagStatistik } from "./atlas-statistik.mjs";
+import { buildWelt } from "./atlas-welt.mjs";
 
 const readJson = (f) => (fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, "utf8")) : null);
 
@@ -127,7 +128,7 @@ export function buildAtlas({ ROOT, DIST, site }) {
     const laender = new Set(data.tage.flatMap((d) => d.land || []));
     data.musik = {};
     for (const m of (musik && musik.stuecke) || []) if (laender.has(m.land) && /^https:\/\/upload\.wikimedia\.org\//.test(m.url)) (data.musik[m.land] ||= []).push({ url: m.url, titel: m.titel, urheber: m.urheber, lizenz: m.lizenz, seite: m.seite });
-    fuerStatistik.push({ slug: t.slug, title: t.title, accent: t.accent, fahrzeug: t.fahrzeug, tage: data.tage });
+    fuerStatistik.push({ slug: t.slug, title: t.title, accent: t.accent, fahrzeug: t.fahrzeug, zeitraum: t.zeitraum, cover: t.cover, laender: t.laender, tage: data.tage });
     // Sonnenauf-/-untergang je Tag (berechnet) und Ort für das Wetter – für die Stationskarte im Atlas
     const wetterFest = readJson(path.join(ROOT, "content", "reisen", t.slug, "_wetter.json"));
     for (const d of data.tage) { const k = tagStatistik(d); d.sonne = k.sonne; d.wetterOrt = k.ort; d.wetter = wetterFest ? wetterFest.tage[String(d.tag)] || null : null; }
@@ -144,7 +145,8 @@ export function buildAtlas({ ROOT, DIST, site }) {
     fs.mkdirSync(path.join(out, t.slug), { recursive: true });
     fs.writeFileSync(path.join(out, t.slug, "index.html"), shell(site, [t]));
   }
-  fs.writeFileSync(path.join(out, "index.html"), shell(site, trips));
+  // /atlas/ = Weltkugel mit allen Reisen (alte Controller-Links #c-… gehen zur neuesten Reise)
+  buildWelt({ ROOT, DIST, site, reisen: fuerStatistik });
   // alte Reise-Übersichten → Atlas
   const red = path.join(DIST, "_redirects");
   const prevR = fs.existsSync(red) ? fs.readFileSync(red, "utf8") : "";

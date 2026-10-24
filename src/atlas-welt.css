@@ -1,0 +1,59 @@
+/* Reise-Atlas · Weltkugel – Nachthimmel, Reisen als leuchtende Linien, Liste links (am Handy unten). */
+:root{
+  --space:#05121a; --panel:rgba(9,24,31,.9); --hair:rgba(255,255,255,.1);
+  --ink:#f3ecdc; --muted:#a9b6b6; --amber:#e0913a; --olive:#9aa65a;
+  --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --serif:"Source Serif 4",Georgia,serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:radial-gradient(1400px 900px at 60% 40%,#0e2a36 0,var(--space) 70%);color:var(--ink);font:15px/1.5 var(--serif);overflow:hidden;-webkit-font-smoothing:antialiased}
+a{color:var(--amber)}
+:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+#welt{position:fixed;inset:0}
+#map{position:absolute;inset:0;background:transparent}
+.maplibregl-canvas{outline:none}
+.nomap{position:absolute;right:24px;top:24px;color:var(--muted)}
+
+#panel{position:absolute;z-index:5;left:max(16px,env(safe-area-inset-left));top:max(16px,env(safe-area-inset-top));bottom:16px;width:380px;display:flex;flex-direction:column;gap:12px;
+  background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--hair);border-radius:18px;padding:20px 18px 14px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+h1{margin:2px 0 4px;font-family:var(--display);font-weight:800;font-size:54px;line-height:.88;text-transform:uppercase}
+.sum{margin:0;font-size:12px;color:var(--muted)}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{font:13px var(--mono);color:var(--ink);background:transparent;border:1px solid var(--hair);border-radius:999px;padding:7px 12px;text-decoration:none;cursor:pointer}
+.btn.primary{background:var(--amber);color:#1a1206;border-color:var(--amber)}
+#list{list-style:none;margin:0;padding:0;overflow:auto;display:flex;flex-direction:column;gap:8px;flex:1;min-height:0}
+.trip{display:grid;grid-template-columns:92px 1fr;gap:12px;align-items:center;padding:8px;border-radius:14px;text-decoration:none;color:inherit;border:1px solid transparent;transition:background .2s,border-color .2s}
+.trip:hover,.trip.on{background:rgba(255,255,255,.05);border-color:var(--acc)}
+.th{display:block;width:92px;height:70px;border-radius:10px;overflow:hidden;background:var(--acc);box-shadow:inset 0 0 0 2px var(--acc)}
+.th img{width:100%;height:100%;object-fit:cover;display:block}
+.tx{display:flex;flex-direction:column;min-width:0}
+.zt{font-size:11px;color:var(--acc);filter:brightness(1.4)}
+.tx b{font-family:var(--display);font-weight:700;font-size:24px;line-height:1;text-transform:uppercase}
+.kz{font-size:11px;color:var(--muted);margin-top:3px}
+.go{font-size:13px;color:var(--amber);margin-top:2px;opacity:0;transition:opacity .2s}
+.trip:hover .go,.trip.on .go{opacity:1}
+.hint{margin:0;font-size:11px;color:var(--muted)}
+.err{color:var(--muted)}
+
+/* Marker */
+.flag{display:block;text-decoration:none;transform:translateY(-4px)}
+.flag span{display:block;font:500 11px var(--mono);color:#fff;background:var(--acc);padding:4px 8px;border-radius:6px;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.4);position:relative;transition:transform .2s}
+.flag span::after{content:"";position:absolute;left:50%;bottom:-5px;margin-left:-5px;border:5px solid transparent;border-bottom:0;border-top-color:var(--acc)}
+.flag.on span{transform:scale(1.18)}
+.home{display:flex;align-items:center;gap:6px;font:11px var(--mono);color:var(--ink);text-shadow:0 1px 4px #000}
+.home i{width:12px;height:12px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 4px rgba(224,145,58,.3),0 0 18px var(--amber)}
+.maplibregl-ctrl-attrib{font-size:10px}
+
+@media (max-width:760px){
+  #panel{left:8px;right:8px;top:auto;bottom:8px;width:auto;max-height:46vh;padding:14px 12px 10px;border-radius:16px}
+  h1{font-size:38px}
+  .trip{grid-template-columns:72px 1fr}.th{width:72px;height:54px}
+  .tx b{font-size:20px}
+  .hint{display:none}
+  .go{opacity:1}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}

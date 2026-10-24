@@ -400,6 +400,7 @@ function buildIndex(trips, counts, ctx) {
       <div class="eyebrow">${trips.length} ${trips.length === 1 ? "Reise" : "Reisen"} · ein Tagebuch</div>
       <h1>Wege, die wir <em>gemeinsam</em> gegangen sind.</h1>
       <p class="lede">Reisetagebücher von Renate und Chris – Tag für Tag, mit dem, was wir gesehen, gegessen und nachgelesen haben.</p>
+      <p class="lede"><a href="/atlas/">🌍 Alle Reisen auf der Weltkugel</a> · <a href="/atlas/statistik/">📊 Reise-Statistik</a></p>
     </section>
     <section class="r-grid">${cards}</section>
     ${newsletter("reisen-allgemein")}

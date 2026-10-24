@@ -98,7 +98,7 @@
     APP.insertAdjacentHTML("beforeend", `<div id="screen">
       <div id="map" role="img" aria-label="Karte der Reiseroute ${esc(TITLE)}"></div>
       <div class="hud" id="hudTop">
-        <div class="brandRow"><a class="backBtn" href="/reisen" aria-label="Zurück zur Reise-Übersicht">← Alle Reisen</a><a class="brand" href="/reisen"><span class="eyebrow">Renate &amp; Chris · Reise-Atlas</span><h1>${esc(TITLE)}</h1></a></div>
+        <div class="brandRow"><a class="backBtn" href="/atlas/" aria-label="Zurück zur Weltkugel mit allen Reisen">← Alle Reisen</a><a class="brand" href="/reisen"><span class="eyebrow">Renate &amp; Chris · Reise-Atlas</span><h1>${esc(TITLE)}</h1></a></div>
         <div class="chips">
           <button class="chip warn" id="tonChip" hidden title="Der Browser hat den Ton blockiert">🔇 Ton einschalten</button>
           <span class="chip"><i class="dot" id="linkDot"></i><b id="linkTxt">Kein Smartphone verbunden</b></span>
