@@ -60,8 +60,7 @@
   const hashCode = (/^#c-([a-z0-9]{4,8})$/.exec(location.hash) || [])[1];
   const narrow = Math.min(screen.width, screen.height) < 600;
   if (hashCode) startController(hashCode);
-  else if (location.hash === "#bildschirm" || !narrow) startScreen();
-  else chooseMode();
+  else startScreen();
 
   function chooseMode() {
     APP.insertAdjacentHTML("beforeend", `<div class="choose"><div class="in">
@@ -74,7 +73,7 @@
     const go = () => { const v = document.getElementById("codeIn").value.trim().toLowerCase(); if (!/^[a-z0-9]{6}$/.test(v)) { document.getElementById("codeErr").hidden = false; return; } location.hash = "#c-" + v; location.reload(); };
     document.getElementById("asCtl").onclick = go;
     document.getElementById("codeIn").addEventListener("keydown", (e) => { if (e.key === "Enter") go(); });
-    document.getElementById("asScreen").onclick = () => { document.querySelector(".choose").remove(); startScreen(); };
+    document.getElementById("asScreen").onclick = () => { document.querySelector(".choose").remove(); if (!document.getElementById("screen")) startScreen(); };
   }
 
   // ---------- Polyline ----------
@@ -111,10 +110,16 @@
           <span class="chip opt"><b class="mono" id="chipKm">0</b> km</span>
         </div>
       </div>
-      <div class="hud" id="side">
+      <div class="hud" id="dock" aria-label="Steuerung">
+        <button data-a="dayPrev" aria-label="Tag zurück">«</button><button data-a="prev" aria-label="Station zurück">◀</button>
+        <button data-a="play" class="primary" id="dPlay">▶ Fahren</button>
+        <button data-a="next" aria-label="Station weiter">▶</button><button data-a="dayNext" aria-label="Tag weiter">»</button>
+        <button data-a="suche" aria-label="Suchen und fragen">🔎</button><button data-a="einst" aria-label="Einstellungen" aria-expanded="false">⚙</button>
+      </div>
+      <div class="hud" id="side"><button class="sideKopf" id="sideKopf" aria-expanded="true"><span>Steuerung</span><i>‹</i></button>
         <div class="panel"><h4>Smartphone als Controller</h4>
           <div id="qrBox"><div id="qr" aria-label="QR-Code zum Controller"></div><p>Mit der Handy-Kamera scannen<br>oder Code eingeben:<br><b id="codeTxt">······</b></p></div></div>
-        <div class="panel" id="tonPanel"><h4>Tempo</h4>
+        <div class="panel" id="tonPanel"><button class="fernBtn" id="fernBtn">📱 Dieses Gerät als Fernbedienung für einen anderen Bildschirm</button><h4>Tempo</h4>
           <div class="seg" style="--n:3" data-ks="tempo"><button data-v="1" title="Taste −">langsam</button><button data-v="2">mittel</button><button data-v="3" title="Taste +">schnell</button></div>
           <h4>Breite</h4>
           <div class="seg" style="--n:3" data-ks="breite"><button data-v="1">Highlights</button><button data-v="2">Stationen</button><button data-v="3">alles</button></div>
@@ -198,7 +203,7 @@
     Object.entries(ROLLEN).forEach(([k, r]) => { const b = document.createElement("button"); b.className = "role"; b.innerHTML = `<span class="k">${r.k}</span><span class="n">${r.n}</span><span class="d">${r.d}</span>`; b.onclick = () => setRole(k); rg.appendChild(b); });
 
     // Kurzer Hinweis beim Start (statt Rollen-Fenster)
-    { const t = document.createElement("div"); t.className = "startHint"; t.innerHTML = narrow ? "Tippe ▶ zum Fahren · wische für Stationen" : "<kbd>Leertaste</kbd> fahren · <kbd>←</kbd><kbd>→</kbd> Station · <kbd>↓</kbd><kbd>↑</kbd> Tiefe · <kbd>−</kbd><kbd>+</kbd> Tempo · <kbd>/</kbd> suchen &amp; fragen";
+    { const t = document.createElement("div"); t.className = "startHint"; t.innerHTML = (matchMedia("(pointer: coarse)").matches || innerWidth <= 900) ? "▶ Fahren · auf die Karte tippen = mehr · wischen = nächste Station · ⚙ Einstellungen" : "<kbd>Leertaste</kbd> fahren · <kbd>←</kbd><kbd>→</kbd> Station · <kbd>↓</kbd><kbd>↑</kbd> Tiefe · <kbd>−</kbd><kbd>+</kbd> Tempo · <kbd>/</kbd> suchen &amp; fragen";
       document.getElementById("screen").appendChild(t); setTimeout(() => t.classList.add("weg"), 7000); setTimeout(() => t.remove(), 8200); addEventListener("keydown", () => t.classList.add("weg"), { once: true }); }
     // Direkt zu einem Tag springen: /atlas/<reise>/?tag=7 (z. B. aus der Reise-Statistik)
     { const t0 = +new URLSearchParams(location.search).get("tag");
@@ -471,6 +476,23 @@
     function dayStep(n) { const tr = track(); const cur = (tr[S.idx] || {}).day || 1; let tgt = cur + n;
       while (tgt >= 1 && tgt <= DAYS.length && !tr.some((s) => s.day === tgt)) tgt += n;
       if (tgt >= 1 && tgt <= DAYS.length) gotoDay(tgt); }
+    // Seitenleiste zusammenklappen (gemerkt), Touch-Dock, Karte als ausklappbares Blatt
+    const side = document.getElementById("side");
+    const setZu = (zu) => { side.classList.toggle("zu", zu); document.getElementById("sideKopf").setAttribute("aria-expanded", !zu); merk.set("sideZu", zu); };
+    setZu(merk.get("sideZu", false) === true);
+    document.getElementById("sideKopf").onclick = () => { if (document.body.classList.contains("touch")) { side.classList.remove("offen"); return; } setZu(!side.classList.contains("zu")); };
+    const touchModus = () => document.body.classList.toggle("touch", matchMedia("(pointer: coarse)").matches || innerWidth <= 900);
+    touchModus(); addEventListener("resize", touchModus);
+    document.getElementById("dock").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; const a = b.dataset.a;
+      if (a === "prev") step(-1); else if (a === "next") step(1); else if (a === "dayPrev") dayStep(-1); else if (a === "dayNext") dayStep(1);
+      else if (a === "play") setPlay(!S.playing); else if (a === "suche") suche();
+      else if (a === "einst") { const o = side.classList.toggle("offen"); b.setAttribute("aria-expanded", o); } });
+    { const card = document.getElementById("card"); let x0 = null, y0 = 0;
+      card.addEventListener("pointerdown", (e) => { if (!document.body.classList.contains("touch")) return; x0 = e.clientX; y0 = e.clientY; });
+      card.addEventListener("pointerup", (e) => { if (x0 == null) return; const dx = e.clientX - x0, dy = e.clientY - y0; x0 = null;
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) { step(dx < 0 ? 1 : -1); return; }
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8 && !e.target.closest("a,button")) card.classList.toggle("auf"); }); }
+    document.getElementById("fernBtn").onclick = () => chooseMode();
     function setBreite(v) { S.breite = v; const cur = (go.last || ST[0]).day; S.idx = Math.max(0, track().findIndex((s) => s.day >= cur)); go(true); broadcast(); }
     function setRole(k) { const r = ROLLEN[k]; if (!r) return; S.rolle = k; Object.assign(S, { tempo: r.s.tempo, breite: r.s.breite, tiefe: r.s.tiefe, thema: r.s.thema });
       document.getElementById("roles").hidden = true; const cur = (go.last || ST[0]).day; S.idx = Math.max(0, track().findIndex((s) => s.day >= cur)); go(true); setPlay(r.s.play); }
@@ -492,6 +514,7 @@
       [...row.children].forEach((b, k) => { const dd = DAYS[k]; b.classList.toggle("cur", dd.tag === d.tag); b.classList.toggle("seen", S.seen.has(dd.tag)); b.classList.toggle("dim", !dayMatches(dd)); });
       ST.forEach((x, k) => pinEls[k] && pinEls[k].classList.toggle("cur", x === s));
       document.getElementById("metaDay").textContent = "Tag " + d.tag;
+      { const dp = document.getElementById("dPlay"); if (dp) dp.textContent = S.playing ? "❚❚ Halt" : "▶ Fahren"; }
       document.getElementById("metaDate").textContent = fmtDate(d.datum);
       document.getElementById("metaMode").textContent = `${S.playing ? "▶ fährt" : "❚❚ steht"} · Tempo ${["", "langsam", "mittel", "schnell"][S.tempo]} · Breite ${["", "Highlights", "Stationen", "alles"][S.breite]}${S.thema ? " · Thema " + themaName(S.thema) : ""}`;
 

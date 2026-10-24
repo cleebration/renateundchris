@@ -230,3 +230,41 @@ a.chip{text-decoration:none;color:var(--ink)}
 .startHint kbd{font:11px var(--mono);border:1px solid var(--hair);border-radius:4px;padding:1px 5px;margin:0 2px;background:rgba(255,255,255,.06)}
 .startHint.weg{opacity:0}
 .tzChip{background:var(--amber)!important;color:var(--night)!important;border-color:var(--amber)!important}
+
+/* Seitenleiste zusammenklappbar */
+.sideKopf{all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--hair);border-radius:12px;padding:8px 12px;font:11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.sideKopf i{font-style:normal;font-size:16px;transition:transform .2s}
+.sideKopf:hover{color:var(--amber);border-color:var(--amber)}
+#side.zu{width:auto}
+#side.zu .panel{display:none!important}
+#side.zu .sideKopf i{transform:rotate(180deg)}
+.fernBtn{display:none}
+#dock{display:none}
+
+/* Tablet und Smartphone: Dock unten, Karte als Blatt, Einstellungen als Blatt */
+body.touch #dock{display:grid;grid-template-columns:repeat(2,1fr) 2.2fr repeat(4,1fr);gap:6px;left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px));bottom:calc(8px + env(safe-area-inset-bottom,0px));z-index:12}
+body.touch #dock button{all:unset;text-align:center;padding:14px 0;border-radius:14px;background:var(--panel);border:1px solid var(--hair);font:18px var(--mono);color:var(--ink);touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+body.touch #dock button.primary{background:var(--amber);color:#1b1206;font-size:15px}
+body.touch #dock button:active{transform:scale(.96)}
+body.touch #rail{bottom:calc(72px + env(safe-area-inset-bottom,0px));left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px));padding:8px 10px}
+body.touch #railMeta{display:none}
+body.touch #railRow{min-height:22px}
+body.touch #card{top:auto;right:max(8px,env(safe-area-inset-right,0px));left:max(8px,env(safe-area-inset-left,0px));width:auto;bottom:calc(122px + env(safe-area-inset-bottom,0px));max-height:32vh;padding:12px 14px 14px;transition:max-height .25s;touch-action:pan-y}
+body.touch #card::before{content:"";display:block;width:40px;height:4px;border-radius:2px;background:var(--hair);margin:-4px auto 2px}
+body.touch #card.auf{max-height:70vh}
+body.touch #card h2{font-size:24px}
+@media (min-width:901px){body.touch #card{left:auto;width:min(520px,calc(100vw - 32px))}}
+body.touch #hudTop .chips .chip:not(.tzChip){display:none}
+body.touch .brand h1{font-size:26px}
+body.touch .brand .eyebrow{display:none}
+body.touch #side{display:none;position:fixed;left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px));top:auto;bottom:calc(72px + env(safe-area-inset-bottom,0px));width:auto;max-height:65vh;z-index:25;box-shadow:0 -10px 40px rgba(0,0,0,.6)}
+body.touch #side.offen{display:flex}
+body.touch #side .panel:not(#tonPanel){display:none}
+body.touch #side.zu .panel{display:flex!important}
+body.touch .sideKopf i{transform:rotate(-90deg)}
+body.touch .fernBtn{display:block;all:unset;cursor:pointer;font:12px var(--mono);color:var(--muted);text-align:center;padding:8px;border:1px dashed var(--hair);border-radius:10px}
+body.touch .narrowOnly{display:none!important}
+body.touch .startHint{bottom:auto;top:calc(130px + env(safe-area-inset-top,0px));white-space:normal;text-align:center;width:min(92vw,520px);border-radius:14px}
+body.touch .maplibregl-ctrl-bottom-right{display:none}
+body.touch .maplibregl-ctrl-bottom-left{left:auto!important;right:max(8px,env(safe-area-inset-right,0px));bottom:auto!important;top:calc(170px + env(safe-area-inset-top,0px));max-width:70vw}
+body.touch .maplibregl-ctrl-attrib{font-size:9px}
