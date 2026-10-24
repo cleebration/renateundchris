@@ -74,7 +74,7 @@ button.chip{cursor:pointer}
 .legend span{display:inline-flex;gap:5px;align-items:center}
 .legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
 
-#side{left:max(16px,env(safe-area-inset-left,0px));top:calc(146px + env(safe-area-inset-top,0px));display:flex;flex-direction:column;gap:8px;width:230px}
+#side{left:max(16px,env(safe-area-inset-left,0px));top:calc(196px + env(safe-area-inset-top,0px));display:flex;flex-direction:column;gap:8px;width:230px}
 .panel{background:var(--panel);border:1px solid var(--hair);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px}
 .panel h4{margin:0;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 #qrBox{display:flex;gap:10px;align-items:center}
@@ -189,7 +189,7 @@ button.chip{cursor:pointer}
   #side .panel:not(#tonPanel){display:none}
   #tonPanel{padding:10px;gap:8px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
 }
-#side{max-height:calc(100% - 146px - 120px - env(safe-area-inset-top,0px));overflow:auto;scrollbar-width:thin}
+#side{max-height:calc(100% - 196px - 120px - env(safe-area-inset-top,0px));overflow:auto;scrollbar-width:thin}
 @media (max-height:980px) and (min-width:901px){#side .panel:last-child{display:none}}
 
 a.chip{text-decoration:none;color:var(--ink)}
@@ -225,3 +225,8 @@ a.chip{text-decoration:none;color:var(--ink)}
 
 .rolesBack{align-self:flex-start;background:none!important;border:0!important;padding:0!important;color:var(--muted)!important;font-size:13px}
 .rolesBack:hover{color:var(--amber)!important}
+
+.startHint{position:absolute;left:50%;bottom:120px;transform:translateX(-50%);z-index:30;background:var(--panel);border:1px solid var(--hair);border-radius:999px;padding:10px 18px;font:13px var(--mono);color:var(--ink);white-space:nowrap;transition:opacity 1s;pointer-events:none}
+.startHint kbd{font:11px var(--mono);border:1px solid var(--hair);border-radius:4px;padding:1px 5px;margin:0 2px;background:rgba(255,255,255,.06)}
+.startHint.weg{opacity:0}
+.tzChip{background:var(--amber)!important;color:var(--night)!important;border-color:var(--amber)!important}

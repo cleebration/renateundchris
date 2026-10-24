@@ -253,7 +253,7 @@
         ${d.h ? sparkline(d.h.profil, 160, 34) + `<span class="dh2 mono">${n0(d.h.min)}–${n0(d.h.max)} m</span>` : ""}</a>`; }).join("")}</div></section>`;
 
     h += `<footer class="foot"><p>Quellen: Kilometer und Fahrzeit aus Straßenrouten (OSRM, Näherung zwischen den Stationen, nicht die GPS-Spur). Sonnenzeiten berechnet für den Übernachtungsort (Ortszeit). Wetter und Höhen: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a> (CC BY 4.0), Tageswerte am Übernachtungsort, Höhen aus Copernicus DEM entlang der Route (grob, ca. 12 Punkte je Tag).</p>
-      <p><a href="/reisen">Alle Reisen</a> · <a href="/datenschutz">Datenschutz</a></p></footer>`;
+      <p><a href="/atlas/">Alle Reisen</a> · <a href="/datenschutz">Datenschutz</a></p></footer>`;
     ROOT.innerHTML = h;
     const nb = document.getElementById("nochmal"); if (nb) nb.onclick = () => { auswahl.forEach((r) => { if (r.status === "fehler") r.status = null; }); auswahl.forEach(nachladen); };
     const tq = document.getElementById("trumpf"); if (tq) tq.onclick = () => trumpf(reisen);

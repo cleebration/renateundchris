@@ -33,7 +33,7 @@ function reiseLinie(tage) {
   return out.map((p) => [Math.round(p[0] * 1e3) / 1e3, Math.round(p[1] * 1e3) / 1e3]);
 }
 
-function shell(site, v, neueste) {
+function shell(site, v, neueste, reisen) {
   return `<!doctype html><html lang="de"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <script>if (/^#c-/.test(location.hash)) location.replace("/atlas/${neueste}/" + location.hash);</script>
@@ -49,7 +49,7 @@ function shell(site, v, neueste) {
 <link rel="stylesheet" href="/atlas/atlas-welt.css?v=${v}">
 </head><body>
 <div id="welt" data-v="${v}"></div>
-<noscript><p style="padding:24px">Die Weltkugel braucht JavaScript. Alle Reisen gibt es unter <a href="/reisen">/reisen</a>.</p></noscript>
+<noscript><p style="padding:24px">Die Weltkugel braucht JavaScript. Unsere Reisen: ${reisen.map((r) => `<a href="/atlas/${r.slug}/">${r.title}</a>`).join(" · ")}</p></noscript>
 <script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
 <script src="/atlas/atlas-welt.js?v=${v}"></script>
 </body></html>`;
@@ -80,6 +80,6 @@ export function buildWelt({ ROOT, DIST, site, reisen }) {
     if (fs.existsSync(src)) fs.copyFileSync(src, path.join(out, f));
   }
   const v = Date.now().toString(36);
-  fs.writeFileSync(path.join(out, "index.html"), shell(site, v, reisen[0].slug));
+  fs.writeFileSync(path.join(out, "index.html"), shell(site, v, reisen[0].slug, reisen));
   return data.reisen.length;
 }

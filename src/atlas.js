@@ -98,14 +98,14 @@
     APP.insertAdjacentHTML("beforeend", `<div id="screen">
       <div id="map" role="img" aria-label="Karte der Reiseroute ${esc(TITLE)}"></div>
       <div class="hud" id="hudTop">
-        <div class="brandRow"><a class="backBtn" href="/atlas/" aria-label="Zurück zur Weltkugel mit allen Reisen">← Alle Reisen</a><a class="brand" href="/reisen"><span class="eyebrow">Renate &amp; Chris · Reise-Atlas</span><h1>${esc(TITLE)}</h1></a></div>
+        <div class="brandRow"><a class="backBtn" href="/atlas/" aria-label="Zurück zur Weltkugel mit allen Reisen">← Alle Reisen</a><a class="brand" href="/atlas/"><span class="eyebrow">Renate &amp; Chris · Reise-Atlas</span><h1>${esc(TITLE)}</h1></a></div>
         <div class="chips">
           <button class="chip warn" id="tonChip" hidden title="Der Browser hat den Ton blockiert">🔇 Ton einschalten</button>
           <span class="chip"><i class="dot" id="linkDot"></i><b id="linkTxt">Kein Smartphone verbunden</b></span>
           <button class="chip narrowOnly" id="tonBtn" aria-expanded="false">Kamera &amp; Ton</button>
           <button class="chip" id="sucheBtn" title="In dieser Reise suchen (Taste /)">🔎 Suchen</button>
           <a class="chip" href="/atlas/statistik/#${esc(REISE)}" title="Kilometer, Wetter, Rekorde und Abzeichen">📊 Statistik</a>
-          <button class="chip" id="chipRoleBtn" title="Rolle wechseln (R)">Rolle <b id="chipRole">–</b></button>
+
           <span class="chip opt">Legenden <b class="mono" id="chipMyth">0</b></span>
           <span class="chip opt">Österreich-Fäden <b class="mono" id="chipWien">0</b></span>
           <span class="chip opt"><b class="mono" id="chipKm">0</b> km</span>
@@ -116,17 +116,21 @@
           <div id="qrBox"><div id="qr" aria-label="QR-Code zum Controller"></div><p>Mit der Handy-Kamera scannen<br>oder Code eingeben:<br><b id="codeTxt">······</b></p></div></div>
         <div class="panel" id="tonPanel"><h4>Tempo</h4>
           <div class="seg" style="--n:3" data-ks="tempo"><button data-v="1" title="Taste −">langsam</button><button data-v="2">mittel</button><button data-v="3" title="Taste +">schnell</button></div>
+          <h4>Breite</h4>
+          <div class="seg" style="--n:3" data-ks="breite"><button data-v="1">Highlights</button><button data-v="2">Stationen</button><button data-v="3">alles</button></div>
+          <h4>Tiefe</h4>
+          <div class="seg" style="--n:4" data-ks="tiefe"><button data-v="0">Ort</button><button data-v="1">Satz</button><button data-v="2">Teaser</button><button data-v="3">alles</button></div>
           <h4>Kamera</h4>
           <div class="seg" style="--n:3" data-ks="kamera">${KAMERA.map(([k, n]) => `<button data-v="${k}" title="${k === "nord" ? "Norden oben" : k === "fahrt" ? "Blick in Fahrtrichtung" : "selbst drehen"}">${n}</button>`).join("")}</div>
           <div id="musikBox" hidden><h4>Musik</h4><div class="seg" style="--n:2" data-ks="musik"><button data-v="aus">aus</button><button data-v="an">an</button></div><p class="note" id="musikInfo"></p></div>
           <div id="vlBox" hidden><h4>Vorlesen</h4><div class="seg vl" data-ks="vorlesen">${VORLESEN.map(([k, n]) => `<button data-v="${k}">${n}</button>`).join("")}</div><p class="note" id="vlInfo"></p></div>
         </div>
-        <div class="panel"><h4>Tastatur</h4><div class="kbd"><kbd>←</kbd> <kbd>→</kbd> Station · <kbd>⇧</kbd>+Pfeil Tag<br><kbd>Leer</kbd> Fahren / Anhalten · <kbd>−</kbd> <kbd>+</kbd> Tempo<br><kbd>↓</kbd> tiefer <kbd>↑</kbd> weniger · <kbd>R</kbd> Rolle · <kbd>F</kbd> Vollbild<br><kbd>K</kbd> Kamera · <kbd>M</kbd> Musik · <kbd>V</kbd> Vorlesen</div></div>
+        <div class="panel"><h4>Tastatur</h4><div class="kbd"><kbd>←</kbd> <kbd>→</kbd> Station · <kbd>⇧</kbd>+Pfeil Tag<br><kbd>Leer</kbd> Fahren / Anhalten · <kbd>−</kbd> <kbd>+</kbd> Tempo<br><kbd>↓</kbd> tiefer <kbd>↑</kbd> weniger · <kbd>B</kbd> Breite · <kbd>F</kbd> Vollbild<br><kbd>/</kbd> Suchen &amp; fragen<br><kbd>K</kbd> Kamera · <kbd>M</kbd> Musik · <kbd>V</kbd> Vorlesen</div></div>
       </div>
       <aside class="hud" id="card" aria-live="polite"></aside>
       <div class="hud" id="rail"><div id="railRow" role="group" aria-label="Reisetage"></div>
         <div id="railMeta"><span><b id="metaDay">Tag 1</b> · <span id="metaDate"></span> · <span id="metaMode"></span></span><span class="legend" id="legend"></span></div></div>
-      <div id="roles"><div class="rolesIn"><a class="backBtn rolesBack" href="/atlas/">← Zurück zu allen Reisen</a><h2>Wie willst du reisen?</h2>
+      <div id="roles" hidden><div class="rolesIn"><a class="backBtn rolesBack" href="/atlas/">← Zurück zu allen Reisen</a><h2>Wie willst du reisen?</h2>
         <p id="rolesLead">Wähle, wie viel du sehen willst – mit Maus, Tastatur oder dem Smartphone. Jederzeit wechselbar.</p>
         <div class="roleGrid" id="roleGrid"></div></div></div>
       <div id="lightbox" hidden role="dialog" aria-label="Foto groß"><button class="big" id="lbClose">Schließen</button><button class="lbNav" id="lbPrev" aria-label="Vorheriges Foto">‹</button><figure><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure><button class="lbNav" id="lbNext" aria-label="Nächstes Foto">›</button></div>
@@ -164,12 +168,12 @@
       b.onclick = () => { const src = innerHeight > innerWidth ? DATA.teaser.hoch || DATA.teaser.quer : DATA.teaser.quer || DATA.teaser.hoch;
         const box = document.createElement("div"); box.className = "tzBox"; box.innerHTML = `<div class="tzIn"><video src="${esc(src)}" controls autoplay playsinline></video><button class="big" data-x>Schließen</button></div>`;
         box.onclick = (e) => { if (e.target === box || e.target.hasAttribute("data-x")) box.remove(); }; document.body.appendChild(box); };
-      document.getElementById("rolesLead").after(b); }
+      b.className = "chip tzChip"; b.textContent = "▶ Teaser"; b.title = "Teaser ansehen (35 s)"; document.getElementById("sucheBtn").before(b); }
     // Rollen ohne passende Inhalte ausblenden (z. B. keine Wien-Fäden)
     if (!DAYS.some((d) => (d.wien_faden || []).length)) delete ROLLEN.wien;
 
     const S = { rolle:null, idx:0, playing:false, tempo:2, breite:2, tiefe:1, thema:null, seen:new Set(), mythen:new Set(), wien:new Set(),
-      kamera: KAMERA.some((k) => k[0] === merk.get("kamera")) ? merk.get("kamera") : "frei",
+      kamera: KAMERA.some((k) => k[0] === merk.get("kamera")) ? merk.get("kamera") : "fahrt",
       musik: merk.get("musik", false) === true, vorlesen: VORLESEN.some((k) => k[0] === merk.get("vorlesen")) ? merk.get("vorlesen") : "aus" };
     const MUSIK = DATA.musik || {};
     const HAT_MUSIK = Object.values(MUSIK).some((l) => l && l.length);
@@ -192,7 +196,10 @@
     // Rollen
     const rg = document.getElementById("roleGrid");
     Object.entries(ROLLEN).forEach(([k, r]) => { const b = document.createElement("button"); b.className = "role"; b.innerHTML = `<span class="k">${r.k}</span><span class="n">${r.n}</span><span class="d">${r.d}</span>`; b.onclick = () => setRole(k); rg.appendChild(b); });
-    document.getElementById("chipRoleBtn").onclick = () => { document.getElementById("roles").hidden = !document.getElementById("roles").hidden; };
+
+    // Kurzer Hinweis beim Start (statt Rollen-Fenster)
+    { const t = document.createElement("div"); t.className = "startHint"; t.innerHTML = narrow ? "Tippe ▶ zum Fahren · wische für Stationen" : "<kbd>Leertaste</kbd> fahren · <kbd>←</kbd><kbd>→</kbd> Station · <kbd>↓</kbd><kbd>↑</kbd> Tiefe · <kbd>−</kbd><kbd>+</kbd> Tempo · <kbd>/</kbd> suchen &amp; fragen";
+      document.getElementById("screen").appendChild(t); setTimeout(() => t.classList.add("weg"), 7000); setTimeout(() => t.remove(), 8200); addEventListener("keydown", () => t.classList.add("weg"), { once: true }); }
     // Direkt zu einem Tag springen: /atlas/<reise>/?tag=7 (z. B. aus der Reise-Statistik)
     { const t0 = +new URLSearchParams(location.search).get("tag");
       if (t0 && dayOf(t0)) { Object.assign(S, { rolle: "entdecker", tempo: 1, breite: 3, tiefe: 2, thema: null }); S.idx = Math.max(0, track().findIndex((s) => s.day >= t0)); document.getElementById("roles").hidden = true; } }
@@ -347,7 +354,7 @@
       if (map && van && !anim) { const s = go.last; if (k === "nord") map.easeTo({ bearing: 0, duration: 700 }); else if (k === "fahrt") map.easeTo({ bearing: kameraZiel(s), pitch: narrow ? 50 : 70, duration: 900 }); }
       render(); }
     document.querySelectorAll("#tonPanel .seg").forEach((g) => g.addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return;
-      if (g.dataset.ks === "tempo") { S.tempo = +b.dataset.v; render(); broadcast(); } else if (g.dataset.ks === "kamera") setKamera(b.dataset.v); else if (g.dataset.ks === "musik") ton.setMusik(b.dataset.v === "an"); else if (g.dataset.ks === "vorlesen") ton.setVorlesen(b.dataset.v); }));
+      if (g.dataset.ks === "tempo") { S.tempo = +b.dataset.v; render(); broadcast(); } else if (g.dataset.ks === "breite") setBreite(+b.dataset.v); else if (g.dataset.ks === "tiefe") { S.tiefe = +b.dataset.v; go(true); } else if (g.dataset.ks === "kamera") setKamera(b.dataset.v); else if (g.dataset.ks === "musik") ton.setMusik(b.dataset.v === "an"); else if (g.dataset.ks === "vorlesen") ton.setVorlesen(b.dataset.v); }));
 
     setTimeout(() => { if (!van) render(); }, 0);
     // ---------- Karte ----------
@@ -464,6 +471,7 @@
     function dayStep(n) { const tr = track(); const cur = (tr[S.idx] || {}).day || 1; let tgt = cur + n;
       while (tgt >= 1 && tgt <= DAYS.length && !tr.some((s) => s.day === tgt)) tgt += n;
       if (tgt >= 1 && tgt <= DAYS.length) gotoDay(tgt); }
+    function setBreite(v) { S.breite = v; const cur = (go.last || ST[0]).day; S.idx = Math.max(0, track().findIndex((s) => s.day >= cur)); go(true); broadcast(); }
     function setRole(k) { const r = ROLLEN[k]; if (!r) return; S.rolle = k; Object.assign(S, { tempo: r.s.tempo, breite: r.s.breite, tiefe: r.s.tiefe, thema: r.s.thema });
       document.getElementById("roles").hidden = true; const cur = (go.last || ST[0]).day; S.idx = Math.max(0, track().findIndex((s) => s.day >= cur)); go(true); setPlay(r.s.play); }
 
@@ -475,7 +483,7 @@
     // ---------- Anzeige ----------
     function render() {
       const tr = track(); const s = tr[S.idx]; const d = s ? dayOf(s.day) : DAYS[0];
-      document.getElementById("chipRole").textContent = S.rolle ? ROLLEN[S.rolle].n : "–";
+
       document.querySelectorAll("#tonPanel .seg").forEach((g) => [...g.children].forEach((b) => b.classList.toggle("on", b.dataset.v === (g.dataset.ks === "musik" ? (S.musik ? "an" : "aus") : String(S[g.dataset.ks])))));
       document.getElementById("chipMyth").textContent = S.mythen.size + "/" + DAYS.reduce((a, x) => a + (x.mythen || []).length, 0);
       document.getElementById("chipWien").textContent = S.wien.size + "/" + DAYS.reduce((a, x) => a + (x.wien_faden || []).length, 0);
@@ -537,7 +545,7 @@
       else if (e.key === "ArrowUp") { S.tiefe = Math.max(0, S.tiefe - 1); go(true); e.preventDefault(); }
       else if (e.key === "+" || e.key === "=") { S.tempo = Math.min(3, S.tempo + 1); render(); broadcast(); }
       else if (e.key === "-" || e.key === "_") { S.tempo = Math.max(1, S.tempo - 1); render(); broadcast(); }
-      else if (e.key === "r" || e.key === "R") document.getElementById("chipRoleBtn").click();
+      else if (e.key === "b" || e.key === "B") setBreite(S.breite % 3 + 1);
       else if (e.key === "k" || e.key === "K") setKamera(KAMERA[(KAMERA.findIndex((k) => k[0] === S.kamera) + 1) % KAMERA.length][0]);
       else if ((e.key === "m" || e.key === "M") && HAT_MUSIK) ton.setMusik(!S.musik);
       else if ((e.key === "v" || e.key === "V") && HAT_VL) ton.setVorlesen(VORLESEN[(VORLESEN.findIndex((k) => k[0] === S.vorlesen) + 1) % VORLESEN.length][0]);
@@ -649,7 +657,7 @@
         <div class="sl"><label>Tiefe</label><div class="seg" style="--n:4" data-k="tiefe"><button data-v="0">Ort</button><button data-v="1">Satz</button><button data-v="2">Teaser</button><button data-v="3">alles</button></div></div>
       </div>
       <div class="secTitle">Thema</div><div class="pills" id="cThemen"></div>
-      <div class="secTitle">Rolle</div><div class="pills" id="cRollen"></div>
+      <div class="pills" id="cRollen" hidden></div>
       <div class="secTitle">Kamera</div>
       <div class="seg" style="--n:3" data-ks="kamera">${KAMERA.map(([k, n]) => `<button data-v="${k}">${n}</button>`).join("")}</div>
       <div id="orbit">Wischen: links/rechts drehen, hoch/runter neigen</div>

@@ -353,7 +353,7 @@ function buildTrip(t, days, ctx) {
     </a>`).join("");
 
   const body = `<main class="wrap">
-    <a class="pg pg-back" href="/reisen">
+    <a class="pg pg-back" href="/atlas/">
       <span class="pg-dir">← Übersicht</span>
       <span class="pg-title">Alle Reisen</span>
     </a>
@@ -458,6 +458,8 @@ export function buildReisen(ctx) {
     }
   }
 
-  fs.writeFileSync(path.join(DIST, "reisen.html"), buildIndex(trips, counts, ctx));
+  // Übersicht /reisen → Weltkugel (Reise-Atlas); die Kartenliste bleibt als Funktion erhalten, wird aber nicht mehr ausgeliefert
+  void buildIndex;
+  fs.writeFileSync(path.join(DIST, "reisen.html"), redirectPage("/atlas/", "Reisen", ctx));
   return total;
 }

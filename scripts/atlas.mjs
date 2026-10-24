@@ -186,7 +186,7 @@ export async function buildAtlas({ ROOT, DIST, site }) {
   // alte Reise-Übersichten → Atlas
   const red = path.join(DIST, "_redirects");
   const prevR = fs.existsSync(red) ? fs.readFileSync(red, "utf8") : "";
-  const lines = trips.map((t) => `/reise/${t.slug}/ /atlas/${t.slug}/ 301\n/reise/${t.slug} /atlas/${t.slug}/ 301\n`).join("");
+  const lines = "/reisen /atlas/ 301\n" + trips.map((t) => `/reise/${t.slug}/ /atlas/${t.slug}/ 301\n/reise/${t.slug} /atlas/${t.slug}/ 301\n`).join("");
   fs.writeFileSync(red, prevR + (prevR && !prevR.endsWith("\n") ? "\n" : "") + lines);
   // Cache-Regeln: Seite und Daten immer frisch prüfen, Fotos lange cachen
   const hdr = path.join(DIST, "_headers");
