@@ -3,6 +3,7 @@
 //   Alte Controller-Links /atlas/#c-<code> werden auf die neueste Reise umgeleitet.
 import fs from "node:fs";
 import path from "node:path";
+import { teaserVon } from "./atlas.mjs";
 
 function decodePoly(s) {
   const out = []; let i = 0, lat = 0, lon = 0;
@@ -64,7 +65,7 @@ export function buildWelt({ ROOT, DIST, site, reisen }) {
       const linie = reiseLinie(r.tage);
       const lo = linie.map((p) => p[0]), la = linie.map((p) => p[1]);
       return {
-        slug: r.slug, title: r.title, zeitraum: r.zeitraum || "", cover: r.cover || "", accent: r.accent || "#e0913a", fahrzeug: r.fahrzeug || "",
+        slug: r.slug, title: r.title, zeitraum: r.zeitraum || "", cover: r.cover || "", teaser: teaserVon(ROOT, r.slug), accent: r.accent || "#e0913a", fahrzeug: r.fahrzeug || "",
         start: (r.tage[0] || {}).datum || "", tage: r.tage.length, laender: [...new Set(r.tage.flatMap((d) => d.land || []))],
         km: Math.round(r.tage.reduce((a, d) => a + ((d.route && d.route.km) || 0), 0)),
         fotos: r.tage.reduce((a, d) => a + (d.fotos || []).length, 0),

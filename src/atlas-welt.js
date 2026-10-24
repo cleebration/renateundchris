@@ -17,6 +17,18 @@
       <p class="hint mono">Globus mit Maus oder Fingern drehen · ← → wählen · Enter öffnet</p>
     </aside>`;
 
+  // Teaser im Fenster: hochkant am Handy, sonst quer
+  function teaser(r) {
+    const src = (innerHeight > innerWidth ? r.teaser.hoch || r.teaser.quer : r.teaser.quer || r.teaser.hoch);
+    const box = document.createElement("div"); box.className = "tzBox"; box.setAttribute("role", "dialog"); box.setAttribute("aria-label", "Teaser " + r.title);
+    box.innerHTML = `<div class="tzIn"><video src="${esc(src)}" poster="${esc(r.cover)}" controls autoplay playsinline></video>
+      <div class="tzBar"><a class="btn primary" href="/atlas/${esc(r.slug)}/">Ganze Reise erkunden →</a><a class="btn" href="${esc(src)}" download>Video speichern</a><button class="btn" data-x>Schließen</button></div></div>`;
+    const zu = () => { box.remove(); removeEventListener("keydown", esc_); };
+    const esc_ = (e) => { if (e.key === "Escape") zu(); };
+    box.addEventListener("click", (e) => { if (e.target === box || e.target.hasAttribute("data-x")) zu(); });
+    addEventListener("keydown", esc_); document.body.appendChild(box); box.querySelector("[data-x]").focus();
+  }
+
   fetch("/atlas/data/welt.json?v=" + V).then((r) => r.json()).then(start).catch(() => {
     document.getElementById("list").innerHTML = '<li class="err">Die Reisen konnten nicht geladen werden. <a href="/reisen">Zur Liste</a></li>';
   });
@@ -30,7 +42,8 @@
       <span class="th">${r.cover ? `<img src="${esc(r.cover)}" alt="" loading="lazy">` : ""}</span>
       <span class="tx"><span class="zt mono">${esc(r.zeitraum)}</span><b>${esc(r.title)}</b>
         <span class="kz mono">${r.tage} Tage · ${n0(r.km)} km · ${r.laender.length} ${r.laender.length === 1 ? "Land" : "Länder"}</span>
-        <span class="go">Eintauchen →</span></span></a></li>`).join("");
+        <span class="go">Eintauchen →</span></span></a>${r.teaser ? `<button class="tz" data-t="${i}" aria-label="Teaser von ${esc(r.title)} ansehen">▶ Teaser</button>` : ""}</li>`).join("");
+    list.addEventListener("click", (e) => { const b = e.target.closest(".tz"); if (!b) return; e.preventDefault(); teaser(R[+b.dataset.t]); });
 
     if (typeof maplibregl === "undefined") { document.getElementById("map").innerHTML = '<p class="nomap">Die Karte konnte nicht geladen werden.</p>'; return; }
     const map = new maplibregl.Map({ container: "map", style: "https://tiles.openfreemap.org/styles/liberty", center: [14, 30], zoom: narrow() ? 0.9 : 1.4,

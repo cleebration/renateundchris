@@ -83,6 +83,13 @@ function tripData(ROOT, slug) {
   return { reise: slug, quelleRouten: routen.quelle || "", tage };
 }
 
+// Teaser-Video je Reise (tools/teaser): assets/reisen/<reise>/teaser-16x9.mp4 und teaser-9x16.mp4
+export function teaserVon(ROOT, slug) {
+  const f = (n) => (fs.existsSync(path.join(ROOT, "assets", "reisen", slug, n)) ? `/assets/reisen/${slug}/${n}` : null);
+  const quer = f("teaser-16x9.mp4"), hoch = f("teaser-9x16.mp4");
+  return quer || hoch ? { quer, hoch } : null;
+}
+
 function shell(site, trips) {
   const t = trips[0];
   const v = Date.now().toString(36);
@@ -123,6 +130,7 @@ export function buildAtlas({ ROOT, DIST, site }) {
     if (!data) continue;
     data.title = t.title;
     data.fahrzeug = t.fahrzeug || "";
+    data.teaser = teaserVon(ROOT, t.slug);
     data.fahrzeugTyp = t.fahrzeugTyp || ""; // l3 · l2 · mietauto (Symbol auf der Karte); je Tag abweichend: _atlas.json tage[].fahrzeug
     // Musik je Land (content/reisen/_musik.json, gemeinsam für alle Reisen) – nur die Länder dieser Reise
     const laender = new Set(data.tage.flatMap((d) => d.land || []));

@@ -156,6 +156,12 @@
     const kmTotal = DAYS.reduce((a, d) => a + ((d.route && d.route.km) || 0), 0);
     { const nL = new Set(DAYS.flatMap((d) => d.land || [])).size; const fz = DATA.fahrzeug || "";
       document.getElementById("rolesLead").textContent = `${DAYS.length} Tage, ${nL} ${nL === 1 ? "Land" : "Länder"}${fz ? ", " + fz : ""}${kmTotal ? `, rund ${Math.round(kmTotal / 10) * 10 >= 1000 ? Math.round(kmTotal).toLocaleString("de-AT") : Math.round(kmTotal)} km` : ""}. Wähle, wie viel du sehen willst – mit Maus, Tastatur oder dem Smartphone. Jederzeit wechselbar.`; }
+    // Teaser-Video (35 s) im Startfenster
+    if (DATA.teaser) { const b = document.createElement("button"); b.className = "tzBtn"; b.textContent = "▶ Teaser ansehen (35 s)";
+      b.onclick = () => { const src = innerHeight > innerWidth ? DATA.teaser.hoch || DATA.teaser.quer : DATA.teaser.quer || DATA.teaser.hoch;
+        const box = document.createElement("div"); box.className = "tzBox"; box.innerHTML = `<div class="tzIn"><video src="${esc(src)}" controls autoplay playsinline></video><button class="big" data-x>Schließen</button></div>`;
+        box.onclick = (e) => { if (e.target === box || e.target.hasAttribute("data-x")) box.remove(); }; document.body.appendChild(box); };
+      document.getElementById("rolesLead").after(b); }
     // Rollen ohne passende Inhalte ausblenden (z. B. keine Wien-Fäden)
     if (!DAYS.some((d) => (d.wien_faden || []).length)) delete ROLLEN.wien;
 
