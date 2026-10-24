@@ -103,6 +103,7 @@
           <button class="chip warn" id="tonChip" hidden title="Der Browser hat den Ton blockiert">🔇 Ton einschalten</button>
           <span class="chip"><i class="dot" id="linkDot"></i><b id="linkTxt">Kein Smartphone verbunden</b></span>
           <button class="chip narrowOnly" id="tonBtn" aria-expanded="false">Kamera &amp; Ton</button>
+          <a class="chip" href="/atlas/statistik/#${esc(REISE)}" title="Kilometer, Wetter, Rekorde und Abzeichen">📊 Statistik</a>
           <button class="chip" id="chipRoleBtn" title="Rolle wechseln (R)">Rolle <b id="chipRole">–</b></button>
           <span class="chip opt">Legenden <b class="mono" id="chipMyth">0</b></span>
           <span class="chip opt">Wien-Fäden <b class="mono" id="chipWien">0</b></span>
@@ -183,6 +184,26 @@
     const rg = document.getElementById("roleGrid");
     Object.entries(ROLLEN).forEach(([k, r]) => { const b = document.createElement("button"); b.className = "role"; b.innerHTML = `<span class="k">${r.k}</span><span class="n">${r.n}</span><span class="d">${r.d}</span>`; b.onclick = () => setRole(k); rg.appendChild(b); });
     document.getElementById("chipRoleBtn").onclick = () => { document.getElementById("roles").hidden = !document.getElementById("roles").hidden; };
+    // Direkt zu einem Tag springen: /atlas/<reise>/?tag=7 (z. B. aus der Reise-Statistik)
+    { const t0 = +new URLSearchParams(location.search).get("tag");
+      if (t0 && dayOf(t0)) { Object.assign(S, { rolle: "entdecker", tempo: 1, breite: 3, tiefe: 2, thema: null }); S.idx = Math.max(0, track().findIndex((s) => s.day >= t0)); document.getElementById("roles").hidden = true; } }
+    // Wetter je Tag (Open-Meteo Archiv, gleicher Zwischenspeicher wie die Reise-Statistik)
+    const WETTER = (() => { try { return JSON.parse(localStorage.getItem("atlas.stat.wetter.v1." + REISE)) || null; } catch (e) { return null; } })() || {};
+    if (!Object.keys(WETTER).length) {
+      const tw = DAYS.filter((d) => d.wetterOrt && d.datum);
+      if (tw.length) {
+        const q = new URLSearchParams({ latitude: tw.map((d) => d.wetterOrt.lat).join(","), longitude: tw.map((d) => d.wetterOrt.lon).join(","), start_date: tw[0].datum, end_date: tw[tw.length - 1].datum, timezone: "auto",
+          daily: "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,sunshine_duration,wind_speed_10m_max" });
+        fetch("https://archive-api.open-meteo.com/v1/archive?" + q).then((r) => (r.ok ? r.json() : Promise.reject())).then((j) => {
+          const arr = Array.isArray(j) ? j : [j];
+          tw.forEach((d, k) => { const dl = (arr[k] || {}).daily; if (!dl) return; const ix = dl.time.indexOf(d.datum); if (ix < 0) return;
+            WETTER[d.tag] = { code: dl.weather_code[ix], max: dl.temperature_2m_max[ix], min: dl.temperature_2m_min[ix], regen: dl.precipitation_sum[ix], sonneH: dl.sunshine_duration[ix] != null ? dl.sunshine_duration[ix] / 3600 : null, wind: dl.wind_speed_10m_max[ix] }; });
+          try { localStorage.setItem("atlas.stat.wetter.v1." + REISE, JSON.stringify(WETTER)); } catch (e) {}
+          try { render(); } catch (e) {}
+        }).catch(() => {});
+      }
+    }
+    const wmoIcon = (c) => c == null ? "" : c === 0 ? "☀️" : c <= 2 ? "🌤️" : c === 3 ? "☁️" : c <= 48 ? "🌫️" : c <= 57 ? "🌦️" : c <= 67 ? "🌧️" : c <= 77 ? "🌨️" : c <= 82 ? "🌦️" : c <= 86 ? "🌨️" : "⛈️";
 
     // Lightbox
     const lb = document.getElementById("lightbox");
@@ -416,6 +437,10 @@
 
       let h = `<span class="day">Tag ${d.tag} · ${esc(fmtDate(d.datum))} · ${esc((d.land || []).map((c) => (COUNTRY[c] || {}).n || c).join(" → "))}</span><h2>${esc((s && s.name) || d.titel || "Ohne Eintrag")}</h2>`;
       if (d.titel && s) h += `<span class="stn">${esc(d.titel)}${s.notiz ? " · " + esc(s.notiz) : ""}${d.route && d.route.km ? ` · ${String(d.route.km).replace(".", ",")} km` : ""}</span>`;
+      { const w = WETTER[d.tag], so = d.sonne; const bits = [];
+        if (w && w.max != null) bits.push(`${wmoIcon(w.code)} ${Math.round(w.max)}° / ${Math.round(w.min)}°${w.regen >= 1 ? ` · ${String(Math.round(w.regen * 10) / 10).replace(".", ",")} mm` : ""}`);
+        if (so) bits.push(`↑ ${so.auf} · ↓ ${so.unter}`);
+        if (bits.length) h += `<span class="wx" title="Wetter am Übernachtungsort (Open-Meteo) · Sonnenauf- und -untergang">${bits.join(" · ")}</span>`; }
       h += `<div class="depth" aria-label="Tiefe ${S.tiefe} von 3">Tiefe ${[0, 1, 2, 3].map((k) => `<i class="${k <= S.tiefe ? "on" : ""}"></i>`).join("")}</div>`;
       if (S.tiefe >= 1 && d.satz) h += `<p class="lead">${esc(d.satz)}</p>`;
       const fotos = d.fotos || [];

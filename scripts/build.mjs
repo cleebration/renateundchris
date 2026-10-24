@@ -423,6 +423,17 @@ function buildDatenschutz() {
     <p>Zur einheitlichen Darstellung bindet diese Website die Schriftarten „Fraunces" und „Spline Sans Mono" über Google Fonts ein. Beim Aufruf der Seite wird dabei deine IP-Adresse an Server von Google (Google Ireland Limited bzw. Google LLC, USA) übertragen, damit die Schriften geladen werden können (Art. 6 Abs. 1 lit. f DSGVO – einheitliche, ansprechende Darstellung). Die Übermittlung in die USA stützt sich auf die EU-Standardvertragsklauseln. Mehr dazu: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>.</p>
     <p>Die Bilder der Seiten „Was wir machen“ und „Dubbles“ werden von unserem Medienserver bei Vercel Inc. (USA) geladen. Dabei wird deine IP-Adresse an Vercel übertragen, damit die Bilder ausgeliefert werden können (Art. 6 Abs. 1 lit. f DSGVO – Darstellung der Galerie). Die Übermittlung in die USA stützt sich auf die EU-Standardvertragsklauseln. Mehr dazu: <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener">vercel.com/legal/privacy-policy</a>.</p>
 
+    <h3>Reise-Atlas und Reise-Statistik</h3>
+    <p>Der Reise-Atlas (/atlas) und die Reise-Statistik (/atlas/statistik) laden beim Aufruf Daten direkt von externen Diensten in deinen Browser; dabei wird deine IP-Adresse an den jeweiligen Anbieter übertragen (Art. 6 Abs. 1 lit. f DSGVO – Darstellung von Karte, Gelände, Wetter und Höhen):</p>
+    <ul>
+      <li>Kartenkacheln von OpenFreeMap (<a href="https://openfreemap.org" target="_blank" rel="noopener">openfreemap.org</a>)</li>
+      <li>Höhenkacheln aus dem AWS-Open-Data-Programm „Terrain Tiles“ (Amazon Web Services, USA; <a href="https://registry.opendata.aws/terrain-tiles" target="_blank" rel="noopener">registry.opendata.aws/terrain-tiles</a>)</li>
+      <li>Wetter- und Höhendaten von Open-Meteo (<a href="https://open-meteo.com/en/terms" target="_blank" rel="noopener">open-meteo.com</a>)</li>
+      <li>die Programmbibliotheken MapLibre, MQTT.js und qrcode-generator über unpkg.com</li>
+    </ul>
+    <p>Für die Steuerung mit dem Smartphone verbinden sich Bildschirm und Smartphone über öffentliche MQTT-Vermittlungsdienste (broker.emqx.io, broker.hivemq.com). Übertragen werden nur ein zufälliger Kopplungscode, Steuerbefehle und der angezeigte Stand (Tag, Ort) – keine Namen oder Konten.</p>
+    <p>Einstellungen des Atlas (z. B. Kamera, Musik) sowie geladene Wetter- und Höhendaten werden im lokalen Speicher deines Browsers abgelegt und nicht an uns übertragen.</p>
+
     <h2>5. Cookies / Speicherung</h2>
     <p>Diese Website verwendet ausschließlich technisch notwendige Mechanismen. Es werden keine Tracking- oder Marketing-Cookies gesetzt und keine Analyse-Dienste eingebunden.</p>
 

@@ -18,6 +18,7 @@ import { neuesteZuerst } from "./reisen-sort.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import { slugify } from "./reisen.mjs";
+import { buildStatistik, tagStatistik } from "./atlas-statistik.mjs";
 
 const readJson = (f) => (fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, "utf8")) : null);
 
@@ -115,6 +116,7 @@ export function buildAtlas({ ROOT, DIST, site }) {
   const out = path.join(DIST, "atlas");
   fs.mkdirSync(path.join(out, "data"), { recursive: true });
   let n = 0;
+  const fuerStatistik = [];
   for (const t of trips) {
     const data = tripData(ROOT, t.slug);
     if (!data) continue;
@@ -125,9 +127,13 @@ export function buildAtlas({ ROOT, DIST, site }) {
     const laender = new Set(data.tage.flatMap((d) => d.land || []));
     data.musik = {};
     for (const m of (musik && musik.stuecke) || []) if (laender.has(m.land) && /^https:\/\/upload\.wikimedia\.org\//.test(m.url)) (data.musik[m.land] ||= []).push({ url: m.url, titel: m.titel, urheber: m.urheber, lizenz: m.lizenz, seite: m.seite });
+    fuerStatistik.push({ slug: t.slug, title: t.title, accent: t.accent, fahrzeug: t.fahrzeug, tage: data.tage });
+    // Sonnenauf-/-untergang je Tag (berechnet) und Ort für das Wetter – für die Stationskarte im Atlas
+    for (const d of data.tage) { const k = tagStatistik(d); d.sonne = k.sonne; d.wetterOrt = k.ort; }
     fs.writeFileSync(path.join(out, "data", `${t.slug}.json`), JSON.stringify(data));
     n += data.tage.length;
   }
+  buildStatistik({ ROOT, DIST, site, reisen: fuerStatistik });
   for (const f of ["atlas.js", "atlas.css"]) {
     const src = path.join(ROOT, "src", f);
     if (fs.existsSync(src)) fs.copyFileSync(src, path.join(out, f));
