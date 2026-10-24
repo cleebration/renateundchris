@@ -14,6 +14,7 @@
       <header><span class="eyebrow">Renate &amp; Chris · Reise-Atlas</span><h1>Unsere Reisen</h1><p class="sum mono" id="sum"></p>
         <div class="acts"><button class="btn primary" id="tour">▶ Rundflug</button><a class="btn" href="/atlas/statistik/">📊 Statistik</a><a class="btn" href="/reisen">Liste</a></div></header>
       <input id="such" type="search" placeholder="🔎 Alle Reisen durchsuchen …" aria-label="Alle Reisen durchsuchen">
+      <div id="antwort" hidden></div>
       <ol id="treffer" hidden aria-label="Suchergebnisse"></ol>
       <ol id="list" aria-label="Reisen"></ol>
       <p class="hint mono">Globus mit Maus oder Fingern drehen · ← → wählen · Enter öffnet</p>
@@ -35,6 +36,14 @@
   let SUCHE = null;
   const such = document.getElementById("such"), tr = document.getElementById("treffer");
   const norm = (t) => String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  such.placeholder = "🔎 Suchen – oder fragen + Enter ✨";
+  such.addEventListener("keydown", async (e) => {
+    if (e.key !== "Enter") return; const f = such.value.trim(); if (f.length < 3) return;
+    const an = document.getElementById("antwort"); an.hidden = false; an.innerHTML = "<p class='hint'>Claude liest im Tagebuch nach …</p>";
+    try { const j = await fetch("/api/frage", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ frage: f, reise: "" }) }).then((r) => r.json());
+      an.innerHTML = j.fehler ? `<p class="hint">${esc(j.fehler)}</p>` : `<p>${esc(j.antwort)}</p>${(j.quellen || []).map((q) => `<a href="/atlas/${esc(q.reise)}/?tag=${q.tag}">→ ${esc(q.titelReise)} · Tag ${q.tag}</a>`).join("")}`;
+    } catch (err) { an.innerHTML = "<p class='hint'>Die Frage konnte gerade nicht beantwortet werden.</p>"; }
+  });
   such.addEventListener("input", async () => {
     const q = norm(such.value).trim();
     if (q.length < 2) { tr.hidden = true; document.getElementById("list").hidden = false; return; }

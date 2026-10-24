@@ -1,7 +1,16 @@
 {
   "name": "renateundchris",
   "compatibility_date": "2026-06-01",
+  // Worker: statische Seite aus dist/ + „Die Reise fragen“ (/api/frage). Geheimnis ANTHROPIC_API_KEY per `npx wrangler secret put ANTHROPIC_API_KEY`.
+  "main": "src/worker.js",
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    "binding": "ASSETS"
+  },
+  "kv_namespaces": [
+    { "binding": "FRAGE", "id": "27edfd5989b846109f467ed9078c0f78" }
+  ],
+  "vars": {
+    "BUDGET_USD": "5.4"
   }
 }

@@ -73,3 +73,7 @@ h1{margin:2px 0 4px;font-family:var(--display);font-weight:800;font-size:54px;li
 #treffer a:hover{border-color:var(--amber)}
 #treffer b{font:12px var(--mono);color:var(--amber)}
 #treffer small{color:var(--muted);font-size:12px}
+
+#antwort{background:rgba(0,0,0,.3);border:1px solid var(--amber);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+#antwort p{margin:0}
+#antwort a{font:12px var(--mono);text-decoration:none}

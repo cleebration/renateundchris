@@ -225,8 +225,18 @@
     // Suche über diese Reise: Taste „/“ oder Knopf 🔎
     function suche() {
       const box = document.createElement("div"); box.className = "tzBox suche";
-      box.innerHTML = `<div class="suIn"><input type="search" placeholder="Suchen: Ort, Essen, Burg, Fähre …" aria-label="In dieser Reise suchen"><ol></ol><button class="big" data-x>Schließen</button></div>`;
-      const inp = box.querySelector("input"), ol = box.querySelector("ol");
+      box.innerHTML = `<div class="suIn"><input type="search" placeholder="Suchen oder fragen: „Wo war es am heißesten?“" aria-label="In dieser Reise suchen oder eine Frage stellen">
+        <div class="frRow"><button class="big primary" data-frage>✨ Frag die Reise</button><span class="note">Antwort von Claude, nur aus unserem Tagebuch · max. 15 Fragen am Tag</span></div>
+        <div class="antwort" hidden></div><ol></ol><button class="big" data-x>Schließen</button></div>`;
+      const inp = box.querySelector("input"), ol = box.querySelector("ol"), an = box.querySelector(".antwort");
+      const fragen = async () => { const f = inp.value.trim(); if (f.length < 3) return; an.hidden = false; an.innerHTML = "<p class='note'>Claude liest im Tagebuch nach …</p>";
+        try { const r = await fetch("/api/frage", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ frage: f, reise: REISE }) }); const j = await r.json();
+          if (j.fehler) { an.innerHTML = `<p class="note">${esc(j.fehler)}</p>`; return; }
+          an.innerHTML = `<p>${esc(j.antwort)}</p>${(j.quellen || []).map((q) => q.reise === REISE ? `<button data-t="${q.tag}">→ Tag ${q.tag} · ${esc(q.titel)}</button>` : `<a href="/atlas/${esc(q.reise)}/?tag=${q.tag}">→ ${esc(q.titelReise)} · Tag ${q.tag}</a>`).join("")}`;
+        } catch (e) { an.innerHTML = "<p class='note'>Die Frage konnte gerade nicht beantwortet werden.</p>"; } };
+      box.querySelector("[data-frage]").onclick = fragen;
+      inp.addEventListener("keydown", (e) => { if (e.key === "Enter") fragen(); });
+      an.onclick = (e) => { const b = e.target.closest("[data-t]"); if (b) { box.remove(); gotoDay(+b.dataset.t); } };
       const norm = (t) => String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       inp.oninput = () => { const q = norm(inp.value).trim(); if (q.length < 2) { ol.innerHTML = ""; return; }
         const treffer = DAYS.map((d) => ({ d, txt: [d.titel, d.satz, d.teaser, ...(d.stationen || []).map((s) => s.name + " " + (s.notiz || "")), ...(d.fotos || []).map((f) => f.text), ...(d.passend || []).map((x) => x.titel + " " + x.ort)].filter(Boolean).join(" · ") }))

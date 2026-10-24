@@ -154,6 +154,18 @@ export async function buildAtlas({ ROOT, DIST, site }) {
   for (const x of alle) fs.writeFileSync(path.join(out, "data", `${x.slug}.json`), JSON.stringify(x.data));
   schreibeRueckverweise(DIST, rueck, quellen);
   console.log(`✓ Querbezüge: ${Object.entries(quellen).map(([k, q]) => `${k} ${q.eintraege.length} (${q.herkunft || "keine"})`).join(", ")} · ${Object.keys(rueck).length} Rückverweise`);
+  // Wissen für „Die Reise fragen“ (Worker /api/frage): je Tag Text + kurze Fakten (km, Wetter, Sonne)
+  fs.writeFileSync(path.join(out, "data", "wissen.json"), JSON.stringify(alle.map((x) => ({
+    reise: x.slug, titel: x.title, fahrzeug: x.data.fahrzeug || "",
+    tage: x.data.tage.map((d) => ({
+      tag: d.tag, datum: d.datum, titel: d.titel || "", land: (d.land || []).join("/"),
+      fakten: [d.route && d.route.km ? `${Math.round(d.route.km)} km` : "keine Fahrt", d.wetter && d.wetter.max != null ? `${Math.round(d.wetter.max)}/${Math.round(d.wetter.min)} °C, ${d.wetter.regen || 0} mm Regen` : "", d.sonne ? `Sonne ${d.sonne.auf}–${d.sonne.unter}` : "", (d.fotos || []).length ? `${d.fotos.length} Fotos` : ""].filter(Boolean).join(", "),
+      text: [d.satz, d.teaser, "Stationen: " + (d.stationen || []).map((s) => s.name + (s.notiz ? ` (${s.notiz})` : "")).join("; "),
+        (d.mythen || []).length ? "Legenden: " + d.mythen.map((m) => `${m.behauptung} – ${m.befund}`).join("; ") : "",
+        (d.wien_faden || []).length ? "Wien-Bezug: " + d.wien_faden.map((w) => `${w.person_oder_thema}: ${w.bezug}`).join("; ") : "",
+        (d.passend || []).length ? "Dazu passend: " + d.passend.map((p) => `${p.titel}${p.ort ? " in " + p.ort : ""} (${p.seite}${p.gleicherTag ? ", an diesem Tag" : ", " + p.jahr} ${p.url})`).join("; ") : ""].filter(Boolean).join("\n").slice(0, 2500),
+    })),
+  }))));
   // Suche über alle Reisen (Weltkugel): je Tag Titel, Satz, Stationen, Fotos, Querbezüge
   fs.writeFileSync(path.join(out, "data", "suche.json"), JSON.stringify(alle.flatMap((x) => x.data.tage.map((d) => ({
     reise: x.slug, titelReise: x.title, tag: d.tag, datum: d.datum, titel: d.titel || "",
