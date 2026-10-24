@@ -156,7 +156,7 @@
    ],
    "titel": "Ruhetag auf Babin Kuk",
    "satz": "Ein Tag auf der Halbinsel: Palmen, Pool und Yuccablüten, am Abend Sonnenuntergang über den Elaphiten.",
-   "teaser": "Kein Ausflug, sondern Zeit auf Babin Kuk und in Lapad: blühende Yucca und Alpenveilchen, der Hotelpool, Spaziergang entlang der Küste. Am Abend färbt sich der Himmel über den vorgelagerten Inseln orange, Spritz im Restaurant Piramda.",
+   "teaser": "Kein Ausflug, sondern Zeit auf Babin Kuk und in Lapad: blühende Yucca und Alpenveilchen, der Hotelpool, Spaziergang entlang der Küste. Am Abend färbt sich der Himmel über den vorgelagerten Inseln orange, Spritz im Restaurant Piramida.",
    "stationen": [
     {
      "name": "Babin Kuk",
@@ -173,7 +173,7 @@
      "notiz": "Sonnenuntergang"
     },
     {
-     "name": "Restaurant Piramda",
+     "name": "Restaurant Piramida",
      "lat": 42.6567,
      "lon": 18.0659,
      "art": "essen",
@@ -259,7 +259,7 @@
    ],
    "titel": "Ausflug nach Mostar",
    "satz": "Nach Bosnien und Herzegowina: Stari Most, Basar und Altstadt von Mostar, auf dem Rückweg Počitelj und die Pelješac-Brücke.",
-   "teaser": "Mit dem orangen Peugeot Traveller geht es über die Grenze nach Mostar. Rund um die Alte Brücke über die Neretva: Kupferschmiede, Teppiche, steile Pflastergassen, Minarette und die Franziskanerkirche. Auf dem Rückweg ein Halt in Počitelj mit seiner Festung über dem Fluss, dann über die Pelješac-Brücke zurück nach Dubrovnik und Burger im Restaurant Piramda.",
+   "teaser": "Mit dem orangen Peugeot Traveller geht es über die Grenze nach Mostar. Rund um die Alte Brücke über die Neretva: Kupferschmiede, Teppiche, steile Pflastergassen, Minarette und die Franziskanerkirche. Auf dem Rückweg ein Halt in Počitelj mit seiner Festung über dem Fluss, dann über die Pelješac-Brücke zurück nach Dubrovnik und Burger im Restaurant Piramida.",
    "stationen": [
     {
      "name": "Mostar, Stari Most",
@@ -283,7 +283,7 @@
      "notiz": "Rückweg nach Dubrovnik"
     },
     {
-     "name": "Restaurant Piramda",
+     "name": "Restaurant Piramida",
      "lat": 42.6567,
      "lon": 18.0659,
      "art": "essen",
