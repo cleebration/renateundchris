@@ -268,3 +268,19 @@ body.touch .startHint{bottom:auto;top:calc(130px + env(safe-area-inset-top,0px))
 body.touch .maplibregl-ctrl-bottom-right{display:none}
 body.touch .maplibregl-ctrl-bottom-left{left:auto!important;right:max(8px,env(safe-area-inset-right,0px));bottom:auto!important;top:calc(170px + env(safe-area-inset-top,0px));max-width:70vw}
 body.touch .maplibregl-ctrl-attrib{font-size:9px}
+
+/* Tageskarte ausblendbar, Reiter am Rand */
+.cardX{all:unset;cursor:pointer;position:sticky;top:0;align-self:flex-end;margin:-8px -8px -30px 0;width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:rgba(255,255,255,.07);color:var(--muted);font:16px var(--mono);z-index:2}
+.cardX:hover{color:var(--amber)}
+#card.zu{display:none}
+#cardTab{right:0;top:calc(196px + env(safe-area-inset-top,0px));border:1px solid var(--hair);border-right:0;border-radius:12px 0 0 12px;background:var(--panel);color:var(--ink);font:12px var(--mono);padding:14px 8px 14px 10px;cursor:pointer;writing-mode:vertical-rl;transform:rotate(180deg);letter-spacing:.08em}
+#cardTab:hover{color:var(--amber)}
+body.touch #cardTab{writing-mode:horizontal-tb;transform:none;top:auto;bottom:calc(122px + env(safe-area-inset-bottom,0px));padding:10px 14px;border-radius:12px 0 0 12px}
+body.touch #card[data-tiefe="2"],body.touch #card[data-tiefe="3"]{max-height:66vh}
+body.touch .cardX{display:none}
+#tempoBlase{left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--amber);color:#1b1206;font:14px var(--mono);padding:8px 14px;border-radius:999px;z-index:40}
+body.touch #dPlay{touch-action:none}
+/* Seitenleiste zu: schmaler Reiter bleibt sichtbar */
+#side.zu .sideKopf{writing-mode:vertical-rl;padding:12px 8px}
+#side.zu .sideKopf i{transform:rotate(90deg)}
+body.touch #card>.day,body.touch #card>h2{touch-action:none}

@@ -130,9 +130,11 @@
           <div id="musikBox" hidden><h4>Musik</h4><div class="seg" style="--n:2" data-ks="musik"><button data-v="aus">aus</button><button data-v="an">an</button></div><p class="note" id="musikInfo"></p></div>
           <div id="vlBox" hidden><h4>Vorlesen</h4><div class="seg vl" data-ks="vorlesen">${VORLESEN.map(([k, n]) => `<button data-v="${k}">${n}</button>`).join("")}</div><p class="note" id="vlInfo"></p></div>
         </div>
-        <div class="panel"><h4>Tastatur</h4><div class="kbd"><kbd>←</kbd> <kbd>→</kbd> Station · <kbd>⇧</kbd>+Pfeil Tag<br><kbd>Leer</kbd> Fahren / Anhalten · <kbd>−</kbd> <kbd>+</kbd> Tempo<br><kbd>↓</kbd> tiefer <kbd>↑</kbd> weniger · <kbd>B</kbd> Breite · <kbd>F</kbd> Vollbild<br><kbd>/</kbd> Suchen &amp; fragen<br><kbd>K</kbd> Kamera · <kbd>M</kbd> Musik · <kbd>V</kbd> Vorlesen</div></div>
+        <div class="panel"><h4>Tastatur</h4><div class="kbd"><kbd>←</kbd> <kbd>→</kbd> Station · <kbd>⇧</kbd>+Pfeil Tag<br><kbd>Leer</kbd> Fahren / Anhalten · <kbd>−</kbd> <kbd>+</kbd> Tempo<br><kbd>↓</kbd> tiefer <kbd>↑</kbd> weniger · <kbd>B</kbd> Breite · <kbd>T</kbd> Tageskarte · <kbd>F</kbd> Vollbild<br><kbd>/</kbd> Suchen &amp; fragen<br><kbd>K</kbd> Kamera · <kbd>M</kbd> Musik · <kbd>V</kbd> Vorlesen</div></div>
       </div>
       <aside class="hud" id="card" aria-live="polite"></aside>
+      <button class="hud" id="cardTab" hidden aria-label="Tagesübersicht einblenden">‹ Tag</button>
+      <div class="hud" id="tempoBlase" hidden></div>
       <div class="hud" id="rail"><div id="railRow" role="group" aria-label="Reisetage"></div>
         <div id="railMeta"><span><b id="metaDay">Tag 1</b> · <span id="metaDate"></span> · <span id="metaMode"></span></span><span class="legend" id="legend"></span></div></div>
       <div id="roles" hidden><div class="rolesIn"><a class="backBtn rolesBack" href="/atlas/">← Zurück zu allen Reisen</a><h2>Wie willst du reisen?</h2>
@@ -203,7 +205,7 @@
     Object.entries(ROLLEN).forEach(([k, r]) => { const b = document.createElement("button"); b.className = "role"; b.innerHTML = `<span class="k">${r.k}</span><span class="n">${r.n}</span><span class="d">${r.d}</span>`; b.onclick = () => setRole(k); rg.appendChild(b); });
 
     // Kurzer Hinweis beim Start (statt Rollen-Fenster)
-    { const t = document.createElement("div"); t.className = "startHint"; t.innerHTML = (matchMedia("(pointer: coarse)").matches || innerWidth <= 900) ? "▶ Fahren · auf die Karte tippen = mehr · wischen = nächste Station · ⚙ Einstellungen" : "<kbd>Leertaste</kbd> fahren · <kbd>←</kbd><kbd>→</kbd> Station · <kbd>↓</kbd><kbd>↑</kbd> Tiefe · <kbd>−</kbd><kbd>+</kbd> Tempo · <kbd>/</kbd> suchen &amp; fragen";
+    { const t = document.createElement("div"); t.className = "startHint"; t.innerHTML = (matchMedia("(pointer: coarse)").matches || innerWidth <= 900) ? "Karte: tippen oder ↑ wischen = mehr · ↓ = weniger · ← → = Station · „Fahren“ seitlich ziehen = Tempo" : "<kbd>Leertaste</kbd> fahren · <kbd>←</kbd><kbd>→</kbd> Station · <kbd>↓</kbd><kbd>↑</kbd> Tiefe · <kbd>−</kbd><kbd>+</kbd> Tempo · <kbd>/</kbd> suchen &amp; fragen";
       document.getElementById("screen").appendChild(t); setTimeout(() => t.classList.add("weg"), 7000); setTimeout(() => t.remove(), 8200); addEventListener("keydown", () => t.classList.add("weg"), { once: true }); }
     // Direkt zu einem Tag springen: /atlas/<reise>/?tag=7 (z. B. aus der Reise-Statistik)
     { const t0 = +new URLSearchParams(location.search).get("tag");
@@ -488,10 +490,27 @@
       else if (a === "play") setPlay(!S.playing); else if (a === "suche") suche();
       else if (a === "einst") { const o = side.classList.toggle("offen"); b.setAttribute("aria-expanded", o); } });
     { const card = document.getElementById("card"); let x0 = null, y0 = 0;
-      card.addEventListener("pointerdown", (e) => { if (!document.body.classList.contains("touch")) return; x0 = e.clientX; y0 = e.clientY; });
-      card.addEventListener("pointerup", (e) => { if (x0 == null) return; const dx = e.clientX - x0, dy = e.clientY - y0; x0 = null;
+      // Touch-Ereignisse statt Pointer: beim Wischen über scrollbaren Inhalt bricht der Browser Pointer-Gesten ab
+      let kopf = false; // senkrechtes Wischen nur im Kopf der Karte (Griff, Tag, Ort) – darunter scrollt der Inhalt
+      card.addEventListener("touchstart", (e) => { const t = e.touches[0]; x0 = t.clientX; y0 = t.clientY; kopf = t.clientY - card.getBoundingClientRect().top < 100; }, { passive: true });
+      card.addEventListener("touchend", (e) => { if (x0 == null) return; const t = e.changedTouches[0]; const dx = t.clientX - x0, dy = t.clientY - y0; x0 = null;
         if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) { step(dx < 0 ? 1 : -1); return; }
-        if (Math.abs(dx) < 8 && Math.abs(dy) < 8 && !e.target.closest("a,button")) card.classList.toggle("auf"); }); }
+        if (kopf && Math.abs(dy) > 40 && Math.abs(dy) > Math.abs(dx) * 1.5) { if (dy < 0) setTiefe(S.tiefe + 1); else if (S.tiefe === 0) setKarteZu(true); else setTiefe(S.tiefe - 1); return; }
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8 && !e.target.closest("a,button,.gal,.hero")) setTiefe((S.tiefe + 1) % 4); }); }
+    // Tageskarte ein-/ausblenden; ausgeblendet bleibt rechts ein schmaler Reiter sichtbar
+    function setTiefe(t) { S.tiefe = Math.max(0, Math.min(3, t)); go(true); broadcast(); }
+    function setKarteZu(zu) { document.getElementById("card").classList.toggle("zu", zu); document.getElementById("cardTab").hidden = !zu; merk.set("karteZu", zu); }
+    document.getElementById("cardTab").onclick = () => setKarteZu(false);
+    if (merk.get("karteZu", false) === true) setKarteZu(true);
+    // Tempo mit dem Daumen: auf „Fahren“ nach links/rechts ziehen
+    { const pb = document.getElementById("dPlay"); let px = null, start = 2, gezogen = false; const blase = document.getElementById("tempoBlase");
+      pb.addEventListener("pointerdown", (e) => { px = e.clientX; start = S.tempo; gezogen = false; pb.setPointerCapture(e.pointerId); });
+      pb.addEventListener("pointermove", (e) => { if (px == null) return; const dx = e.clientX - px; if (Math.abs(dx) < 18 && !gezogen) return;
+        gezogen = true; const t = Math.max(1, Math.min(3, start + Math.round(dx / 45))); if (t !== S.tempo) { S.tempo = t; render(); broadcast(); }
+        blase.textContent = "Tempo: " + ["", "langsam", "mittel", "schnell"][S.tempo]; blase.hidden = false; });
+      const ende = () => { px = null; setTimeout(() => (blase.hidden = true), 700); };
+      pb.addEventListener("pointerup", ende); pb.addEventListener("pointercancel", ende);
+      pb.addEventListener("click", (e) => { if (gezogen) { e.stopImmediatePropagation(); e.preventDefault(); gezogen = false; } }, true); }
     document.getElementById("fernBtn").onclick = () => chooseMode();
     function setBreite(v) { S.breite = v; const cur = (go.last || ST[0]).day; S.idx = Math.max(0, track().findIndex((s) => s.day >= cur)); go(true); broadcast(); }
     function setRole(k) { const r = ROLLEN[k]; if (!r) return; S.rolle = k; Object.assign(S, { tempo: r.s.tempo, breite: r.s.breite, tiefe: r.s.tiefe, thema: r.s.thema });
@@ -544,7 +563,9 @@
         if (d.seite) h += `<a class="more" href="${esc(d.seite)}">Ganzes Tagebuch von Tag ${d.tag} lesen →</a>`;
       }
       if (d.status === "fehlt") h += `<p class="note">Für diesen Tag gibt es noch keinen Eintrag.</p>`;
-      const card = document.getElementById("card"); card.innerHTML = h;
+      const card = document.getElementById("card"); card.innerHTML = `<button class="cardX" aria-label="Tagesübersicht ausblenden (T)" title="ausblenden (T)">›</button>` + h; card.dataset.tiefe = S.tiefe;
+      card.querySelector(".cardX").onclick = () => setKarteZu(true);
+      document.getElementById("cardTab").textContent = `‹ Tag ${d.tag}`;
       card.querySelectorAll("[data-f]").forEach((b) => b.onclick = () => openPhoto(fotos[+b.dataset.f]));
       card.querySelectorAll("[data-c]").forEach((b) => b.onclick = () => { const c = d.clips[+b.dataset.c]; const box = document.createElement("div"); box.className = "tzBox";
         box.innerHTML = `<div class="tzIn"><video src="${esc(c.url)}" ${c.poster ? `poster="${esc(c.poster)}"` : ""} controls autoplay muted playsinline></video><p class="note">Tag ${d.tag} · Ton per Klick auf 🔈 im Video</p><button class="big" data-x>Schließen</button></div>`;
@@ -569,6 +590,7 @@
       else if (e.key === "+" || e.key === "=") { S.tempo = Math.min(3, S.tempo + 1); render(); broadcast(); }
       else if (e.key === "-" || e.key === "_") { S.tempo = Math.max(1, S.tempo - 1); render(); broadcast(); }
       else if (e.key === "b" || e.key === "B") setBreite(S.breite % 3 + 1);
+      else if (e.key === "t" || e.key === "T") setKarteZu(!document.getElementById("card").classList.contains("zu"));
       else if (e.key === "k" || e.key === "K") setKamera(KAMERA[(KAMERA.findIndex((k) => k[0] === S.kamera) + 1) % KAMERA.length][0]);
       else if ((e.key === "m" || e.key === "M") && HAT_MUSIK) ton.setMusik(!S.musik);
       else if ((e.key === "v" || e.key === "V") && HAT_VL) ton.setVorlesen(VORLESEN[(VORLESEN.findIndex((k) => k[0] === S.vorlesen) + 1) % VORLESEN.length][0]);
