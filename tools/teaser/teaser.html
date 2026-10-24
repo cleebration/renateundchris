@@ -1,0 +1,186 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8">
+<link rel="stylesheet" href="node_modules/@fontsource/big-shoulders-display/700.css">
+<link rel="stylesheet" href="node_modules/@fontsource/big-shoulders-display/800.css">
+<link rel="stylesheet" href="node_modules/@fontsource/ibm-plex-mono/500.css">
+<link rel="stylesheet" href="node_modules/@fontsource/source-serif-4/400.css">
+<link rel="stylesheet" href="node_modules/@fontsource/source-serif-4/400-italic.css">
+<style>html,body{margin:0;background:#000}canvas{display:block}</style></head><body>
+<canvas id="c"></canvas>
+<script src="node_modules/topojson-client/dist/topojson-client.min.js"></script>
+<script>
+// Teaser-Renderer: zeichnet Bild für Bild auf ein Canvas; tools/teaser.py holt die Bilder und baut daraus das Video.
+const Q = new URLSearchParams(location.search);
+const SLUG = Q.get("reise"), W = +Q.get("w") || 1920, H = +Q.get("h") || 1080, HOCH = H > W;
+const C = document.getElementById("c"); C.width = W; C.height = H; const g = C.getContext("2d");
+const S = Math.min(W, H) / 1080; // Grundmaß
+const T_INTRO = 3.2, T_MAP = 23, T_STATS = 5, T_END = 4.3, DUR = T_INTRO + T_MAP + T_STATS + T_END;
+const ISO = { AT: 40, SI: 705, HR: 191, ME: 499, AL: 8, GR: 300, MK: 807, RS: 688, BA: 70, IT: 380, HU: 348, SK: 703, CZ: 203, DE: 276, CH: 756, FR: 250, BG: 100, RO: 642, PL: 616, ES: 724, PT: 620, TR: 792, NL: 528, BE: 56, DK: 208, NO: 578, SE: 752, FI: 246, GB: 826, IE: 372 };
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const ease = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+const fmt = (x) => Math.round(x).toLocaleString("de-AT");
+function decode(s) { const out = []; let i = 0, lat = 0, lon = 0; while (i < s.length) { for (const k of [0, 1]) { let b, sh = 0, r = 0; do { b = s.charCodeAt(i++) - 63; r |= (b & 31) << sh; sh += 5; } while (b >= 32); const v = r & 1 ? ~(r >> 1) : r >> 1; if (k === 0) lat += v; else lon += v; } out.push([lon / 1e5, lat / 1e5]); } return out; }
+const loadImg = (u) => new Promise((ok) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ok(null); i.src = u; });
+
+let M, D, R, mapLayer, pts, cum, total, fotos, cover;
+window.ready = (async () => {
+  await document.fonts.load("800 40px 'Big Shoulders Display'"); await document.fonts.load("700 40px 'Big Shoulders Display'");
+  await document.fonts.load("500 20px 'IBM Plex Mono'"); await document.fonts.load("400 20px 'Source Serif 4'"); await document.fonts.load("italic 400 20px 'Source Serif 4'");
+  const [welt, data, topo] = await Promise.all([fetch("dist/atlas/data/welt.json").then((r) => r.json()), fetch(`dist/atlas/data/${SLUG}.json`).then((r) => r.json()), fetch("node_modules/world-atlas/countries-50m.json").then((r) => r.json())]);
+  M = welt.reisen.find((r) => r.slug === SLUG); D = data;
+  // Route mit Tageszuordnung; Tage ohne Fahrt bekommen eine kurze Pause an der Station
+  pts = [];
+  for (const d of D.tage) {
+    let line = d.route && d.route.poly ? decode(d.route.poly) : (d.stationen || []).filter((s) => typeof s.lat === "number").map((s) => [s.lon, s.lat]);
+    if (!line.length && pts.length) line = [pts[pts.length - 1].p];
+    line.forEach((p, k) => pts.push({ p, tag: d.tag, stop: k === 0 }));
+  }
+  const km = (a, b) => Math.hypot((b[0] - a[0]) * Math.cos(((a[1] + b[1]) / 2) * Math.PI / 180), b[1] - a[1]) * 111.2;
+  window.RC = [0]; for (let i = 1; i < pts.length; i++) RC.push(RC[i - 1] + km(pts[i - 1].p, pts[i].p));
+  // Zeit je Tag: halb nach Strecke, halb gleich verteilt (sonst rasen kurze Tage vorbei)
+  const bonus = (RC[RC.length - 1] || 100) / Math.max(1, D.tage.length);
+  cum = [0]; for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + (RC[i] - RC[i - 1]) + (pts[i].stop ? bonus : 0));
+  total = cum[cum.length - 1] || 1;
+  // Projektion (Web-Mercator) auf den Kartenbereich
+  const my = (lat) => Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360));
+  const lo = pts.map((x) => x.p[0]), la = pts.map((x) => x.p[1]);
+  const bx = [Math.min(...lo), Math.max(...lo)], by = [my(Math.min(...la)), my(Math.max(...la))];
+  const area = HOCH ? { x: 70 * S, y: H * 0.40, w: W - 140 * S, h: H * 0.47 } : { x: 110 * S, y: 150 * S, w: W * 0.56, h: H - 300 * S };
+  const sc = Math.min(area.w / (((bx[1] - bx[0]) * Math.PI) / 180 || 0.01), area.h / (by[1] - by[0] || 0.01));
+  const cx = (bx[0] + bx[1]) / 2, cy = (by[0] + by[1]) / 2;
+  R = { area, proj: ([lon, lat]) => [area.x + area.w / 2 + ((lon - cx) * Math.PI / 180) * sc, area.y + area.h / 2 - (my(lat) - cy) * sc] };
+  pts.forEach((x) => (x.xy = R.proj(x.p)));
+  // statische Karte
+  mapLayer = document.createElement("canvas"); mapLayer.width = W; mapLayer.height = H; const m = mapLayer.getContext("2d");
+  const sea = m.createLinearGradient(0, 0, W, H); sea.addColorStop(0, "#0b2430"); sea.addColorStop(1, "#071820"); m.fillStyle = sea; m.fillRect(0, 0, W, H);
+  const besucht = new Set(D.tage.flatMap((d) => d.land || []).map((c) => ISO[c]).filter(Boolean));
+  const feats = topojson.feature(topo, topo.objects.countries).features;
+  const path = (geom) => { m.beginPath(); const polys = geom.type === "Polygon" ? [geom.coordinates] : geom.type === "MultiPolygon" ? geom.coordinates : [];
+    for (const poly of polys) for (const ring of poly) ring.forEach((p, i) => { const [x, y] = R.proj([p[0], clamp(p[1], -85, 85)]); i ? m.lineTo(x, y) : m.moveTo(x, y); }); };
+  for (const f of feats) { if (!f.geometry) continue; path(f.geometry); m.fillStyle = besucht.has(+f.id) ? "#2a4a4c" : "#16313a"; m.fill("evenodd"); m.strokeStyle = "rgba(243,236,220,.16)"; m.lineWidth = 1.2 * S; m.stroke(); }
+  // feines Raster
+  m.strokeStyle = "rgba(255,255,255,.035)"; m.lineWidth = 1; for (let x = 0; x < W; x += 60 * S) { m.beginPath(); m.moveTo(x, 0); m.lineTo(x, H); m.stroke(); } for (let y = 0; y < H; y += 60 * S) { m.beginPath(); m.moveTo(0, y); m.lineTo(W, y); m.stroke(); }
+  // ganze Route schwach
+  m.setLineDash([6 * S, 8 * S]); m.strokeStyle = "rgba(243,236,220,.22)"; m.lineWidth = 2 * S; m.beginPath(); pts.forEach((x, i) => (i ? m.lineTo(...x.xy) : m.moveTo(...x.xy))); m.stroke(); m.setLineDash([]);
+  // Fotos: erscheinen, wenn der Van einen Tag erreicht (Tagesbeginn), mit mindestens 2,9 s Abstand
+  const tOf = (tag) => { const i = pts.findIndex((x) => x.tag === tag); const p = i < 0 ? 0 : cum[i] / total; return T_INTRO + 0.8 + inv(p) * (T_MAP - 1.6); };
+  const wahl = []; let last = -9;
+  for (const d of D.tage) {
+    if (!(d.fotos || []).length) continue;
+    const t0 = Math.max(tOf(d.tag) + 0.15, T_INTRO + 0.9);
+    if (t0 < last + 2.9 || t0 + 2.6 > T_INTRO + T_MAP) continue;
+    const f = d.fotos.find((x) => !x.hoch) || d.fotos[0]; wahl.push({ d, f, t0 }); last = t0;
+  }
+  fotos = (await Promise.all(wahl.map(async (w) => ({ ...w, img: await loadImg("dist" + w.f.url) })))).filter((x) => x.img);
+  cover = await loadImg("dist" + (M.cover || (fotos[0] && fotos[0].f.url) || ""));
+  return { dur: DUR };
+})();
+// Fortschritt der Fahrt über die Zeit (sanft anfahren und bremsen) und Umkehrung
+const prog = (u) => { u = clamp(u); return u - 0.35 * Math.sin(2 * Math.PI * u) / (2 * Math.PI); }; // fast gleichmäßig, sanft an den Enden
+function inv(p) { let a = 0, b = 1; for (let k = 0; k < 30; k++) { const c = (a + b) / 2; prog(c) < p ? (a = c) : (b = c); } return (a + b) / 2; }
+
+function coverDraw(img, x, y, w, h, zoom = 1, fx = 0.5, fy = 0.5) {
+  if (!img) { g.fillStyle = "#1c3a45"; g.fillRect(x, y, w, h); return; }
+  const r = Math.max(w / img.width, h / img.height) * zoom, iw = img.width * r, ih = img.height * r;
+  g.save(); g.beginPath(); g.rect(x, y, w, h); g.clip(); g.drawImage(img, x + (w - iw) * fx, y + (h - ih) * fy, iw, ih); g.restore();
+}
+function text(t, x, y, font, color, align = "left", alpha = 1) { g.globalAlpha = alpha; g.font = font; g.fillStyle = color; g.textAlign = align; g.textBaseline = "alphabetic"; g.fillText(t, x, y); g.globalAlpha = 1; }
+function fitFont(t, weight, family, maxW, size) { g.font = `${weight} ${size}px ${family}`; const w = g.measureText(t).width; return w > maxW ? size * maxW / w : size; }
+const AMBER = "#e0913a", INK = "#f3ecdc", MUTED = "#a9b6b6";
+const BSD = "'Big Shoulders Display'", MONO = "'IBM Plex Mono'", SERIF = "'Source Serif 4'";
+
+function karte(t, alpha = 1) {
+  const u = clamp((t - T_INTRO - 0.8) / (T_MAP - 1.6)), p = prog(u) * total;
+  let i = 0; while (i < cum.length - 1 && cum[i + 1] <= p) i++;
+  const f = cum[i + 1] > cum[i] ? (p - cum[i]) / (cum[i + 1] - cum[i]) : 0;
+  const a = pts[i].xy, b = (pts[i + 1] || pts[i]).xy, van = [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f];
+  g.globalAlpha = alpha; g.drawImage(mapLayer, 0, 0);
+  // gefahrene Strecke mit Leuchten
+  for (const [lw, al] of [[14, 0.18], [7, 0.35], [3.4, 1]]) {
+    g.strokeStyle = M.accent; g.globalAlpha = al * alpha; g.lineWidth = lw * S; g.lineCap = "round"; g.lineJoin = "round";
+    g.beginPath(); for (let k = 0; k <= i; k++) k ? g.lineTo(...pts[k].xy) : g.moveTo(...pts[k].xy); g.lineTo(...van); g.stroke();
+  }
+  g.globalAlpha = alpha;
+  // Van
+  const puls = 1 + 0.25 * Math.sin(t * 6);
+  g.fillStyle = M.accent; g.globalAlpha = 0.3 * alpha; g.beginPath(); g.arc(van[0], van[1], 16 * S * puls, 0, 7); g.fill(); g.globalAlpha = alpha;
+  g.fillStyle = "#fff"; g.beginPath(); g.arc(van[0], van[1], 8.5 * S, 0, 7); g.fill(); g.fillStyle = AMBER; g.beginPath(); g.arc(van[0], van[1], 5.5 * S, 0, 7); g.fill();
+  // Kopf und Tageszähler
+  const tag = pts[i].tag, d = D.tage.find((x) => x.tag === tag) || {};
+  const kmBis = (RC[i] + ((RC[i + 1] ?? RC[i]) - RC[i]) * f) * (M.km / (RC[RC.length - 1] || 1));
+  const pad = 70 * S;
+  text("RENATE & CHRIS · REISE-ATLAS", pad, pad + 10 * S, `500 ${20 * S}px ${MONO}`, AMBER, "left", alpha);
+  text(M.title.toUpperCase(), pad, pad + 74 * S, `800 ${fitFont(M.title.toUpperCase(), 800, BSD, W - 2 * pad, 70 * S)}px ${BSD}`, INK, "left", alpha);
+  const ort = (() => { const st = (d.stationen || []).filter((s) => typeof s.lat === "number"); if (!st.length) return d.titel || ""; let best = st[0], bd = 1e9; st.forEach((s) => { const [x, y] = R.proj([s.lon, s.lat]); const dd = (x - van[0]) ** 2 + (y - van[1]) ** 2; if (dd < bd) { bd = dd; best = s; } }); return best.name; })();
+  const yB = H - pad;
+  g.globalAlpha = 0.85 * alpha; g.fillStyle = "rgba(9,24,31,.9)"; const bw = HOCH ? W - 2 * pad : Math.min(760 * S, W * 0.55); roundRect(pad - 18 * S, yB - 108 * S, bw, 132 * S, 16 * S); g.fill(); g.globalAlpha = alpha;
+  text(`TAG ${tag} VON ${D.tage.length}`, pad, yB - 70 * S, `500 ${22 * S}px ${MONO}`, AMBER, "left", alpha);
+  text(ort, pad, yB - 22 * S, `700 ${fitFont(ort, 700, BSD, bw - 260 * S, 48 * S)}px ${BSD}`, INK, "left", alpha);
+  text(`${fmt(Math.min(kmBis, M.km))} km`, pad + bw - 40 * S, yB - 22 * S, `500 ${30 * S}px ${MONO}`, INK, "right", alpha);
+  g.globalAlpha = 1;
+}
+function roundRect(x, y, w, h, r) { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+
+function polaroid(f, t) {
+  const k = t - f.t0; if (k < 0 || k > 2.6) return;
+  const a = k < 0.45 ? easeOut(k / 0.45) : k > 2.15 ? 1 - (k - 2.15) / 0.45 : 1;
+  const w = HOCH ? W * 0.74 : W * 0.33, h = w * 0.72, fw = w + 28 * S, fh = h + 92 * S;
+  const cx = HOCH ? W / 2 : W * 0.78, cy = HOCH ? 175 * S + fh / 2 : H * 0.47;
+  const rot = ((fotos.indexOf(f) % 2 ? 1 : -1) * 3 * Math.PI) / 180;
+  g.save(); g.globalAlpha = clamp(a); g.translate(cx, cy + (1 - a) * 40 * S); g.rotate(rot); g.scale(0.92 + 0.08 * a, 0.92 + 0.08 * a);
+  g.shadowColor = "rgba(0,0,0,.55)"; g.shadowBlur = 40 * S; g.shadowOffsetY = 14 * S; g.fillStyle = "#f6f1e6"; g.fillRect(-fw / 2, -fh / 2, fw, fh); g.shadowColor = "transparent";
+  coverDraw(f.img, -w / 2, -fh / 2 + 14 * S, w, h, 1.04 + 0.06 * (k / 2.6), 0.5, 0.5);
+  const cap = `Tag ${f.d.tag} · ${f.f.text || f.d.titel || ""}`;
+  text(cap, -w / 2, fh / 2 - 34 * S, `italic 400 ${fitFont(cap, "italic 400", SERIF, w, 30 * S)}px ${SERIF}`, "#2a2a2a");
+  g.restore();
+}
+
+function intro(t) {
+  const k = t / T_INTRO;
+  coverDraw(cover, 0, 0, W, H, 1.08 + 0.08 * k, 0.5, 0.45);
+  const grd = g.createLinearGradient(0, H * 0.25, 0, H); grd.addColorStop(0, "rgba(5,18,26,0)"); grd.addColorStop(1, "rgba(5,18,26,.92)"); g.fillStyle = grd; g.fillRect(0, 0, W, H);
+  const pad = 80 * S, a1 = easeOut(clamp((t - 0.2) / 0.7)), a2 = easeOut(clamp((t - 0.6) / 0.7)), a3 = easeOut(clamp((t - 1.0) / 0.7));
+  const T = M.title.toUpperCase(), fs = fitFont(T, 800, BSD, W - 2 * pad, (HOCH ? 150 : 160) * S);
+  text("RENATE & CHRIS · REISE-ATLAS", pad, H - pad - fs - 64 * S + (1 - a1) * 20 * S, `500 ${24 * S}px ${MONO}`, AMBER, "left", a1);
+  text(T, pad, H - pad - 70 * S + (1 - a2) * 30 * S, `800 ${fs}px ${BSD}`, INK, "left", a2);
+  const sub = `${M.zeitraum} · ${M.tage} Tage${M.fahrzeug ? " · " + M.fahrzeug : ""}`;
+  text(sub, pad, H - pad, `italic 400 ${fitFont(sub, "italic 400", SERIF, W - 2 * pad, 38 * S)}px ${SERIF}`, INK, "left", a3);
+}
+
+function stats(t) {
+  const k = clamp((t - T_INTRO - T_MAP) / T_STATS);
+  karte(T_INTRO + T_MAP, 1); g.fillStyle = `rgba(5,18,26,${0.78 * easeOut(clamp(k * 4))})`; g.fillRect(0, 0, W, H);
+  const items = [[M.tage, "Tage"], [M.km, "Kilometer"], [M.laender.length, M.laender.length === 1 ? "Land" : "Länder"], [M.fotos, "Fotos im Atlas"]];
+  const cols = HOCH ? 1 : 4, cw = HOCH ? W - 160 * S : (W - 160 * S) / 4;
+  text("DIE REISE IN ZAHLEN", W / 2, HOCH ? H * 0.2 : H * 0.3, `500 ${26 * S}px ${MONO}`, AMBER, "center", easeOut(clamp(k * 4)));
+  items.forEach(([v, l], i) => {
+    const a = easeOut(clamp((k - 0.08 - i * 0.07) * 4)), cnt = v * easeOut(clamp((k - 0.08 - i * 0.07) * 2.2));
+    const x = HOCH ? W / 2 : 80 * S + cw * (i + 0.5), y = HOCH ? H * 0.32 + i * 300 * S : H * 0.55;
+    text(fmt(cnt), x, y + (1 - a) * 30 * S, `800 ${(HOCH ? 190 : 170) * S}px ${BSD}`, INK, "center", a);
+    text(l.toUpperCase(), x, y + 56 * S, `500 ${26 * S}px ${MONO}`, MUTED, "center", a);
+  });
+}
+
+function ende(t) {
+  const k = clamp((t - T_INTRO - T_MAP - T_STATS) / T_END);
+  coverDraw(cover, 0, 0, W, H, 1.15 - 0.05 * k, 0.5, 0.45); g.fillStyle = "rgba(5,18,26,.8)"; g.fillRect(0, 0, W, H);
+  const a = easeOut(clamp(k * 3)), b = easeOut(clamp((k - 0.15) * 3)), c = easeOut(clamp((k - 0.3) * 3));
+  const L1 = "DIE GANZE REISE ERKUNDEN", fs = fitFont(L1, 800, BSD, W - 160 * S, (HOCH ? 120 : 130) * S);
+  text("INTERAKTIV · TAG FÜR TAG · MIT FOTOS", W / 2, H / 2 - fs - 10 * S, `500 ${24 * S}px ${MONO}`, AMBER, "center", a);
+  text(L1, W / 2, H / 2, `800 ${fs}px ${BSD}`, INK, "center", b);
+  const url = `renateundchris.com/atlas/${SLUG}`;
+  text(url, W / 2, H / 2 + 90 * S, `500 ${fitFont(url, 500, MONO, W - 160 * S, 40 * S)}px ${MONO}`, AMBER, "center", c);
+  text("Am Mac oder TV ansehen – mit dem Smartphone steuern", W / 2, H / 2 + 150 * S, `italic 400 ${fitFont("Am Mac oder TV ansehen – mit dem Smartphone steuern", "italic 400", SERIF, W - 160 * S, 32 * S)}px ${SERIF}`, MUTED, "center", c);
+}
+
+window.frame = (t, q = 0.86) => {
+  g.clearRect(0, 0, W, H);
+  if (t < T_INTRO) { intro(t); if (t > T_INTRO - 0.6) karte(t, (t - (T_INTRO - 0.6)) / 0.6); }
+  else if (t < T_INTRO + T_MAP) { karte(t); fotos.forEach((f) => polaroid(f, t)); }
+  else if (t < T_INTRO + T_MAP + T_STATS) stats(t);
+  else { ende(t); const k = t - T_INTRO - T_MAP - T_STATS; if (k < 0.5) { g.globalAlpha = 1 - k / 0.5; stats(T_INTRO + T_MAP + T_STATS - 0.001); g.globalAlpha = 1; } }
+  // sanfte Blende am Anfang und Ende
+  const fade = Math.min(clamp(t / 0.4), clamp((DUR - t) / 0.5)); if (fade < 1) { g.fillStyle = `rgba(0,0,0,${1 - fade})`; g.fillRect(0, 0, W, H); }
+  return C.toDataURL("image/jpeg", q);
+};
+</script></body></html>
