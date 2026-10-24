@@ -2,7 +2,7 @@
 
 Der Atlas ist für jede Reise derselbe. Eine neue Reise braucht nur **Daten** und **Fotos**,
 keinen neuen Code. Ergebnis: `renateundchris.com/atlas/<reise>/` mit 3D-Karte, Zeitleiste,
-Rollen, Fotos und iPhone-Controller.
+Rollen, Fotos und Smartphone-Controller.
 
 ## Ablage in „1! claude“ (Drive)
 
@@ -60,10 +60,10 @@ Länder außerhalb der Liste in `src/atlas.js` (`COUNTRY`) dort ergänzen.
 ## 5. Veröffentlichen
 
 `node scripts/build.mjs` lokal prüfen, committen, pushen – Cloudflare baut automatisch.
-Test: `/atlas/<slug>/` am Mac öffnen, QR mit dem iPhone scannen.
+Test: `/atlas/<slug>/` am Mac öffnen, QR mit dem Smartphone scannen.
 
 ## Technik in Kürze
 
 - Karte: MapLibre GL, OpenFreeMap (Liberty), Höhen: Terrain Tiles (AWS Open Data)
-- iPhone ↔ Bildschirm: MQTT über öffentliche Broker (EMQX, HiveMQ), Kanal `rcatlas/v1/<code>/…`
+- Smartphone ↔ Bildschirm: MQTT über öffentliche Broker (EMQX, HiveMQ), Kanal `rcatlas/v1/<code>/…`
 - Code: `scripts/atlas.mjs` (Build), `src/atlas.js`, `src/atlas.css`

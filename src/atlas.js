@@ -1,5 +1,5 @@
-/* Reise-Atlas – Bildschirm + iPhone-Controller.
-   Kopplung: Bildschirm und iPhone treffen sich über zwei öffentliche MQTT-Broker unter „rcatlas/v1/<code>/…“; das iPhone öffnet
+/* Reise-Atlas – Bildschirm + Smartphone-Controller.
+   Kopplung: Bildschirm und Smartphone treffen sich über zwei öffentliche MQTT-Broker unter „rcatlas/v1/<code>/…“; das Smartphone öffnet
    /atlas/#c-<code> (QR-Code). Keine Anmeldung, kein eigener Server. */
 (function () {
   "use strict";
@@ -21,6 +21,11 @@
     abenteurer:{n:"Abenteurer",k:"Pannen & Grenzen",d:"Offroad, Reifen, Staus – die ehrliche Seite.",s:{tempo:2,breite:3,tiefe:2,thema:"panne",play:false}},
     wien:{n:"Wien-Spurensucher",k:"Quest",d:"Folge den Fäden, die von hier nach Wien führen.",s:{tempo:2,breite:2,tiefe:3,thema:"habsburg",play:false}}
   };
+  const KAMERA = [["nord","Nord"],["fahrt","Fahrt"],["frei","Frei"]];
+  const VORLESEN = [["aus","aus"],["chris","Chris"],["renate","Renate"],["abwechselnd","abwechselnd"],["zufall","zufällig"]];
+  const SPRECHER = { chris: "Chris", renate: "Renate" };
+  const merk = { get(k, d) { try { const v = localStorage.getItem("atlas." + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+                 set(k, v) { try { localStorage.setItem("atlas." + k, JSON.stringify(v)); } catch (e) {} } };
   const esc = (t) => String(t ?? "").replace(/[&<>"]/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const fmtDate = (iso) => { if (!iso) return ""; const d = new Date(iso + "T12:00:00"); return d.toLocaleDateString("de-AT", {weekday:"short", day:"2-digit", month:"2-digit"}); };
@@ -35,10 +40,10 @@
 
   function chooseMode() {
     APP.insertAdjacentHTML("beforeend", `<div class="choose"><div class="in">
-      <h2>Reise-Atlas</h2><p>Am besten am Mac oder Fernseher ansehen und mit dem iPhone steuern. Am Bildschirm steht ein QR-Code und ein Code aus sechs Zeichen.</p>
+      <h2>Reise-Atlas</h2><p>Am besten am Mac oder Fernseher ansehen und mit dem Smartphone steuern (iPhone oder Android). Am Bildschirm steht ein QR-Code und ein Code aus sechs Zeichen.</p>
       <label for="codeIn" class="note">Code vom Bildschirm</label>
       <input id="codeIn" inputmode="text" autocomplete="off" autocapitalize="none" maxlength="6" placeholder="abc123">
-      <button class="big primary" id="asCtl">Verbinden<small>iPhone als Controller</small></button>
+      <button class="big primary" id="asCtl">Verbinden<small>Smartphone als Controller</small></button>
       <span class="err" id="codeErr" hidden>Der Code hat sechs Zeichen (Buchstaben und Ziffern).</span>
       <button class="big" id="asScreen">Hier ansehen<small>ohne zweites Gerät</small></button></div></div>`);
     const go = () => { const v = document.getElementById("codeIn").value.trim().toLowerCase(); if (!/^[a-z0-9]{6}$/.test(v)) { document.getElementById("codeErr").hidden = false; return; } location.hash = "#c-" + v; location.reload(); };
@@ -70,7 +75,9 @@
       <div class="hud" id="hudTop">
         <div class="brandRow"><a class="backBtn" href="/reisen" aria-label="Zurück zur Reise-Übersicht">← Alle Reisen</a><a class="brand" href="/reisen"><span class="eyebrow">Renate &amp; Chris · Reise-Atlas</span><h1>${esc(TITLE)}</h1></a></div>
         <div class="chips">
-          <span class="chip"><i class="dot" id="linkDot"></i><b id="linkTxt">Kein iPhone verbunden</b></span>
+          <button class="chip warn" id="tonChip" hidden title="Der Browser hat den Ton blockiert">🔇 Ton einschalten</button>
+          <span class="chip"><i class="dot" id="linkDot"></i><b id="linkTxt">Kein Smartphone verbunden</b></span>
+          <button class="chip narrowOnly" id="tonBtn" aria-expanded="false">Kamera &amp; Ton</button>
           <button class="chip" id="chipRoleBtn" title="Rolle wechseln (R)">Rolle <b id="chipRole">–</b></button>
           <span class="chip opt">Legenden <b class="mono" id="chipMyth">0</b></span>
           <span class="chip opt">Wien-Fäden <b class="mono" id="chipWien">0</b></span>
@@ -78,15 +85,20 @@
         </div>
       </div>
       <div class="hud" id="side">
-        <div class="panel"><h4>iPhone als Controller</h4>
-          <div id="qrBox"><div id="qr" aria-label="QR-Code zum Controller"></div><p>Mit der iPhone-Kamera scannen<br>oder Code eingeben:<br><b id="codeTxt">······</b></p></div></div>
-        <div class="panel"><h4>Tastatur</h4><div class="kbd"><kbd>←</kbd> <kbd>→</kbd> Station · <kbd>⇧</kbd>+Pfeil Tag<br><kbd>Leer</kbd> Fahren / Anhalten<br><kbd>↑</kbd> <kbd>↓</kbd> Tiefe · <kbd>R</kbd> Rolle · <kbd>F</kbd> Vollbild</div></div>
+        <div class="panel"><h4>Smartphone als Controller</h4>
+          <div id="qrBox"><div id="qr" aria-label="QR-Code zum Controller"></div><p>Mit der Handy-Kamera scannen<br>oder Code eingeben:<br><b id="codeTxt">······</b></p></div></div>
+        <div class="panel" id="tonPanel"><h4>Kamera</h4>
+          <div class="seg" style="--n:3" data-ks="kamera">${KAMERA.map(([k, n]) => `<button data-v="${k}" title="${k === "nord" ? "Norden oben" : k === "fahrt" ? "Blick in Fahrtrichtung" : "selbst drehen"}">${n}</button>`).join("")}</div>
+          <div id="musikBox" hidden><h4>Musik</h4><div class="seg" style="--n:2" data-ks="musik"><button data-v="aus">aus</button><button data-v="an">an</button></div><p class="note" id="musikInfo"></p></div>
+          <div id="vlBox" hidden><h4>Vorlesen</h4><div class="seg vl" data-ks="vorlesen">${VORLESEN.map(([k, n]) => `<button data-v="${k}">${n}</button>`).join("")}</div><p class="note" id="vlInfo"></p></div>
+        </div>
+        <div class="panel"><h4>Tastatur</h4><div class="kbd"><kbd>←</kbd> <kbd>→</kbd> Station · <kbd>⇧</kbd>+Pfeil Tag<br><kbd>Leer</kbd> Fahren / Anhalten<br><kbd>↑</kbd> <kbd>↓</kbd> Tiefe · <kbd>R</kbd> Rolle · <kbd>F</kbd> Vollbild<br><kbd>K</kbd> Kamera · <kbd>M</kbd> Musik · <kbd>V</kbd> Vorlesen</div></div>
       </div>
       <aside class="hud" id="card" aria-live="polite"></aside>
       <div class="hud" id="rail"><div id="railRow" role="group" aria-label="Reisetage"></div>
         <div id="railMeta"><span><b id="metaDay">Tag 1</b> · <span id="metaDate"></span> · <span id="metaMode"></span></span><span class="legend" id="legend"></span></div></div>
       <div id="roles"><div class="rolesIn"><h2>Wie willst du reisen?</h2>
-        <p id="rolesLead">Wähle, wie viel du sehen willst – mit Maus, Tastatur oder dem iPhone. Jederzeit wechselbar.</p>
+        <p id="rolesLead">Wähle, wie viel du sehen willst – mit Maus, Tastatur oder dem Smartphone. Jederzeit wechselbar.</p>
         <div class="roleGrid" id="roleGrid"></div></div></div>
       <div id="lightbox" hidden role="dialog" aria-label="Foto groß"><button class="big" id="lbClose">Schließen</button><button class="lbNav" id="lbPrev" aria-label="Vorheriges Foto">‹</button><figure><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure><button class="lbNav" id="lbNext" aria-label="Nächstes Foto">›</button></div>
     </div>`);
@@ -117,11 +129,16 @@
     });
     const kmTotal = DAYS.reduce((a, d) => a + ((d.route && d.route.km) || 0), 0);
     { const nL = new Set(DAYS.flatMap((d) => d.land || [])).size; const fz = DATA.fahrzeug || "";
-      document.getElementById("rolesLead").textContent = `${DAYS.length} Tage, ${nL} ${nL === 1 ? "Land" : "Länder"}${fz ? ", " + fz : ""}${kmTotal ? `, rund ${Math.round(kmTotal / 10) * 10 >= 1000 ? Math.round(kmTotal).toLocaleString("de-AT") : Math.round(kmTotal)} km` : ""}. Wähle, wie viel du sehen willst – mit Maus, Tastatur oder dem iPhone. Jederzeit wechselbar.`; }
+      document.getElementById("rolesLead").textContent = `${DAYS.length} Tage, ${nL} ${nL === 1 ? "Land" : "Länder"}${fz ? ", " + fz : ""}${kmTotal ? `, rund ${Math.round(kmTotal / 10) * 10 >= 1000 ? Math.round(kmTotal).toLocaleString("de-AT") : Math.round(kmTotal)} km` : ""}. Wähle, wie viel du sehen willst – mit Maus, Tastatur oder dem Smartphone. Jederzeit wechselbar.`; }
     // Rollen ohne passende Inhalte ausblenden (z. B. keine Wien-Fäden)
     if (!DAYS.some((d) => (d.wien_faden || []).length)) delete ROLLEN.wien;
 
-    const S = { rolle:null, idx:0, playing:false, tempo:2, breite:2, tiefe:1, thema:null, seen:new Set(), mythen:new Set(), wien:new Set() };
+    const S = { rolle:null, idx:0, playing:false, tempo:2, breite:2, tiefe:1, thema:null, seen:new Set(), mythen:new Set(), wien:new Set(),
+      kamera: KAMERA.some((k) => k[0] === merk.get("kamera")) ? merk.get("kamera") : "frei",
+      musik: merk.get("musik", false) === true, vorlesen: VORLESEN.some((k) => k[0] === merk.get("vorlesen")) ? merk.get("vorlesen") : "aus" };
+    const MUSIK = DATA.musik || {};
+    const HAT_MUSIK = Object.values(MUSIK).some((l) => l && l.length);
+    const HAT_VL = DAYS.some((d) => d.vorlesen && (d.vorlesen.chris || d.vorlesen.renate));
     const visible = (s) => { const a = s.art || "besuch";
       if (S.breite === 1) return a === "uebernachtung" || s.i === 0;
       if (S.breite === 2) return ["besuch","uebernachtung","faehre"].includes(a) || s.i === 0;
@@ -166,6 +183,74 @@
     lb.addEventListener("pointerup", (e) => { if (swX == null) return; const dx = e.clientX - swX; swX = null; if (Math.abs(dx) > 50) lbStep(dx < 0 ? 1 : -1); });
     lb.addEventListener("click", (e) => { if (e.target === lb) closeLb(); });
 
+    // ---------- Ton: Musik je Land + Vorlesen (Chris/Renate) ----------
+    const ton = (() => {
+      const musik = new Audio(); musik.preload = "none"; let musikUrl = "";
+      const stimme = new Audio(); stimme.preload = "auto";
+      let land = null, nr = 0, sprecherJetzt = null, nachher = null, naechster = "chris", gesperrt = false;
+      const liest = () => !!sprecherJetzt && !stimme.paused && !stimme.ended;
+      // iOS lässt die Lautstärke nicht setzen – dort pausiert die Musik beim Vorlesen statt leiser zu werden
+      const lautRegelbar = (() => { try { const a = new Audio(); a.volume = 0.5; return a.volume === 0.5; } catch (e) { return false; } })();
+      let fadeT = null;
+      function blende() {
+        const ziel = !S.musik ? 0 : liest() ? (lautRegelbar ? 0.07 : 0) : 0.32;
+        clearInterval(fadeT);
+        if (!lautRegelbar) { if (ziel === 0) musik.pause(); else spiele(musik); return; }
+        if (ziel > 0 && musik.paused && musikUrl) { musik.volume = 0; spiele(musik); }
+        fadeT = setInterval(() => { const v = musik.volume, d = ziel - v;
+          if (Math.abs(d) < 0.02) { musik.volume = ziel; clearInterval(fadeT); if (ziel === 0) musik.pause(); return; }
+          musik.volume = Math.max(0, Math.min(1, v + Math.sign(d) * 0.02)); }, 40);
+      }
+      function spiele(a) { const p = a.play(); if (p && p.catch) p.then(() => { if (gesperrt) { gesperrt = false; hinweis(); } }).catch((e) => { if (e && e.name === "NotAllowedError") { gesperrt = true; hinweis(); } }); }
+      function hinweis() { const c = document.getElementById("tonChip"); if (c) c.hidden = !gesperrt; }
+      document.getElementById("tonChip").onclick = () => { gesperrt = false; hinweis(); if (sprecherJetzt) spiele(stimme); blende(); };
+      function stueck() { const l = MUSIK[land] || []; return l.length ? l[nr % l.length] : null; }
+      function laden() { const x = stueck(); if (!x) return false; if (musikUrl !== x.url) { musikUrl = x.url; musik.src = x.url; } info(); return true; }
+      musik.addEventListener("ended", () => { nr++; laden(); if (S.musik) { musik.volume = lautRegelbar ? 0 : 1; spiele(musik); blende(); } });
+      function landWechsel(neu) {
+        if (!MUSIK[neu] || !MUSIK[neu].length || neu === land) return; // ohne Musik für das Land: weiter das Bisherige
+        land = neu; nr = 0;
+        if (!S.musik || musik.paused) { laden(); return; }
+        if (!lautRegelbar) { laden(); spiele(musik); return; }
+        clearInterval(fadeT); const t = setInterval(() => { musik.volume = Math.max(0, musik.volume - 0.03);
+          if (musik.volume <= 0.01) { clearInterval(t); laden(); musik.volume = 0; spiele(musik); blende(); } }, 40);
+      }
+      function info() {
+        const x = stueck(), el = document.getElementById("musikInfo"); if (!el) return;
+        el.innerHTML = x && S.musik ? `♪ ${esc(x.titel)}${x.urheber ? " – " + esc(x.urheber) : ""} · <a href="${esc(x.seite)}" target="_blank" rel="noopener">${esc(x.lizenz || "Lizenz")}</a>` : (HAT_MUSIK ? "Freie Musik aus den Reiseländern (Wikimedia Commons)." : "");
+      }
+      function vlInfo() { const el = document.getElementById("vlInfo"); if (el) el.textContent = sprecherJetzt && liest() ? `🔊 ${SPRECHER[sprecherJetzt]} liest Tag ${(go.last || {}).day || ""}` : (S.vorlesen === "aus" ? "" : "liest bei jedem neuen Tag"); }
+      function fertig() { sprecherJetzt = null; vlInfo(); blende(); broadcast(); const f = nachher; nachher = null; if (f) setTimeout(f, 600); }
+      stimme.addEventListener("ended", fertig); stimme.addEventListener("error", fertig);
+      function stopp() { if (!stimme.paused) stimme.pause(); if (sprecherJetzt) fertig(); }
+      function lies(d) {
+        stopp(); if (S.vorlesen === "aus" || !d || !d.vorlesen) return;
+        const da = ["chris", "renate"].filter((k) => d.vorlesen[k]); if (!da.length) return;
+        let k = S.vorlesen === "zufall" ? da[Math.floor(Math.random() * da.length)] : S.vorlesen === "abwechselnd" ? naechster : S.vorlesen;
+        if (!da.includes(k)) k = da[0];
+        if (S.vorlesen === "abwechselnd") naechster = k === "chris" ? "renate" : "chris";
+        sprecherJetzt = k; stimme.src = d.vorlesen[k]; spiele(stimme); blende(); vlInfo(); broadcast();
+      }
+      let gelesen = null;
+      return {
+        liest, sprecher: () => (liest() ? sprecherJetzt : null),
+        danach(f) { nachher = f; },
+        ankunft(d) { landWechsel(ccOf(d)); if (d.tag !== gelesen) { gelesen = d.tag; lies(d); } },
+        setMusik(an) { S.musik = !!an && HAT_MUSIK; merk.set("musik", S.musik); if (S.musik) { if (!land) landWechsel(ccOf(dayOf((go.last || ST[0] || {}).day) || DAYS[0])); if (!land) { land = Object.keys(MUSIK)[0]; } laden(); } info(); blende(); render(); },
+        setVorlesen(k) { if (!VORLESEN.some((x) => x[0] === k)) return; S.vorlesen = k; merk.set("vorlesen", k);
+          if (k === "aus") stopp(); else { const d = dayOf((go.last || {}).day); gelesen = d ? d.tag : null; if (d) lies(d); }
+          vlInfo(); render(); },
+        start() { document.getElementById("musikBox").hidden = !HAT_MUSIK; document.getElementById("vlBox").hidden = !HAT_VL; if (!HAT_MUSIK) S.musik = false; info(); vlInfo(); },
+      };
+    })();
+    ton.start();
+    document.getElementById("tonBtn").onclick = (e) => { const o = document.getElementById("side").classList.toggle("offen"); e.currentTarget.setAttribute("aria-expanded", o); };
+    function setKamera(k) { if (!KAMERA.some((x) => x[0] === k)) return; S.kamera = k; merk.set("kamera", k);
+      if (map && van && !anim) { const s = go.last; if (k === "nord") map.easeTo({ bearing: 0, duration: 700 }); else if (k === "fahrt") map.easeTo({ bearing: kameraZiel(s), pitch: narrow ? 50 : 70, duration: 900 }); }
+      render(); }
+    document.querySelectorAll("#tonPanel .seg").forEach((g) => g.addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return;
+      if (g.dataset.ks === "kamera") setKamera(b.dataset.v); else if (g.dataset.ks === "musik") ton.setMusik(b.dataset.v === "an"); else if (g.dataset.ks === "vorlesen") ton.setVorlesen(b.dataset.v); }));
+
     setTimeout(() => { if (!van) render(); }, 0);
     // ---------- Karte ----------
     const map = new maplibregl.Map({
@@ -175,6 +260,7 @@
     map.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: 'Höhen: <a href="https://registry.opendata.aws/terrain-tiles" target="_blank" rel="noopener">Terrain Tiles (AWS Open Data)</a> · Routen: <a href="https://project-osrm.org" target="_blank" rel="noopener">OSRM</a> (Näherung)' }), "bottom-left");
     map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "bottom-right");
 
+    map.on("rotatestart", (e) => { if (e && e.originalEvent && S.kamera !== "frei") setKamera("frei"); });
     const pinEls = [];
     let van, fotoMarkers = [];
     map.on("load", () => {
@@ -213,17 +299,31 @@
     // ---------- Bewegung ----------
     let anim = null, timer = null;
     function stopAnim() { if (anim) { cancelAnimationFrame(anim); anim = null; } }
-    function animateAlong(path, ms, done) {
+    // Richtung (Grad, im Uhrzeigersinn von Norden) von a nach b
+    const brg = (a, b) => Math.atan2((b[0] - a[0]) * Math.cos(a[1] * Math.PI / 180), b[1] - a[1]) * 180 / Math.PI;
+    const mischWinkel = (a, b, t) => a + ((((b - a) % 360) + 540) % 360 - 180) * t;
+    function richtungAn(d, ri) { if (!d || !d.line || ri == null) return null; const L = d.line;
+      const a = L[Math.max(0, ri - 6)], b = L[Math.min(L.length - 1, ri + 6)]; return a && b && (a[0] !== b[0] || a[1] !== b[1]) ? brg(a, b) : null; }
+    function kameraZiel(s) { // Blickrichtung an einer Station je Kamera-Modus
+      if (S.kamera === "nord") return 0;
+      if (S.kamera === "fahrt") { const r = s ? richtungAn(dayOf(s.day), s.ri) : null; return r == null ? map.getBearing() : r; }
+      return map.getBearing(); }
+    function animateAlong(path, ms, done, ziel) {
       stopAnim();
       if (reduced || path.length < 2 || ms < 50) { done(); return; }
       const cum = [0]; for (let k = 1; k < path.length; k++) cum.push(cum[k - 1] + Math.sqrt(d2(path[k], path[k - 1])));
       const L = cum[cum.length - 1] || 1; const t0 = performance.now();
+      const punktBei = (t) => { let k = 1; while (k < cum.length - 1 && cum[k] < t) k++; const a = path[k - 1], b = path[k], sg = (cum[k] - cum[k - 1]) || 1, u = Math.max(0, Math.min(1, (t - cum[k - 1]) / sg)); return [a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u]; };
+      const z0 = map.getZoom(), p0 = map.getPitch(); let kopf = map.getBearing();
+      const fahrt = S.kamera === "fahrt", zt = fahrt ? 11.6 : ziel.zoom, pt = fahrt ? 72 : ziel.pitch;
+      const vor = Math.max(0.004, Math.min(0.03, L * 0.12)); // Blick voraus (~0,4–3 km)
       const step = (now) => {
         const f = Math.min(1, (now - t0) / ms); const e = f < .5 ? 2 * f * f : 1 - Math.pow(-2 * f + 2, 2) / 2; const target = e * L;
-        let k = 1; while (k < cum.length - 1 && cum[k] < target) k++;
-        const a = path[k - 1], b = path[k], seg = (cum[k] - cum[k - 1]) || 1, u = (target - cum[k - 1]) / seg;
-        const pos = [a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u];
-        van.setLngLat(pos); map.jumpTo({ center: pos });
+        const pos = punktBei(target); const g = Math.min(1, f / 0.2);
+        const cam = { center: pos, zoom: z0 + (zt - z0) * g, pitch: p0 + (pt - p0) * g };
+        if (fahrt) { kopf = mischWinkel(kopf, brg(pos, punktBei(Math.min(L, target + vor))), 0.12); cam.bearing = kopf; }
+        else if (S.kamera === "nord") cam.bearing = 0;
+        van.setLngLat(pos); map.jumpTo(cam);
         if (f < 1) anim = requestAnimationFrame(step); else { anim = null; done(); }
       };
       anim = requestAnimationFrame(step);
@@ -236,23 +336,21 @@
       if (S.tiefe >= 2) { (d.mythen || []).forEach((m, k) => S.mythen.add(d.tag + "-" + k)); (d.wien_faden || []).forEach((m, k) => S.wien.add(d.tag + "-" + k)); }
       if (!van) { render(); return; } // Karte lädt noch
       const zoom = S.tiefe >= 2 ? 10.2 : 8.4, pitch = narrow ? 45 : (S.tiefe >= 2 ? 68 : 58);
-      const finish = () => { van.setLngLat([s.lon, s.lat]); drawDone(); map.easeTo({ center: [s.lon, s.lat], zoom, pitch, duration: reduced ? 0 : 900 }); showFotos(d); render(); afterArrive(); };
+      const finish = () => { van.setLngLat([s.lon, s.lat]); drawDone(); map.easeTo({ center: [s.lon, s.lat], zoom, pitch: S.kamera === "fahrt" && !narrow ? 70 : pitch, bearing: kameraZiel(s), duration: reduced ? 0 : 900 }); showFotos(d); render(); ton.ankunft(d); afterArrive(); };
       // fahren entlang der Straße, wenn möglich
       if (!jump && prev && d.line && prev.day === s.day && prev.ri != null && s.ri != null && s.ri > prev.ri) {
         const path = d.line.slice(prev.ri, s.ri + 1);
-        map.easeTo({ zoom: Math.min(zoom, 9.2), pitch, duration: reduced ? 0 : 500 });
-        animateAlong(path, [0, 5200, 3200, 1700][S.tempo], finish);
+        animateAlong(path, [0, 5200, 3200, 1700][S.tempo], finish, { zoom: Math.min(zoom, 9.2), pitch });
       } else if (!jump && prev && d.line && s.day === prev.day + 1 && s.ri != null && dayOf(prev.day).line && prev.ri != null) {
         const pl = dayOf(prev.day).line.slice(prev.ri); const path = pl.concat(d.line.slice(0, s.ri + 1));
-        map.easeTo({ zoom: 8.6, pitch, duration: reduced ? 0 : 600 });
-        animateAlong(path, [0, 7000, 4200, 2200][S.tempo], finish);
+        animateAlong(path, [0, 7000, 4200, 2200][S.tempo], finish, { zoom: 8.6, pitch });
       } else {
-        stopAnim(); map.flyTo({ center: [s.lon, s.lat], zoom, pitch, duration: reduced ? 0 : [0, 2600, 1800, 1000][S.tempo], essential: true });
+        stopAnim(); map.flyTo({ center: [s.lon, s.lat], zoom, pitch, bearing: kameraZiel(s), duration: reduced ? 0 : [0, 2600, 1800, 1000][S.tempo], essential: true });
         finish();
       }
       render();
     }
-    function afterArrive() { if (!S.playing) return; clearTimeout(timer); const tr = track();
+    function afterArrive() { if (!S.playing) return; clearTimeout(timer); if (ton.liest()) { ton.danach(afterArrive); return; } const tr = track();
       if (S.idx >= tr.length - 1) { setPlay(false); return; }
       timer = setTimeout(() => { S.idx++; go(false); }, [0, 4200, 2200, 700][S.tempo] + (S.tiefe >= 2 ? 1500 : 0)); }
     function setPlay(p) { S.playing = p; clearTimeout(timer); if (p && !anim) afterArrive(); render(); }
@@ -273,6 +371,7 @@
     function render() {
       const tr = track(); const s = tr[S.idx]; const d = s ? dayOf(s.day) : DAYS[0];
       document.getElementById("chipRole").textContent = S.rolle ? ROLLEN[S.rolle].n : "–";
+      document.querySelectorAll("#tonPanel .seg").forEach((g) => [...g.children].forEach((b) => b.classList.toggle("on", b.dataset.v === (g.dataset.ks === "musik" ? (S.musik ? "an" : "aus") : S[g.dataset.ks]))));
       document.getElementById("chipMyth").textContent = S.mythen.size + "/" + DAYS.reduce((a, x) => a + (x.mythen || []).length, 0);
       document.getElementById("chipWien").textContent = S.wien.size + "/" + DAYS.reduce((a, x) => a + (x.wien_faden || []).length, 0);
       const kmSoFar = DAYS.filter((x) => x.tag < d.tag).reduce((a, x) => a + ((x.route && x.route.km) || 0), 0);
@@ -322,13 +421,16 @@
       else if (e.key === "ArrowUp") { S.tiefe = Math.min(3, S.tiefe + 1); go(true); e.preventDefault(); }
       else if (e.key === "ArrowDown") { S.tiefe = Math.max(0, S.tiefe - 1); go(true); e.preventDefault(); }
       else if (e.key === "r" || e.key === "R") document.getElementById("chipRoleBtn").click();
+      else if (e.key === "k" || e.key === "K") setKamera(KAMERA[(KAMERA.findIndex((k) => k[0] === S.kamera) + 1) % KAMERA.length][0]);
+      else if ((e.key === "m" || e.key === "M") && HAT_MUSIK) ton.setMusik(!S.musik);
+      else if ((e.key === "v" || e.key === "V") && HAT_VL) ton.setVorlesen(VORLESEN[(VORLESEN.findIndex((k) => k[0] === S.vorlesen) + 1) % VORLESEN.length][0]);
       else if (e.key === "f" || e.key === "F") { if (!document.fullscreenElement) document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(() => {}); else document.exitFullscreen(); }
     });
 
     // ---------- Kopplung (Weiterleitung über öffentliche MQTT-Broker) ----------
     const ctlSeen = new Map();
     function stateMsg() { const s = track()[S.idx]; const d = s ? dayOf(s.day) : DAYS[0];
-      return { t: "state", tag: d.tag, datum: d.datum, ort: (s && s.name) || "", satz: d.satz || "", playing: S.playing, tempo: S.tempo, breite: S.breite, tiefe: S.tiefe, thema: S.thema, rolle: S.rolle, foto: lbIdx >= 0 ? { tag: ALLF[lbIdx].day, i: ALLF[lbIdx].i + 1, n: ALLF[lbIdx].n, url: ALLF[lbIdx].f.url, text: (ALLF[lbIdx].f.text || "").slice(0, 120), zeit: ALLF[lbIdx].f.zeit || "" } : null }; }
+      return { t: "state", tag: d.tag, datum: d.datum, ort: (s && s.name) || "", satz: d.satz || "", playing: S.playing, tempo: S.tempo, breite: S.breite, tiefe: S.tiefe, thema: S.thema, rolle: S.rolle, kamera: S.kamera, musik: S.musik, vorlesen: S.vorlesen, hatMusik: HAT_MUSIK, hatVorlesen: HAT_VL, sprecher: ton.sprecher(), foto: lbIdx >= 0 ? { tag: ALLF[lbIdx].day, i: ALLF[lbIdx].i + 1, n: ALLF[lbIdx].n, url: ALLF[lbIdx].f.url, text: (ALLF[lbIdx].f.text || "").slice(0, 120), zeit: ALLF[lbIdx].f.zeit || "" } : null }; }
     let link = null;
     function broadcast() { if (link) link.send("state", stateMsg(), true); }
     function apply(m) {
@@ -349,13 +451,17 @@
       else if (m.day === 1 || m.day === -1) dayStep(m.day);
       else if ("tiefe" in m || redraw) go(true);
       if (typeof m.playing === "boolean") setPlay(m.playing);
+      if (KAMERA.some((k) => k[0] === m.kamera)) setKamera(m.kamera);
+      if (typeof m.musik === "boolean") ton.setMusik(m.musik);
+      if (VORLESEN.some((k) => k[0] === m.vorlesen)) ton.setVorlesen(m.vorlesen);
+      if (m.orbit && typeof m.orbit.b === "number" && S.kamera !== "frei") setKamera("frei");
       if (m.orbit && typeof m.orbit.b === "number") map.easeTo({ bearing: map.getBearing() + Math.max(-40, Math.min(40, m.orbit.b)), pitch: Math.max(0, Math.min(80, map.getPitch() + Math.max(-20, Math.min(20, +m.orbit.p || 0)))), duration: 250 });
       if (m.zoom === 1 || m.zoom === -1) map.easeTo({ zoom: map.getZoom() + m.zoom, duration: 300 });
       render();
     }
     function linkUi() { const now = Date.now(); for (const [k, t] of ctlSeen) if (now - t > 25000) ctlSeen.delete(k);
       const n = ctlSeen.size; document.getElementById("linkDot").classList.toggle("on", n > 0);
-      document.getElementById("linkTxt").textContent = n ? (n === 1 ? "iPhone verbunden" : n + " Controller verbunden") : (link && link.up() ? "Kein iPhone verbunden" : "Verbinde …"); }
+      document.getElementById("linkTxt").textContent = n ? (n === 1 ? "Smartphone verbunden" : n + " Controller verbunden") : (link && link.up() ? "Kein Smartphone verbunden" : "Verbinde …"); }
     function newCode() { const a = "abcdefghjkmnpqrstuvwxyz23456789"; let s = ""; const r = crypto.getRandomValues(new Uint8Array(6)); r.forEach((x) => s += a[x % a.length]); return s; }
     let code; try { code = sessionStorage.getItem("atlasCode"); } catch (e) {}
     if (!code || !/^[a-z0-9]{6}$/.test(code)) code = newCode();
@@ -428,8 +534,14 @@
       <div class="secTitle">Thema</div><div class="pills" id="cThemen"></div>
       <div class="secTitle">Rolle</div><div class="pills" id="cRollen"></div>
       <div class="secTitle">Kamera</div>
+      <div class="seg" style="--n:3" data-ks="kamera">${KAMERA.map(([k, n]) => `<button data-v="${k}">${n}</button>`).join("")}</div>
       <div id="orbit">Wischen: links/rechts drehen, hoch/runter neigen</div>
       <div class="pad" style="grid-template-columns:1fr 1fr"><button class="big" id="bZoomOut">−<small>weiter weg</small></button><button class="big" id="bZoomIn">+<small>näher</small></button></div>
+      <div id="cTon" hidden><div class="secTitle">Ton</div>
+        <div class="sliders">
+          <div class="sl" id="cMusikSl" hidden><label>Musik</label><div class="seg" style="--n:2" data-ks="musik"><button data-v="aus">aus</button><button data-v="an">an</button></div></div>
+          <div class="sl" id="cVlSl" hidden><label>Vorlesen</label><div class="seg vl" data-ks="vorlesen">${VORLESEN.map(([k, n]) => `<button data-v="${k}">${n}</button>`).join("")}</div></div>
+        </div><p class="note" id="cVlInfo"></p></div>
     </div>`);
     const $ = (id) => document.getElementById(id);
     let scr = null;
@@ -449,7 +561,9 @@
     fb.addEventListener("pointerup", (e) => { if (fx == null) return; const dx = e.clientX - fx, dy = e.clientY - fy; fx = null;
       if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) send({ step: dx < 0 ? 1 : -1 }); });
     $("bZoomIn").onclick = () => send({ zoom: 1 }); $("bZoomOut").onclick = () => send({ zoom: -1 });
-    document.querySelectorAll("#ctl .seg").forEach((g) => g.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) send({ [g.dataset.k]: +b.dataset.v }); }));
+    document.querySelectorAll("#ctl .seg[data-k]").forEach((g) => g.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) send({ [g.dataset.k]: +b.dataset.v }); }));
+    document.querySelectorAll("#ctl .seg[data-ks]").forEach((g) => g.addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return;
+      send({ [g.dataset.ks]: g.dataset.ks === "musik" ? b.dataset.v === "an" : b.dataset.v }); }));
     tp.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) send({ thema: b.dataset.v || null }); });
     rp.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) send({ rolle: b.dataset.v }); });
     const pad = $("orbit"); let sx = 0, sy = 0;
@@ -466,7 +580,10 @@
       $("bFoto").firstChild.textContent = fo ? "Foto schließen" : "Fotos";
       $("bFoto").querySelector("small").textContent = fo ? `Tag ${fo.tag} · ${fo.i}/${fo.n} – ◀ ▶ blättern` : "groß ansehen";
       $("bPrev").querySelector("small").textContent = fo ? "Foto" : "Station"; $("bNext").querySelector("small").textContent = fo ? "Foto" : "Station";
-      document.querySelectorAll("#ctl .seg").forEach((g) => [...g.children].forEach((b) => b.classList.toggle("on", +b.dataset.v === p[g.dataset.k])));
+      document.querySelectorAll("#ctl .seg[data-k]").forEach((g) => [...g.children].forEach((b) => b.classList.toggle("on", +b.dataset.v === p[g.dataset.k])));
+      document.querySelectorAll("#ctl .seg[data-ks]").forEach((g) => [...g.children].forEach((b) => b.classList.toggle("on", b.dataset.v === (g.dataset.ks === "musik" ? (p.musik ? "an" : "aus") : p[g.dataset.ks]))));
+      $("cTon").hidden = !(p.hatMusik || p.hatVorlesen); $("cMusikSl").hidden = !p.hatMusik; $("cVlSl").hidden = !p.hatVorlesen;
+      $("cVlInfo").textContent = p.sprecher ? `🔊 ${SPRECHER[p.sprecher] || p.sprecher} liest gerade` : "";
       [...tp.children].forEach((b) => b.classList.toggle("on", (b.dataset.v || null) === (p.thema || null)));
       [...rp.children].forEach((b) => b.classList.toggle("on", b.dataset.v === p.rolle)); }
     let lastState = 0;
