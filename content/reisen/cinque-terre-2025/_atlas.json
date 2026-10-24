@@ -5,12 +5,20 @@
    "tag": 1,
    "datum": "2025-10-24",
    "land": [
+    "AT",
     "IT"
    ],
    "titel": "Ankommen in Lazise",
-   "satz": "Erster Abend am Gardasee: Abendessen im Pergolo, danach durch die beleuchtete Altstadt zur Scaligerburg.",
-   "teaser": "Die Reise beginnt am Ostufer des Gardasees. Im Pergolo, Vino e Cucina gibt es Pasta, Tartar und zum Schluss Crème brûlée und Espresso. Danach ein Spaziergang durch die nächtlichen Gassen bis zu den angestrahlten Mauern der Scaligerburg.",
+   "satz": "Nach dem Gig mit Jazz Exclusive in Stadl-Paura Nachtfahrt nach Süden, in der Früh Fahrerwechsel zu Renate. Erster Abend am Gardasee: Abendessen im Pergolo, danach durch die beleuchtete Altstadt zur Scaligerburg.",
+   "teaser": "Nach Chris' Gig mit Jazz Exclusive in Stadl-Paura geht es in der Nacht los, Chris fährt, in der Früh übernimmt Renate das Steuer. Die Reise beginnt am Ostufer des Gardasees. Im Pergolo, Vino e Cucina gibt es Pasta, Tartar und zum Schluss Crème brûlée und Espresso. Danach ein Spaziergang durch die nächtlichen Gassen bis zu den angestrahlten Mauern der Scaligerburg.",
    "stationen": [
+    {
+     "name": "Landesmusikschule Stadl-Paura",
+     "lat": 48.077,
+     "lon": 13.865,
+     "art": "besuch",
+     "notiz": "Gig mit Jazz Exclusive, danach Nachtfahrt (Chris am Steuer)"
+    },
     {
      "name": "Pergolo, Vino e Cucina",
      "lat": 45.5056,
@@ -348,6 +356,35 @@
     "burg",
     "kulinarik"
    ],
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 10,
+   "datum": "2025-11-02",
+   "land": [
+    "IT",
+    "AT"
+   ],
+   "titel": "Heimfahrt nach Linz",
+   "satz": "Rückfahrt vom Gardasee nach Linz.",
+   "teaser": "",
+   "stationen": [
+    {
+     "name": "Lazise",
+     "lat": 45.5054,
+     "lon": 10.7319,
+     "art": "besuch",
+     "notiz": "Abfahrt"
+    },
+    {
+     "name": "Linz",
+     "lat": 48.306,
+     "lon": 14.286,
+     "art": "uebernachtung",
+     "notiz": "Zuhause"
+    }
+   ],
+   "themen": [],
    "status": "nur-fotos"
   }
  ]

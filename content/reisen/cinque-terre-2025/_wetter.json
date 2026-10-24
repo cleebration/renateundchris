@@ -1,5 +1,5 @@
 {
- "quelle": "Open-Meteo Archiv (ERA5), Tageswerte am Übernachtungsort, CC BY 4.0",
+ "quelle": "Open-Meteo Archiv (ERA5), Tageswerte am \u00dcbernachtungsort, CC BY 4.0",
  "stand": "2026-10-24",
  "tage": {
   "1": {
@@ -73,6 +73,14 @@
    "regen": 0.8,
    "sonneH": 0.2,
    "wind": 7.8
+  },
+  "10": {
+   "code": 63,
+   "max": 12.6,
+   "min": 6.7,
+   "regen": 12.0,
+   "sonneH": 0.5,
+   "wind": 16.9
   }
  }
 }
