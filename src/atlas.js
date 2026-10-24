@@ -253,8 +253,12 @@
       function stueck() { const l = MUSIK[land] || []; return l.length ? l[nr % l.length] : null; }
       function laden() { const x = stueck(); if (!x) return false; if (musikUrl !== x.url) { musikUrl = x.url; musik.src = x.url; } info(); return true; }
       musik.addEventListener("ended", () => { nr++; laden(); if (S.musik) { musik.volume = lautRegelbar ? 0 : 1; spiele(musik); blende(); } });
-      function landWechsel(neu) {
-        if (!MUSIK[neu] || !MUSIK[neu].length || neu === land) return; // ohne Musik für das Land: weiter das Bisherige
+      // Länder ohne eigene freie Musik spielen die eines Nachbarlands (z. B. Kroatien → Slowenien/Bela krajina)
+      const NACHBAR = { HR: ["SI", "ME", "IT", "AT"], BA: ["RS", "ME", "HR"], XK: ["AL", "RS", "MK"], BG: ["MK", "GR", "RS"], SI: ["AT", "HR", "IT"], ME: ["RS", "AL"], AL: ["GR", "MK"], MK: ["GR", "RS"], RS: ["MK", "ME"], GR: ["MK", "AL"], CH: ["AT", "IT"], DE: ["AT"], HU: ["AT", "RS"] };
+      const mitMusik = (k) => (MUSIK[k] && MUSIK[k].length ? k : (NACHBAR[k] || []).find((x) => MUSIK[x] && MUSIK[x].length) || null);
+      function landWechsel(roh) {
+        const neu = mitMusik(roh);
+        if (!neu || neu === land) return; // gar keine Musik in der Nähe: weiter das Bisherige
         land = neu; nr = 0;
         if (!S.musik || musik.paused) { laden(); return; }
         if (!lautRegelbar) { laden(); spiele(musik); return; }

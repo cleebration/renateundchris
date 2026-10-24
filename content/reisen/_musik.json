@@ -1,0 +1,109 @@
+{
+ "quelle": "Wikimedia Commons, freie Lizenzen (Public Domain, CC0, CC BY, CC BY-SA); geprüft 2026-10-24 per Commons-API (Lizenz, Datei vorhanden). Kroatien: keine passende freie Volksmusik gefunden. Ogg-Dateien als MP3-Fassung von Commons (spielt auch in Safari/iPhone).",
+ "stuecke": [
+  {
+   "land": "AT",
+   "titel": "An der schönen blauen Donau (Johann Strauss II, Ausschnitt)",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/9/91/Strauss,_An_der_sch%C3%B6nen_blauen_Donau.ogg/Strauss,_An_der_sch%C3%B6nen_blauen_Donau.ogg.mp3",
+   "seite": "https://commons.wikimedia.org/wiki/File:Strauss,_An_der_sch%C3%B6nen_blauen_Donau.ogg",
+   "urheber": "Musopen / European Archive",
+   "lizenz": "CC0"
+  },
+  {
+   "land": "AT",
+   "titel": "Kaiserwalzer (Johann Strauss II, Ausschnitt)",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a6/Strauss,_Kaiserwalzer.ogg/Strauss,_Kaiserwalzer.ogg.mp3",
+   "seite": "https://commons.wikimedia.org/wiki/File:Strauss,_Kaiserwalzer.ogg",
+   "urheber": "Musopen",
+   "lizenz": "CC0"
+  },
+  {
+   "land": "AT",
+   "titel": "Zithersolo aus G'schichten aus dem Wienerwald (Johann Strauss II)",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/cf/Zither_solo_from_G'schichten_aus_dem_Wienerwald_Op.325.ogg/Zither_solo_from_G'schichten_aus_dem_Wienerwald_Op.325.ogg.mp3",
+   "seite": "https://commons.wikimedia.org/wiki/File:Zither_solo_from_G'schichten_aus_dem_Wienerwald_Op.325.ogg",
+   "urheber": "Musopen",
+   "lizenz": "CC0"
+  },
+  {
+   "land": "IT",
+   "titel": "Tarantella (traditionell)",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/4/4c/Tarantella.ogg/Tarantella.ogg.mp3",
+   "seite": "https://commons.wikimedia.org/wiki/File:Tarantella.ogg",
+   "urheber": "Air Force Strings, United States Air Force Band",
+   "lizenz": "Public Domain"
+  },
+  {
+   "land": "IT",
+   "titel": "Santa Lucia (traditionell, Aufnahme 1931)",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/6/60/A_canzone_'e_Santa_Lucia_(1931).ogg/A_canzone_'e_Santa_Lucia_(1931).ogg.mp3",
+   "seite": "https://commons.wikimedia.org/wiki/File:A_canzone_'e_Santa_Lucia_(1931).ogg",
+   "urheber": "Gilda Mignonette",
+   "lizenz": "Public Domain"
+  },
+  {
+   "land": "IT",
+   "titel": "Funiculì, funiculà (Luigi Denza)",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a2/Funicul%C3%AC_Funicul%C3%A0_Daddi_3569e.ogg/Funicul%C3%AC_Funicul%C3%A0_Daddi_3569e.ogg.mp3",
+   "seite": "https://commons.wikimedia.org/wiki/File:Funicul%C3%AC_Funicul%C3%A0_Daddi_3569e.ogg",
+   "urheber": "Francesco Daddi, Tenor",
+   "lizenz": "Public Domain"
+  },
+  {
+   "land": "GR",
+   "titel": "Greek Dance",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/2/22/Audionautix-com-ccby-greekdance.mp3",
+   "seite": "https://commons.wikimedia.org/wiki/File:Audionautix-com-ccby-greekdance.mp3",
+   "urheber": "Jason Shaw (Audionautix)",
+   "lizenz": "CC BY 3.0"
+  },
+  {
+   "land": "GR",
+   "titel": "Seikilos-Epitaph (antike griechische Melodie)",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b6/%CE%9F_%CE%95%CF%80%CE%B9%CF%84%CE%AC%CF%86%CE%B9%CE%BF%CF%82_%CF%84%CE%BF%CF%85_%CE%A3%CE%B5%E1%BF%96%CE%BA%CE%B9%CE%BB%CE%BF%CF%85_-_Epitaph_of_Seikilos.ogg/%CE%9F_%CE%95%CF%80%CE%B9%CF%84%CE%AC%CF%86%CE%B9%CE%BF%CF%82_%CF%84%CE%BF%CF%85_%CE%A3%CE%B5%E1%BF%96%CE%BA%CE%B9%CE%BB%CE%BF%CF%85_-_Epitaph_of_Seikilos.ogg.mp3",
+   "seite": "https://commons.wikimedia.org/wiki/File:%CE%9F_%CE%95%CF%80%CE%B9%CF%84%CE%AC%CF%86%CE%B9%CE%BF%CF%82_%CF%84%CE%BF%CF%85_%CE%A3%CE%B5%E1%BF%96%CE%BA%CE%B9%CE%BB%CE%BF%CF%85_-_Epitaph_of_Seikilos.ogg",
+   "urheber": "Marcus Harvey",
+   "lizenz": "CC BY-SA 2.5"
+  },
+  {
+   "land": "MK",
+   "titel": "A bre Makedonče (Violine)",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a6/%D0%90_%D0%B1%D1%80%D0%B5_%D0%9C%D0%B0%D0%BA%D0%B5%D0%B4%D0%BE%D0%BD%D1%87%D0%B5.ogg/%D0%90_%D0%B1%D1%80%D0%B5_%D0%9C%D0%B0%D0%BA%D0%B5%D0%B4%D0%BE%D0%BD%D1%87%D0%B5.ogg.mp3",
+   "seite": "https://commons.wikimedia.org/wiki/File:%D0%90_%D0%B1%D1%80%D0%B5_%D0%9C%D0%B0%D0%BA%D0%B5%D0%B4%D0%BE%D0%BD%D1%87%D0%B5.ogg",
+   "urheber": "Buli",
+   "lizenz": "CC BY-SA 4.0"
+  },
+  {
+   "land": "SI",
+   "titel": "Tänze aus der Bela krajina (Ausschnitt)",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/7/7c/Igre_iz_Bele_krajine_(deo).ogg/Igre_iz_Bele_krajine_(deo).ogg.mp3",
+   "seite": "https://commons.wikimedia.org/wiki/File:Igre_iz_Bele_krajine_(deo).ogg",
+   "urheber": "Kinder-Folkloreensemble, Aufnahme Saša Mažinjanin",
+   "lizenz": "Public Domain"
+  },
+  {
+   "land": "RS",
+   "titel": "Vlaške igre – walachische Tänze (Ausschnitt)",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/f/f8/Vlaske_igre_-_deo.ogg/Vlaske_igre_-_deo.ogg.mp3",
+   "seite": "https://commons.wikimedia.org/wiki/File:Vlaske_igre_-_deo.ogg",
+   "urheber": "Ansambl Etno Sound Srbija, Aufnahme Saša Mažinjanin",
+   "lizenz": "Public Domain"
+  },
+  {
+   "land": "ME",
+   "titel": "Gusle",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/2/26/Gusle0001.ogg/Gusle0001.ogg.mp3",
+   "seite": "https://commons.wikimedia.org/wiki/File:Gusle0001.ogg",
+   "urheber": "unbekannt",
+   "lizenz": "CC BY-SA 3.0"
+  },
+  {
+   "land": "AL",
+   "titel": "Kido na ballkone (traditionelles albanisches Lied)",
+   "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/2/2c/Kido_Na_Ballkone.ogg/Kido_Na_Ballkone.ogg.mp3",
+   "seite": "https://commons.wikimedia.org/wiki/File:Kido_Na_Ballkone.ogg",
+   "urheber": "Emily Hurst, Aufnahme Luke Stodola",
+   "lizenz": "CC BY-SA 3.0"
+  }
+ ]
+}
