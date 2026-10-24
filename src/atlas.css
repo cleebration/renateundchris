@@ -322,3 +322,7 @@ body.touch #cardTab{transform:rotate(180deg);border-radius:0 12px 12px 0;border-
 @keyframes vollgas{50%{box-shadow:0 0 0 6px rgba(230,60,40,.35),0 0 24px rgba(230,60,40,.5)}}
 @media (prefers-reduced-motion:reduce){.tacho .nadel{transition:none}#dPlay.vollgas{animation:none}}
 #dPlay .lbl,#dPlay small{color:#10140f!important;text-transform:none;font:15px var(--mono)}#dPlay.steht small{color:#5a5a50!important}
+#dPlay .tacho{width:64px;height:38px;padding:3px 5px 0}
+.tagFort{position:relative;height:16px;border-radius:8px;background:rgba(255,255,255,.07);overflow:hidden;margin:2px 0}
+.tagFort i{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,rgba(224,145,58,.55),var(--amber));border-radius:8px}
+.tagFort span{position:relative;display:block;text-align:center;font:11px/16px var(--mono);color:var(--ink)}

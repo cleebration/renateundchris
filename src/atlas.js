@@ -43,16 +43,17 @@
     l2: { n: "Peugeot Traveller L2", form: "bus", lack: "#e2702a", dach: "#f2954f", rand: "#1b1206", w: 30, h: 63 },
     mietauto: { n: "Mietauto", form: "pkw", lack: "#d6dade", dach: "#f1f3f5", rand: "#16262c", w: 27, h: 56 },
   };
+  const FZ_GROESSE = 0.6; // Fahrzeug auf der Karte kleiner darstellen
   function fahrzeugSvg(k) {
     const f = FAHRZEUGE[k] || FAHRZEUGE.l3, W = 40, H = Math.round(f.h / f.w * 40), glas = "#8fb8cc";
-    if (f.form === "pkw") return `<svg viewBox="0 0 ${W} ${H}" width="${f.w}" height="${f.h}" aria-hidden="true">
+    if (f.form === "pkw") return `<svg viewBox="0 0 ${W} ${H}" width="${Math.round(f.w * FZ_GROESSE)}" height="${Math.round(f.h * FZ_GROESSE)}" aria-hidden="true">
       <rect x="2" y="2" width="36" height="${H - 4}" rx="11" fill="${f.lack}" stroke="${f.rand}" stroke-width="2"/>
       <path d="M8 ${H * .28} Q20 ${H * .22} 32 ${H * .28} L30 ${H * .38} Q20 ${H * .35} 10 ${H * .38}Z" fill="${glas}"/>
       <rect x="9" y="${H * .4}" width="22" height="${H * .27}" rx="4" fill="${f.dach}"/>
       <path d="M10 ${H * .7} Q20 ${H * .73} 30 ${H * .7} L31 ${H * .78} Q20 ${H * .8} 9 ${H * .78}Z" fill="${glas}"/>
       <rect x="0" y="${H * .3}" width="3" height="5" rx="1" fill="${f.lack}"/><rect x="37" y="${H * .3}" width="3" height="5" rx="1" fill="${f.lack}"/>
       <rect x="7" y="4" width="6" height="3" rx="1.5" fill="#fff6d8"/><rect x="27" y="4" width="6" height="3" rx="1.5" fill="#fff6d8"/></svg>`;
-    return `<svg viewBox="0 0 ${W} ${H}" width="${f.w}" height="${f.h}" aria-hidden="true">
+    return `<svg viewBox="0 0 ${W} ${H}" width="${Math.round(f.w * FZ_GROESSE)}" height="${Math.round(f.h * FZ_GROESSE)}" aria-hidden="true">
       <rect x="3" y="2" width="34" height="${H - 4}" rx="8" fill="${f.lack}" stroke="${f.rand}" stroke-width="2"/>
       <path d="M7 15 Q20 11 33 15 L32 24 Q20 22 8 24Z" fill="${glas}"/>
       <rect x="8" y="27" width="24" height="${H - 39}" rx="3" fill="${f.dach}"/>
@@ -405,6 +406,9 @@
       map.addLayer({ id: "all", type: "line", source: "all", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": "#ffffff", "line-width": 2.5, "line-opacity": 0.45, "line-dasharray": [1, 1.6] } });
       map.addLayer({ id: "done-casing", type: "line", source: "done", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": "#0a1b23", "line-width": 7 } });
       map.addLayer({ id: "done", type: "line", source: "done", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": ["get", "col"], "line-width": 4.5 } });
+      map.addSource("spur", { type: "geojson", data: fc([]) });
+      map.addLayer({ id: "spur-casing", type: "line", source: "spur", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": "#0a1b23", "line-width": 7 } });
+      map.addLayer({ id: "spur", type: "line", source: "spur", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": ["get", "col"], "line-width": 4.5 } });
 
       ST.forEach((s, k) => { const e = document.createElement("div"); e.className = "pin" + (s.art === "uebernachtung" ? " night" : ""); e.title = "Tag " + s.day + " · " + s.name;
         e.onclick = () => { let t = track(); let i = t.indexOf(s); if (i < 0) { S.breite = 3; S.thema = null; t = track(); i = t.indexOf(s); } S.idx = Math.max(0, i); go(true); };
@@ -425,12 +429,30 @@
       const feats = [];
       DAYS.forEach((d) => { if (!d.line) return; if (d.tag < p.day) feats.push(line(d.line, { col: colOf(d) }));
         else if (d.tag === p.day && p.ri > 0) feats.push(line(d.line.slice(0, p.ri + 1), { col: colOf(d) })); });
-      map.getSource("done").setData(fc(feats));
+      map.getSource("done").setData(fc(feats)); if (map.getSource("spur")) map.getSource("spur").setData(fc([]));
       const vis = new Set(track()); ST.forEach((s, k) => pinEls[k] && pinEls[k].classList.toggle("dim", !vis.has(s)));
     }
 
     // ---------- Bewegung ----------
     let anim = null, timer = null;
+    // Zwei-Finger-Gesten: zoomen/drehen auch während der Fahrt. Gezoomter Maßstab bleibt; Drehen schaltet die Kamera auf „frei“.
+    let hand = false, handZoom = null;
+    // Fahrzeug aus der Mitte rücken, solange die Tageskarte bzw. Steuerung Platz belegt (Kartenrand-Polster)
+    let polsterAlt = "";
+    function polster() { const c = document.getElementById("card"), sd = document.getElementById("side"), W = innerWidth, H = innerHeight, p = { top: 0, bottom: 0, left: 0, right: 0 };
+      if (c && !c.classList.contains("zu") && c.offsetParent) { const r = c.getBoundingClientRect();
+        if (r.left > W * 0.3) p.right = Math.round(Math.min(W * 0.55, W - r.left)); else p.bottom = Math.round(Math.min(H * 0.6, H - r.top)); }
+      if (sd && !sd.classList.contains("zu") && document.body.classList.contains("touch")) { const r = sd.getBoundingClientRect(); p.left = Math.round(Math.min(W * 0.45, r.right)); }
+      const k = JSON.stringify(p); if (k === polsterAlt) return; polsterAlt = k; if (anim || map.isMoving()) map.setPadding(p); else map.easeTo({ padding: p, duration: 500 }); }
+    addEventListener("resize", () => setTimeout(polster, 100));
+    if (window.ResizeObserver) new ResizeObserver(() => requestAnimationFrame(polster)).observe(document.getElementById("card"));
+    new MutationObserver(() => requestAnimationFrame(polster)).observe(document.getElementById("card"), { attributes: true, attributeFilter: ["class", "data-tiefe"] });
+    new MutationObserver(() => requestAnimationFrame(polster)).observe(document.getElementById("side"), { attributes: true, attributeFilter: ["class"] });
+    map.once("load", () => setTimeout(polster, 300));
+    map.on("touchstart", (e) => { if (e.originalEvent && e.originalEvent.touches && e.originalEvent.touches.length >= 2) hand = true; });
+    map.on("touchend", (e) => { if (!hand || (e.originalEvent && e.originalEvent.touches && e.originalEvent.touches.length)) return; hand = false; handZoom = map.getZoom(); });
+    map.on("wheel", () => { clearTimeout(map._hz); map._hz = setTimeout(() => (handZoom = map.getZoom()), 300); });
+    map.on("rotateend", (e) => { if (e.originalEvent && S.kamera !== "frei") { S.kamera = "frei"; merk.set("kamera", "frei"); render(); broadcast(); } });
     function stopAnim() { if (anim) { cancelAnimationFrame(anim); anim = null; } }
     // Richtung (Grad, im Uhrzeigersinn von Norden) von a nach b
     const brg = (a, b) => Math.atan2((b[0] - a[0]) * Math.cos(a[1] * Math.PI / 180), b[1] - a[1]) * 180 / Math.PI;
@@ -445,24 +467,42 @@
     let fzJetzt = null;
     function setzeFahrzeug(d) { const k = (d && FAHRZEUGE[d.fahrzeug] ? d.fahrzeug : null) || (FAHRZEUGE[DATA.fahrzeugTyp] ? DATA.fahrzeugTyp : "l3");
       if (k === fzJetzt || !van) return; fzJetzt = k; const el = van.getElement(); el.innerHTML = fahrzeugSvg(k); el.title = FAHRZEUGE[k].n; }
-    function animateAlong(path, ms, done, ziel) {
+    // Geschwindigkeit in km pro Sekunde je Stufe (Stufe 5 ≈ 30 km/s); Dauer folgt der Streckenlänge
+    const kmProSek = (t) => 30 / Math.pow(0.7, t - 5);
+    const fahrDauer = (path) => { let km = 0; for (let k = 1; k < path.length; k++) km += Math.sqrt(d2(path[k], path[k - 1])) * 111.2;
+      return Math.max(500, Math.min(30000, km / kmProSek(S.tempo) * 1000)); };
+    let rollt = false; // fährt gerade durch (kein Anfahren/Abbremsen an Zwischenstationen)
+    // Fortschritt des Tages (Balken + km) – aus dem Punkt-Index auf der Tageslinie
+    function tagFort(day, ri) { const el = document.querySelector("#card .tagFort"); const d = dayOf(day); if (!el || !d || !d.line) return;
+      const f = Math.max(0, Math.min(1, ri / (d.line.length - 1))); el.querySelector("i").style.width = (f * 100).toFixed(1) + "%";
+      el.querySelector("span").textContent = `${Math.round(f * d.route.km)} / ${Math.round(d.route.km)} km`; }
+    function animateAlong(path, ms, done, ziel, farbe, fort) {
       stopAnim();
       if (reduced || path.length < 2 || ms < 50) { done(); return; }
       const cum = [0]; for (let k = 1; k < path.length; k++) cum.push(cum[k - 1] + Math.sqrt(d2(path[k], path[k - 1])));
       const L = cum[cum.length - 1] || 1; const t0 = performance.now();
+      // weich anfahren nur aus dem Stand, weich bremsen nur vor dem Ende bzw. einem längeren Halt; dazwischen gleichmäßig
+      const anfahren = !rollt, bremsen = !S.playing || S.idx >= track().length - 1 || halt(track()[S.idx]) > 400; rollt = true;
+      const kurve = (f) => { const a = anfahren ? 0.18 : 0, b = bremsen ? 0.18 : 0, v = 1 / (1 - a / 2 - b / 2);
+        if (f < a) return v * f * f / (2 * a); if (f > 1 - b) { const r = 1 - f; return 1 - v * r * r / (2 * b); } return v * (f - a / 2); };
       const punktBei = (t) => { let k = 1; while (k < cum.length - 1 && cum[k] < t) k++; const a = path[k - 1], b = path[k], sg = (cum[k] - cum[k - 1]) || 1, u = Math.max(0, Math.min(1, (t - cum[k - 1]) / sg)); return [a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u]; };
       const z0 = map.getZoom(), p0 = map.getPitch(); let kopf = map.getBearing(); let fzKopf = van.getRotation();
       const fahrt = S.kamera === "fahrt", zt = fahrt ? 11.6 : ziel.zoom, pt = fahrt ? 72 : ziel.pitch;
       const vor = Math.max(0.004, Math.min(0.03, L * 0.12)); // Blick voraus (~0,4–3 km)
       const step = (now) => {
-        const f = Math.min(1, (now - t0) / ms); const e = f < .5 ? 2 * f * f : 1 - Math.pow(-2 * f + 2, 2) / 2; const target = e * L;
+        const f = Math.min(1, (now - t0) / ms); const e = kurve(f); const target = e * L;
         const pos = punktBei(target); const g = Math.min(1, f / 0.2);
         const cam = { center: pos, zoom: z0 + (zt - z0) * g, pitch: p0 + (pt - p0) * g };
         const voraus = brg(pos, punktBei(Math.min(L, target + vor)));
         fzKopf = mischWinkel(fzKopf, voraus, 0.25); van.setRotation(fzKopf);
         if (fahrt) { kopf = mischWinkel(kopf, voraus, 0.12); cam.bearing = kopf; }
         else if (S.kamera === "nord") cam.bearing = 0;
-        van.setLngLat(pos); map.jumpTo(cam);
+        van.setLngLat(pos);
+        { let k = 1; while (k < cum.length - 1 && cum[k] < target) k++; const sp = map.getSource("spur"); // Straße entsteht direkt hinter dem Fahrzeug
+          if (sp) sp.setData(fc([line(path.slice(0, k).concat([pos]), { col: farbe || "#e0913a" })])); if (fort) fort(k - 1 + Math.max(0, Math.min(1, (target - cum[k - 1]) / ((cum[k] - cum[k - 1]) || 1)))); }
+        if (hand) { if (f < 1) anim = requestAnimationFrame(step); else { anim = null; done(); } return; } // Hand an der Karte: nur das Fahrzeug bewegen
+        if (handZoom != null) { cam.zoom = handZoom; delete cam.pitch; }
+        map.jumpTo(cam);
         if (f < 1) anim = requestAnimationFrame(step); else { anim = null; done(); }
       };
       anim = requestAnimationFrame(step);
@@ -474,15 +514,15 @@
       const d = dayOf(s.day);
       if (S.tiefe >= 2) { (d.mythen || []).forEach((m, k) => S.mythen.add(d.tag + "-" + k)); (d.wien_faden || []).forEach((m, k) => S.wien.add(d.tag + "-" + k)); }
       if (!van) { render(); return; } // Karte lädt noch
-      const zoom = S.tiefe >= 2 ? 10.2 : 8.4, pitch = narrow ? 45 : (S.tiefe >= 2 ? 68 : 58);
-      const finish = () => { van.setLngLat([s.lon, s.lat]); setzeFahrzeug(d); { const r = richtungAn(d, s.ri); if (r != null) van.setRotation(r); } drawDone(); map.easeTo({ center: [s.lon, s.lat], zoom, pitch: S.kamera === "fahrt" && !narrow ? 70 : pitch, bearing: kameraZiel(s), duration: reduced ? 0 : 900 }); showFotos(d); render(); ton.ankunft(d); afterArrive(); };
+      const zoom = handZoom != null ? handZoom : S.tiefe >= 2 ? 10.2 : 8.4, pitch = narrow ? 45 : (S.tiefe >= 2 ? 68 : 58);
+      const finish = () => { van.setLngLat([s.lon, s.lat]); setzeFahrzeug(d); { const r = richtungAn(d, s.ri); if (r != null) van.setRotation(r); } drawDone(); if (!(S.playing && halt(s) <= 400)) map.easeTo({ center: [s.lon, s.lat], zoom, pitch: S.kamera === "fahrt" && !narrow ? 70 : pitch, bearing: kameraZiel(s), duration: reduced ? 0 : 900 }); showFotos(d); render(); ton.ankunft(d); afterArrive(); };
       // fahren entlang der Straße, wenn möglich
       if (!jump && prev && d.line && prev.day === s.day && prev.ri != null && s.ri != null && s.ri > prev.ri) {
         const path = d.line.slice(prev.ri, s.ri + 1);
-        animateAlong(path, tz(3200, S.tempo), finish, { zoom: Math.min(zoom, 9.2), pitch });
+        animateAlong(path, fahrDauer(path), finish, { zoom: Math.min(zoom, 9.2), pitch }, colOf(d), (i) => tagFort(s.day, prev.ri + i));
       } else if (!jump && prev && d.line && s.day === prev.day + 1 && s.ri != null && dayOf(prev.day).line && prev.ri != null) {
         const pl = dayOf(prev.day).line.slice(prev.ri); const path = pl.concat(d.line.slice(0, s.ri + 1));
-        animateAlong(path, tz(4200, S.tempo), finish, { zoom: 8.6, pitch });
+        animateAlong(path, fahrDauer(path), finish, { zoom: 8.6, pitch }, colOf(dayOf(prev.day)), (i) => { const n = pl.length; if (i >= n) tagFort(s.day, i - n); });
       } else {
         stopAnim(); map.flyTo({ center: [s.lon, s.lat], zoom, pitch, bearing: kameraZiel(s), duration: reduced ? 0 : tz(1800, S.tempo), essential: true });
         finish();
@@ -491,12 +531,18 @@
     }
     function afterArrive() { if (!S.playing) return; clearTimeout(timer); if (ton.liest()) { ton.danach(afterArrive); return; } const tr = track();
       if (S.idx >= tr.length - 1) { setPlay(false); return; }
-      timer = setTimeout(() => { S.idx++; go(false); }, tz(2200, S.tempo) + (S.tiefe >= 2 ? 1500 : 0)); }
+      const h = halt(tr[S.idx]); if (h > 400) rollt = false;
+      timer = setTimeout(() => { S.idx++; go(false); }, h); }
+    // Verweildauer an einer Station: kurz beim Durchfahren, länger bei Tagesziel/Highlights und großer Tiefe; schneller = kürzer
+    function halt(s) { if (!s) return 0; const a = s.art || "besuch";
+      let ms = 150 + (a === "uebernachtung" ? 900 : a === "besuch" ? 400 : 0) + (S.tiefe >= 2 ? 1200 : 0) + (S.tiefe >= 3 ? 1000 : 0);
+      return Math.round(ms * Math.pow(0.75, S.tempo - 5)); }
     // Fahrstufe 0 = anhalten (letztes Tempo bleibt gemerkt), 1–10 = mit diesem Tempo fahren
     const gang = () => (S.playing ? S.tempo : 0);
     function fahrstufe(v) { v = Math.max(0, Math.min(TMAX, Math.round(v))); if (v === 0) { if (S.playing) setPlay(false); }
       else { S.tempo = v; if (!S.playing) setPlay(true); else render(); } broadcast(); }
-    function setPlay(p) { S.playing = p; clearTimeout(timer); if (p && !anim) afterArrive(); render(); }
+    function setPlay(p) { S.playing = p; clearTimeout(timer); rollt = false;
+      if (p && !anim) { const tr = track(); if (S.idx < tr.length - 1) { S.idx++; go(false); } else setPlay(false); } render(); }
     function step(n) { stopAnim(); clearTimeout(timer); const tr = track(); S.idx = Math.min(tr.length - 1, Math.max(0, S.idx + n)); go(n < 0); }
     function gotoDay(t) { stopAnim(); let k = track().findIndex((s) => s.day >= t); if (k < 0) { S.thema = null; S.breite = 3; k = track().findIndex((s) => s.day >= t); } S.idx = Math.max(0, k); go(true); }
     function dayStep(n) { const tr = track(); const cur = (tr[S.idx] || {}).day || 1; let tgt = cur + n;
@@ -538,7 +584,8 @@
         if (Math.abs(dx) < 8 && Math.abs(dy) < 8 && !e.target.closest("a,button,.gal,.hero")) { if (S.tiefe + tiefeRichtung > 3 || S.tiefe + tiefeRichtung < 0) tiefeRichtung = -tiefeRichtung; setTiefe(S.tiefe + tiefeRichtung); } }); }
     // Tageskarte ein-/ausblenden; ausgeblendet bleibt rechts ein schmaler Reiter sichtbar
     let tiefeRichtung = 1; // Tippen: 1→2→3→4→3→2→1 …
-    function setTiefe(t) { S.tiefe = Math.max(0, Math.min(3, t)); go(true); broadcast(); }
+    function setTiefe(t) { handZoom = null; setTiefeOhne(t); }
+    function setTiefeOhne(t) { S.tiefe = Math.max(0, Math.min(3, t)); go(true); broadcast(); }
     function setKarteZu(zu) { document.getElementById("card").classList.toggle("zu", zu); document.getElementById("cardTab").hidden = !zu; merk.set("karteZu", zu); }
     document.getElementById("cardTab").onclick = () => setKarteZu(false);
     if (merk.get("karteZu", false) === true) setKarteZu(true);
@@ -578,8 +625,8 @@
         if (tt) { tt.textContent = g ? `Stufe ${g}/10 · ${TEMPO[g]}` : `Stufe 0 · steht (zuletzt ${S.tempo})`; tachoSetzen(document.getElementById("tachoGross"), g, true);
           const r = document.getElementById("tempoR"); r.value = g; r.style.setProperty("--f", tempoFarbe(g)); }
         const dp = document.getElementById("dPlay");
-        if (dp) { if (!dp.querySelector(".lbl")) dp.innerHTML = `<span class="lbl"></span><small></small>`; tachoSetzen(dp, g);
-          dp.querySelector(".lbl").textContent = g ? "❚❚ Halt" : "▶ Fahren"; dp.querySelector("small").textContent = g ? g : "↺ " + S.tempo;
+        if (dp) { if (dp.querySelector(".lbl") || !dp.querySelector("svg")) dp.innerHTML = ""; tachoSetzen(dp, g);
+          dp.setAttribute("aria-label", g ? `Fährt mit Stufe ${g} – tippen zum Anhalten` : `Steht – tippen zum Weiterfahren mit Stufe ${S.tempo}`);
           dp.style.setProperty("--tf", tempoFarbe(g)); dp.classList.toggle("steht", !g); dp.classList.toggle("vollgas", g >= 9);
           dp.title = g ? `Stufe ${g}/10 – tippen = Stopp, seitlich ziehen = schneller/langsamer` : `Steht – tippen = weiter mit Stufe ${S.tempo}, nach rechts ziehen = anfahren`; } }
       document.getElementById("metaDate").textContent = fmtDate(d.datum);
@@ -591,6 +638,7 @@
         if (w && w.max != null) bits.push(`${wmoIcon(w.code)} ${Math.round(w.max)}° / ${Math.round(w.min)}°${w.regen >= 1 ? ` · ${String(Math.round(w.regen * 10) / 10).replace(".", ",")} mm` : ""}`);
         if (so) bits.push(`↑ ${so.auf} · ↓ ${so.unter}`);
         if (bits.length) h += `<span class="wx" title="Wetter am Übernachtungsort (Open-Meteo) · Sonnenauf- und -untergang">${bits.join(" · ")}</span>`; }
+      if (d.line && d.route && d.route.km) h += `<div class="tagFort" aria-label="Fortschritt des Tages"><i></i><span></span></div>`;
       h += `<div class="depth" aria-label="Tiefe ${S.tiefe + 1} von 4">Tiefe <b>${S.tiefe + 1}</b>/4 ${[0, 1, 2, 3].map((k) => `<i class="${k <= S.tiefe ? "on" : ""}"></i>`).join("")}</div>`;
       if (S.tiefe >= 1 && d.satz) h += `<p class="lead">${esc(d.satz)}</p>`;
       { const pa = (d.passend || []).concat((MAUERN || []).filter((m) => m.tag === d.tag));
@@ -611,7 +659,7 @@
         if (d.seite) h += `<a class="more" href="${esc(d.seite)}">Ganzes Tagebuch von Tag ${d.tag} lesen →</a>`;
       }
       if (d.status === "fehlt") h += `<p class="note">Für diesen Tag gibt es noch keinen Eintrag.</p>`;
-      const card = document.getElementById("card"); card.innerHTML = `<button class="cardX" aria-label="Tagesübersicht ausblenden (T)" title="ausblenden (T)">›</button>` + h; card.dataset.tiefe = S.tiefe;
+      const card = document.getElementById("card"); card.innerHTML = `<button class="cardX" aria-label="Tagesübersicht ausblenden (T)" title="ausblenden (T)">›</button>` + h; card.dataset.tiefe = S.tiefe; if (!anim) tagFort(d.tag, (s && s.ri) || 0); setTimeout(() => { try { polster(); } catch (e) {} }, 0);
       card.querySelector(".cardX").onclick = () => setKarteZu(true);
       document.getElementById("cardTab").textContent = `‹ Tag ${d.tag}`;
       card.querySelectorAll("[data-f]").forEach((b) => b.onclick = () => openPhoto(fotos[+b.dataset.f]));
