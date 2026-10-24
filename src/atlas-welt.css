@@ -84,3 +84,6 @@ h1{margin:2px 0 4px;font-family:var(--display);font-weight:800;font-size:54px;li
 .frage .frRow{display:flex;gap:8px}
 .frage #such{flex:1;min-width:0;border:0;background:transparent;padding:6px 4px;font:15px var(--serif);color:var(--ink);outline:none}
 .frage:focus-within{border-color:var(--amber)}
+
+#panel .home{display:inline-block;margin-bottom:10px;font:12px var(--mono);color:var(--ink);text-decoration:none;border:1px solid var(--hair);border-radius:999px;padding:5px 10px}
+#panel .home:hover{border-color:var(--amber);color:var(--amber)}
