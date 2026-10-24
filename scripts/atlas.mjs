@@ -120,6 +120,7 @@ export function buildAtlas({ ROOT, DIST, site }) {
     if (!data) continue;
     data.title = t.title;
     data.fahrzeug = t.fahrzeug || "";
+    data.fahrzeugTyp = t.fahrzeugTyp || ""; // l3 · l2 · mietauto (Symbol auf der Karte); je Tag abweichend: _atlas.json tage[].fahrzeug
     // Musik je Land (content/reisen/_musik.json, gemeinsam für alle Reisen) – nur die Länder dieser Reise
     const laender = new Set(data.tage.flatMap((d) => d.land || []));
     data.musik = {};

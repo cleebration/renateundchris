@@ -90,8 +90,8 @@ button.chip{cursor:pointer}
 .pin.cur{transform:scale(1.7);box-shadow:0 0 0 6px rgba(224,145,58,.3)}
 .pin.dim{opacity:.2}
 .fpin{width:34px;height:34px;border-radius:8px;border:2px solid #f3ecdc;background:#13303b center/cover;box-shadow:0 4px 12px rgba(0,0,0,.45);cursor:zoom-in}
-.van{width:30px;height:30px;border-radius:50%;background:var(--amber);border:3px solid var(--night);display:grid;place-items:center;box-shadow:0 6px 16px rgba(0,0,0,.45)}
-.van svg{width:18px;height:18px}
+.van{z-index:6;line-height:0;filter:drop-shadow(0 3px 4px rgba(0,0,0,.55)) drop-shadow(0 0 6px rgba(224,145,58,.55))}
+.van svg{display:block}
 .maplibregl-ctrl-attrib{font-family:var(--mono);font-size:10px}
 
 #roles{position:absolute;inset:0;z-index:20;display:grid;place-items:center;background:rgba(6,16,21,.66);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px));overflow:auto}

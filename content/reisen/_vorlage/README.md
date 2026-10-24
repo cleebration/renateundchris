@@ -67,3 +67,7 @@ Test: `/atlas/<slug>/` am Mac öffnen, QR mit dem Smartphone scannen.
 - Karte: MapLibre GL, OpenFreeMap (Liberty), Höhen: Terrain Tiles (AWS Open Data)
 - Smartphone ↔ Bildschirm: MQTT über öffentliche Broker (EMQX, HiveMQ), Kanal `rcatlas/v1/<code>/…`
 - Code: `scripts/atlas.mjs` (Build), `src/atlas.js`, `src/atlas.css`
+
+## Fahrzeug auf der Karte
+
+`reisen.json` → `"fahrzeugTyp": "l3"` (Peugeot Traveller L3, schwarz) · `"l2"` (Traveller L2, orange) · `"mietauto"`. Einzelne Tage abweichend: in `_atlas.json` bei `tage[]` `"fahrzeug": "mietauto"`. Ohne Angabe: L3.

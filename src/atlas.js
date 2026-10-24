@@ -24,6 +24,31 @@
   const KAMERA = [["nord","Nord"],["fahrt","Fahrt"],["frei","Frei"]];
   const VORLESEN = [["aus","aus"],["chris","Chris"],["renate","Renate"],["abwechselnd","abwechselnd"],["zufall","zufällig"]];
   const SPRECHER = { chris: "Chris", renate: "Renate" };
+  // Fahrzeuge von oben (wie die Auto-Markierung bei Navi-Karten). Spitze = vorne = oben, gedreht wird in Fahrtrichtung.
+  // Je Reise: reisen.json „fahrzeugTyp“; je Tag abweichend: _atlas.json tage[].fahrzeug (z. B. "mietauto").
+  const FAHRZEUGE = {
+    l3: { n: "Peugeot Traveller L3", form: "bus", lack: "#17191c", dach: "#2c3136", rand: "#f3ecdc", w: 30, h: 70 },
+    l2: { n: "Peugeot Traveller L2", form: "bus", lack: "#e2702a", dach: "#f2954f", rand: "#1b1206", w: 30, h: 63 },
+    mietauto: { n: "Mietauto", form: "pkw", lack: "#d6dade", dach: "#f1f3f5", rand: "#16262c", w: 27, h: 56 },
+  };
+  function fahrzeugSvg(k) {
+    const f = FAHRZEUGE[k] || FAHRZEUGE.l3, W = 40, H = Math.round(f.h / f.w * 40), glas = "#8fb8cc";
+    if (f.form === "pkw") return `<svg viewBox="0 0 ${W} ${H}" width="${f.w}" height="${f.h}" aria-hidden="true">
+      <rect x="2" y="2" width="36" height="${H - 4}" rx="11" fill="${f.lack}" stroke="${f.rand}" stroke-width="2"/>
+      <path d="M8 ${H * .28} Q20 ${H * .22} 32 ${H * .28} L30 ${H * .38} Q20 ${H * .35} 10 ${H * .38}Z" fill="${glas}"/>
+      <rect x="9" y="${H * .4}" width="22" height="${H * .27}" rx="4" fill="${f.dach}"/>
+      <path d="M10 ${H * .7} Q20 ${H * .73} 30 ${H * .7} L31 ${H * .78} Q20 ${H * .8} 9 ${H * .78}Z" fill="${glas}"/>
+      <rect x="0" y="${H * .3}" width="3" height="5" rx="1" fill="${f.lack}"/><rect x="37" y="${H * .3}" width="3" height="5" rx="1" fill="${f.lack}"/>
+      <rect x="7" y="4" width="6" height="3" rx="1.5" fill="#fff6d8"/><rect x="27" y="4" width="6" height="3" rx="1.5" fill="#fff6d8"/></svg>`;
+    return `<svg viewBox="0 0 ${W} ${H}" width="${f.w}" height="${f.h}" aria-hidden="true">
+      <rect x="3" y="2" width="34" height="${H - 4}" rx="8" fill="${f.lack}" stroke="${f.rand}" stroke-width="2"/>
+      <path d="M7 15 Q20 11 33 15 L32 24 Q20 22 8 24Z" fill="${glas}"/>
+      <rect x="8" y="27" width="24" height="${H - 39}" rx="3" fill="${f.dach}"/>
+      <line x1="11" y1="30" x2="11" y2="${H - 15}" stroke="${f.lack}" stroke-width="1.2" opacity=".6"/><line x1="29" y1="30" x2="29" y2="${H - 15}" stroke="${f.lack}" stroke-width="1.2" opacity=".6"/>
+      <rect x="10" y="${H - 10}" width="20" height="4" rx="1.5" fill="${glas}" opacity=".8"/>
+      <rect x="0" y="16" width="4" height="6" rx="1.5" fill="${f.lack}"/><rect x="36" y="16" width="4" height="6" rx="1.5" fill="${f.lack}"/>
+      <rect x="8" y="4" width="6" height="3" rx="1.5" fill="#fff6d8"/><rect x="26" y="4" width="6" height="3" rx="1.5" fill="#fff6d8"/></svg>`;
+  }
   const merk = { get(k, d) { try { const v = localStorage.getItem("atlas." + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
                  set(k, v) { try { localStorage.setItem("atlas." + k, JSON.stringify(v)); } catch (e) {} } };
   const esc = (t) => String(t ?? "").replace(/[&<>"]/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -277,8 +302,9 @@
       ST.forEach((s, k) => { const e = document.createElement("div"); e.className = "pin" + (s.art === "uebernachtung" ? " night" : ""); e.title = "Tag " + s.day + " · " + s.name;
         e.onclick = () => { let t = track(); let i = t.indexOf(s); if (i < 0) { S.breite = 3; S.thema = null; t = track(); i = t.indexOf(s); } S.idx = Math.max(0, i); go(true); };
         pinEls[k] = e; new maplibregl.Marker({ element: e }).setLngLat([s.lon, s.lat]).addTo(map); });
-      const ve = document.createElement("div"); ve.className = "van"; ve.innerHTML = '<svg viewBox="0 0 24 24" fill="#0a1b23" aria-hidden="true"><path d="M3 7h11l4 4h3v5h-2a2 2 0 1 1-4 0H9a2 2 0 1 1-4 0H3z"/></svg>';
-      van = new maplibregl.Marker({ element: ve }).setLngLat([ST[0].lon, ST[0].lat]).addTo(map);
+      const ve = document.createElement("div"); ve.className = "van";
+      van = new maplibregl.Marker({ element: ve, rotationAlignment: "map", pitchAlignment: "map" }).setLngLat([ST[0].lon, ST[0].lat]).addTo(map);
+      setzeFahrzeug(dayOf(ST[0].day));
       drawDone(); if (track()[S.idx]) go(true); else render();
     });
     function firstSymbol() { const l = (map.getStyle().layers || []).find((x) => x.type === "symbol"); return l && l.id; }
@@ -308,20 +334,26 @@
       if (S.kamera === "nord") return 0;
       if (S.kamera === "fahrt") { const r = s ? richtungAn(dayOf(s.day), s.ri) : null; return r == null ? map.getBearing() : r; }
       return map.getBearing(); }
+    // Fahrzeug je Tag (Reise-Standard oder Tageswert) und Ausrichtung
+    let fzJetzt = null;
+    function setzeFahrzeug(d) { const k = (d && FAHRZEUGE[d.fahrzeug] ? d.fahrzeug : null) || (FAHRZEUGE[DATA.fahrzeugTyp] ? DATA.fahrzeugTyp : "l3");
+      if (k === fzJetzt || !van) return; fzJetzt = k; const el = van.getElement(); el.innerHTML = fahrzeugSvg(k); el.title = FAHRZEUGE[k].n; }
     function animateAlong(path, ms, done, ziel) {
       stopAnim();
       if (reduced || path.length < 2 || ms < 50) { done(); return; }
       const cum = [0]; for (let k = 1; k < path.length; k++) cum.push(cum[k - 1] + Math.sqrt(d2(path[k], path[k - 1])));
       const L = cum[cum.length - 1] || 1; const t0 = performance.now();
       const punktBei = (t) => { let k = 1; while (k < cum.length - 1 && cum[k] < t) k++; const a = path[k - 1], b = path[k], sg = (cum[k] - cum[k - 1]) || 1, u = Math.max(0, Math.min(1, (t - cum[k - 1]) / sg)); return [a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u]; };
-      const z0 = map.getZoom(), p0 = map.getPitch(); let kopf = map.getBearing();
+      const z0 = map.getZoom(), p0 = map.getPitch(); let kopf = map.getBearing(); let fzKopf = van.getRotation();
       const fahrt = S.kamera === "fahrt", zt = fahrt ? 11.6 : ziel.zoom, pt = fahrt ? 72 : ziel.pitch;
       const vor = Math.max(0.004, Math.min(0.03, L * 0.12)); // Blick voraus (~0,4–3 km)
       const step = (now) => {
         const f = Math.min(1, (now - t0) / ms); const e = f < .5 ? 2 * f * f : 1 - Math.pow(-2 * f + 2, 2) / 2; const target = e * L;
         const pos = punktBei(target); const g = Math.min(1, f / 0.2);
         const cam = { center: pos, zoom: z0 + (zt - z0) * g, pitch: p0 + (pt - p0) * g };
-        if (fahrt) { kopf = mischWinkel(kopf, brg(pos, punktBei(Math.min(L, target + vor))), 0.12); cam.bearing = kopf; }
+        const voraus = brg(pos, punktBei(Math.min(L, target + vor)));
+        fzKopf = mischWinkel(fzKopf, voraus, 0.25); van.setRotation(fzKopf);
+        if (fahrt) { kopf = mischWinkel(kopf, voraus, 0.12); cam.bearing = kopf; }
         else if (S.kamera === "nord") cam.bearing = 0;
         van.setLngLat(pos); map.jumpTo(cam);
         if (f < 1) anim = requestAnimationFrame(step); else { anim = null; done(); }
@@ -336,7 +368,7 @@
       if (S.tiefe >= 2) { (d.mythen || []).forEach((m, k) => S.mythen.add(d.tag + "-" + k)); (d.wien_faden || []).forEach((m, k) => S.wien.add(d.tag + "-" + k)); }
       if (!van) { render(); return; } // Karte lädt noch
       const zoom = S.tiefe >= 2 ? 10.2 : 8.4, pitch = narrow ? 45 : (S.tiefe >= 2 ? 68 : 58);
-      const finish = () => { van.setLngLat([s.lon, s.lat]); drawDone(); map.easeTo({ center: [s.lon, s.lat], zoom, pitch: S.kamera === "fahrt" && !narrow ? 70 : pitch, bearing: kameraZiel(s), duration: reduced ? 0 : 900 }); showFotos(d); render(); ton.ankunft(d); afterArrive(); };
+      const finish = () => { van.setLngLat([s.lon, s.lat]); setzeFahrzeug(d); { const r = richtungAn(d, s.ri); if (r != null) van.setRotation(r); } drawDone(); map.easeTo({ center: [s.lon, s.lat], zoom, pitch: S.kamera === "fahrt" && !narrow ? 70 : pitch, bearing: kameraZiel(s), duration: reduced ? 0 : 900 }); showFotos(d); render(); ton.ankunft(d); afterArrive(); };
       // fahren entlang der Straße, wenn möglich
       if (!jump && prev && d.line && prev.day === s.day && prev.ri != null && s.ri != null && s.ri > prev.ri) {
         const path = d.line.slice(prev.ri, s.ri + 1);
