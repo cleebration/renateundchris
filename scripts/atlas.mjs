@@ -75,9 +75,13 @@ function tripData(ROOT, slug) {
         text: nearest(t.stationen, f.lat, f.lon) || t.titel || "",
       }));
     }
+    // Highlight-Clips: assets/reisen/<reise>/clips/tag-NN-*.mp4 (+ gleichnamiges .jpg als Vorschaubild)
+    const clipDir = path.join(ROOT, "assets", "reisen", slug, "clips");
+    const clips = fs.existsSync(clipDir) ? fs.readdirSync(clipDir).filter((f) => new RegExp(`^tag-${String(t.tag).padStart(2, "0")}-.+\\.mp4$`).test(f)).sort()
+      .map((f) => ({ url: `/assets/reisen/${slug}/clips/${f}`, poster: fs.existsSync(path.join(clipDir, f.replace(/\.mp4$/, ".jpg"))) ? `/assets/reisen/${slug}/clips/${f.replace(/\.mp4$/, ".jpg")}` : null })) : [];
     const vl = (vorlesen.tage || {})[String(t.tag)] || {};
     const stimmen = { chris: vlUrl(vl.chris), renate: vlUrl(vl.renate) };
-    return { ...t, route: routen.tage[String(t.tag)] || null, seite: seite ? seite.url : null, fotos,
+    return { ...t, route: routen.tage[String(t.tag)] || null, seite: seite ? seite.url : null, fotos, clips,
       vorlesen: stimmen.chris || stimmen.renate ? stimmen : null };
   });
   return { reise: slug, quelleRouten: routen.quelle || "", tage };

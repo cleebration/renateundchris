@@ -453,6 +453,7 @@
         if (bits.length) h += `<span class="wx" title="Wetter am Übernachtungsort (Open-Meteo) · Sonnenauf- und -untergang">${bits.join(" · ")}</span>`; }
       h += `<div class="depth" aria-label="Tiefe ${S.tiefe} von 3">Tiefe ${[0, 1, 2, 3].map((k) => `<i class="${k <= S.tiefe ? "on" : ""}"></i>`).join("")}</div>`;
       if (S.tiefe >= 1 && d.satz) h += `<p class="lead">${esc(d.satz)}</p>`;
+      if (S.tiefe >= 1 && (d.clips || []).length) h += `<div class="clips">${d.clips.map((c, k) => `<button class="clip" data-c="${k}" aria-label="Video von Tag ${d.tag} abspielen">${c.poster ? `<img src="${esc(c.poster)}" alt="" loading="lazy">` : ""}<span>▶ Video</span></button>`).join("")}</div>`;
       const fotos = d.fotos || [];
       if (S.tiefe >= 2) {
         if (d.teaser) h += `<p>${esc(d.teaser)}</p>`;
@@ -470,6 +471,9 @@
       if (d.status === "fehlt") h += `<p class="note">Für diesen Tag gibt es noch keinen Eintrag.</p>`;
       const card = document.getElementById("card"); card.innerHTML = h;
       card.querySelectorAll("[data-f]").forEach((b) => b.onclick = () => openPhoto(fotos[+b.dataset.f]));
+      card.querySelectorAll("[data-c]").forEach((b) => b.onclick = () => { const c = d.clips[+b.dataset.c]; const box = document.createElement("div"); box.className = "tzBox";
+        box.innerHTML = `<div class="tzIn"><video src="${esc(c.url)}" ${c.poster ? `poster="${esc(c.poster)}"` : ""} controls autoplay muted playsinline></video><p class="note">Tag ${d.tag} · Ton per Klick auf 🔈 im Video</p><button class="big" data-x>Schließen</button></div>`;
+        box.onclick = (e) => { if (e.target === box || e.target.hasAttribute("data-x")) box.remove(); }; document.body.appendChild(box); });
       broadcast();
     }
 
