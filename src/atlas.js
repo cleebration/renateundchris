@@ -229,7 +229,7 @@
         <div class="frRow"><button class="big primary" data-frage>✨ Frag die Reise</button><span class="note">Antwort von Claude, nur aus unserem Tagebuch · max. 15 Fragen am Tag</span></div>
         <div class="antwort" hidden></div><ol></ol><button class="big" data-x>Schließen</button></div>`;
       const inp = box.querySelector("input"), ol = box.querySelector("ol"), an = box.querySelector(".antwort");
-      const fragen = async () => { const f = inp.value.trim(); if (f.length < 3) return; an.hidden = false; an.innerHTML = "<p class='note'>Claude liest im Tagebuch nach …</p>";
+      const fragen = async () => { const f = inp.value.trim(); if (f.length < 3) return; an.hidden = false; ol.innerHTML = ""; an.innerHTML = "<p class='note'>Claude liest im Tagebuch nach …</p>";
         try { const r = await fetch("/api/frage", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ frage: f, reise: REISE }) }); const j = await r.json();
           if (j.fehler) { an.innerHTML = `<p class="note">${esc(j.fehler)}</p>`; return; }
           an.innerHTML = `<p>${esc(j.antwort)}</p>${(j.quellen || []).map((q) => q.reise === REISE ? `<button data-t="${q.tag}">→ Tag ${q.tag} · ${esc(q.titel)}</button>` : `<a href="/atlas/${esc(q.reise)}/?tag=${q.tag}">→ ${esc(q.titelReise)} · Tag ${q.tag}</a>`).join("")}`;

@@ -64,7 +64,9 @@ Regeln:
         body: JSON.stringify({ model: env.MODELL || MODELL, max_tokens: 500, system, messages: [{ role: "user", content: nutzer }] }),
       });
     } catch (e) { return json({ fehler: "Der Sprachdienst ist gerade nicht erreichbar." }, 502); }
-    if (!r.ok) return json({ fehler: `Der Sprachdienst antwortet nicht (${r.status}).` }, 502);
+    if (!r.ok) { let grund = ""; try { const e = await r.json(); grund = (e.error && e.error.message) || ""; } catch (e) {}
+      console.log("Anthropic", r.status, grund);
+      return json({ fehler: `Der Sprachdienst antwortet nicht (${r.status}${grund ? ": " + grund : ""}).` }, 502); }
     const a = await r.json();
     const text = (a.content || []).filter((c) => c.type === "text").map((c) => c.text).join("").trim();
 
