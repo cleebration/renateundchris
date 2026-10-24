@@ -129,7 +129,8 @@ export function buildAtlas({ ROOT, DIST, site }) {
     for (const m of (musik && musik.stuecke) || []) if (laender.has(m.land) && /^https:\/\/upload\.wikimedia\.org\//.test(m.url)) (data.musik[m.land] ||= []).push({ url: m.url, titel: m.titel, urheber: m.urheber, lizenz: m.lizenz, seite: m.seite });
     fuerStatistik.push({ slug: t.slug, title: t.title, accent: t.accent, fahrzeug: t.fahrzeug, tage: data.tage });
     // Sonnenauf-/-untergang je Tag (berechnet) und Ort für das Wetter – für die Stationskarte im Atlas
-    for (const d of data.tage) { const k = tagStatistik(d); d.sonne = k.sonne; d.wetterOrt = k.ort; }
+    const wetterFest = readJson(path.join(ROOT, "content", "reisen", t.slug, "_wetter.json"));
+    for (const d of data.tage) { const k = tagStatistik(d); d.sonne = k.sonne; d.wetterOrt = k.ort; d.wetter = wetterFest ? wetterFest.tage[String(d.tag)] || null : null; }
     fs.writeFileSync(path.join(out, "data", `${t.slug}.json`), JSON.stringify(data));
     n += data.tage.length;
   }

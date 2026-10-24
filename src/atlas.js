@@ -188,7 +188,7 @@
     { const t0 = +new URLSearchParams(location.search).get("tag");
       if (t0 && dayOf(t0)) { Object.assign(S, { rolle: "entdecker", tempo: 1, breite: 3, tiefe: 2, thema: null }); S.idx = Math.max(0, track().findIndex((s) => s.day >= t0)); document.getElementById("roles").hidden = true; } }
     // Wetter je Tag (Open-Meteo Archiv, gleicher Zwischenspeicher wie die Reise-Statistik)
-    const WETTER = (() => { try { return JSON.parse(localStorage.getItem("atlas.stat.wetter.v1." + REISE)) || null; } catch (e) { return null; } })() || {};
+    const WETTER = DAYS.some((d) => d.wetter) ? Object.fromEntries(DAYS.filter((d) => d.wetter).map((d) => [d.tag, d.wetter])) : (() => { try { return JSON.parse(localStorage.getItem("atlas.stat.wetter.v1." + REISE)) || null; } catch (e) { return null; } })() || {};
     if (!Object.keys(WETTER).length) {
       const tw = DAYS.filter((d) => d.wetterOrt && d.datum);
       if (tw.length) {

@@ -1,0 +1,78 @@
+{
+ "quelle": "Open-Meteo Archiv (ERA5), Tageswerte am Übernachtungsort, CC BY 4.0",
+ "stand": "2026-10-24",
+ "tage": {
+  "1": {
+   "code": 3,
+   "max": 18.7,
+   "min": 10,
+   "regen": 0,
+   "sonneH": 10,
+   "wind": 21.8
+  },
+  "2": {
+   "code": 3,
+   "max": 16.7,
+   "min": 6.6,
+   "regen": 0,
+   "sonneH": 8.1,
+   "wind": 9.5
+  },
+  "3": {
+   "code": 51,
+   "max": 19.3,
+   "min": 10.5,
+   "regen": 0.4,
+   "sonneH": 10,
+   "wind": 9
+  },
+  "4": {
+   "code": 3,
+   "max": 17,
+   "min": 7.9,
+   "regen": 0,
+   "sonneH": 7.7,
+   "wind": 15.2
+  },
+  "5": {
+   "code": 51,
+   "max": 19.3,
+   "min": 10.1,
+   "regen": 0.5,
+   "sonneH": 10,
+   "wind": 12.5
+  },
+  "6": {
+   "code": 61,
+   "max": 17.6,
+   "min": 12.5,
+   "regen": 6.4,
+   "sonneH": 8.2,
+   "wind": 15.4
+  },
+  "7": {
+   "code": 61,
+   "max": 16.3,
+   "min": 13.8,
+   "regen": 12.6,
+   "sonneH": 0.2,
+   "wind": 9.4
+  },
+  "8": {
+   "code": 51,
+   "max": 17.8,
+   "min": 14.2,
+   "regen": 0.6,
+   "sonneH": 1.6,
+   "wind": 7.2
+  },
+  "9": {
+   "code": 51,
+   "max": 18.1,
+   "min": 15,
+   "regen": 0.8,
+   "sonneH": 0.2,
+   "wind": 7.8
+  }
+ }
+}

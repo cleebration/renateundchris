@@ -143,6 +143,13 @@
       ["🌧️", "Regenfest", "ein Tag mit 10 mm Regen", A.wetterDa ? v(r.nass) : null, 10, "mm"],
       ["⛰️", "Gipfelstürmer", "Route über 1.500 m", A.hoeheDa ? v(r.hoch) : null, 1500, "m"],
     ];
+    const nord = Math.max(0, ...A.tageListe.filter((d) => d.ort).map((d) => d.ort.lat));
+    L.push(["🥵", "Glutofen", "ein Tag mit 40 °C", A.wetterDa ? v(r.heiss) : null, 40, "°C"],
+      ["⛈️", "Wolkenbruch", "ein Tag mit 50 mm Regen", A.wetterDa ? v(r.nass) : null, 50, "mm"],
+      ["🏔️", "Zweitausender", "Route über 2.000 m", A.hoeheDa ? v(r.hoch) : null, 2000, "m"],
+      ["🏝️", "Inselhüpfer", "15 Fährfahrten", A.faehren, 15, "Fähren"],
+      ["🧊", "Polarkreis", "nördlich von 66,5° übernachtet", Math.round(nord * 10) / 10, 66.6, "° N"]);
+    if (alle) L.push(["🌐", "Weltenbummler", "15 Länder", A.nLaender, 15, "Länder"], ["🏁", "Zehntausender", "10.000 km insgesamt", A.km, 10000, "km"]);
     if (alle) L.push(["🧭", "Stammgäste", "3 Reisen im Atlas", A.reisen, 3, "Reisen"], ["🌍", "Länderkönig", "10 Länder", A.nLaender, 10, "Länder"]);
     return L.map(([i, n, b, wert, ziel, e]) => ({ i, n, b, wert, ziel, e, ok: wert != null && wert >= ziel }));
   }
@@ -291,7 +298,7 @@
   }
   fetch("/atlas/data/statistik.json?v=" + V).then((r) => r.json()).then((d) => {
     DATA = d;
-    DATA.reisen.forEach((r) => { r.wetter = merk.get(WKEY(r.slug)); r.hoehe = merk.get(HKEY(r.slug)); if (r.wetter && r.hoehe) r.status = "fertig"; });
+    DATA.reisen.forEach((r) => { r.wetter = r.wetter || merk.get(WKEY(r.slug)); r.hoehe = r.hoehe || merk.get(HKEY(r.slug)); if (r.wetter && r.hoehe) r.status = "fertig"; });
     addEventListener("hashchange", route); route();
   }).catch(() => { ROOT.innerHTML = '<p class="status warn">Die Statistik konnte nicht geladen werden. Bitte Seite neu laden.</p>'; });
 })();

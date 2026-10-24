@@ -115,7 +115,11 @@ export function buildStatistik({ ROOT, DIST, site, reisen }) {
   const out = path.join(DIST, "atlas");
   const data = {
     stand: new Date().toISOString().slice(0, 10),
-    reisen: reisen.map((r) => ({ slug: r.slug, title: r.title, accent: r.accent || "#e0913a", fahrzeug: r.fahrzeug || "", tage: r.tage.map(tagStatistik) })),
+    reisen: reisen.map((r) => {
+      // fest eingespeicherte Daten (tools/wetter-hoehen.mjs) – sonst lädt der Browser sie nach
+      const fest = (f) => { const p = path.join(ROOT, "content", "reisen", r.slug, f); return fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, "utf8")).tage : null; };
+      return { slug: r.slug, title: r.title, accent: r.accent || "#e0913a", fahrzeug: r.fahrzeug || "", tage: r.tage.map(tagStatistik), wetter: fest("_wetter.json"), hoehe: fest("_hoehe.json") };
+    }),
   };
   fs.writeFileSync(path.join(out, "data", "statistik.json"), JSON.stringify(data));
   for (const f of ["atlas-statistik.js", "atlas-statistik.css"]) {
