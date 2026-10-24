@@ -11,7 +11,7 @@
    ],
    "titel": "Durch Kroatien nach Dubrovnik",
    "satz": "Nachtfahrt nach Chris' Gig in Stadl-Paura: über Spielfeld und Macelj nach Kroatien, Fahrerwechsel am Morgen, abends Dubrovniks Altstadt.",
-   "teaser": "Am Abend des 25. Oktober spielt Chris noch mit Jazz Exclusive in Stadl-Paura, danach geht es direkt los: Tankstopps bei Gralla und Vukova Gorica, Grenzen in Spielfeld und Macelj mitten in der Nacht. Am Morgen übernimmt Renate das Steuer, mit einem Regenbogen über den Wäldern an der A1 und weiter durch die Lika bis ins Neretva-Tal. Am Nachmittag Ankunft im Hotel Valamar Lacroma auf Babin Kuk, am Abend gleich die erste Runde durch die Altstadt.",
+   "teaser": "Am Abend des 25. Oktober spielt Chris noch mit Jazz Exclusive in Stadl-Paura, danach geht es direkt los: Tankstopps bei Gralla und Vukova Gorica, Grenzen in Spielfeld und Macelj mitten in der Nacht. Am Morgen übernimmt Renate das Steuer, mit einem Regenbogen über den Wäldern an der A1 und weiter durch die Lika bis ins Neretva-Tal. Am Nachmittag Ankunft im Hotel Valamar Lacroma auf Babin Kuk, am Abend gleich die erste Runde durch die Altstadt und zum Ausklang ein Cocktail an der Hotelbar.",
    "stationen": [
     {
      "name": "Landesmusikschule Stadl-Paura",
@@ -82,6 +82,13 @@
      "lon": 18.11,
      "art": "besuch",
      "notiz": "Erster Abend: Stradun, Hafen, Sponza-Palast"
+    },
+    {
+     "name": "Hotelbar Valamar Lacroma",
+     "lat": 42.66,
+     "lon": 18.062,
+     "art": "essen",
+     "notiz": "Cocktail zum Ausklang"
     }
    ],
    "uebernachtung": "Hotel Valamar Lacroma",
@@ -93,7 +100,7 @@
    "wien_faden": [],
    "epochen": [],
    "quelle_datei": "Google-Fotos-Album, Foto-GPS, Polarsteps-Screenshot",
-   "hinweise": "Nachtfahrt-Stationen aus Polarsteps (Chris, 2026-10-24); Koordinaten der Tankstellen/Grenzen geschätzt. Ort des Fahrerwechsels nicht genau bekannt (\"in der Früh\").",
+   "hinweise": "Nachtfahrt-Stationen aus Polarsteps (Chris, 2026-10-24); Koordinaten der Tankstellen/Grenzen geschätzt. Ort des Fahrerwechsels nicht genau bekannt (\"in der Früh\"). Restaurantnamen: Chris 2026-10-24.",
    "status": "teilweise"
   },
   {
@@ -103,8 +110,8 @@
     "HR"
    ],
    "titel": "Altstadt bei Nacht",
-   "satz": "Abendspaziergang vom Pile-Tor über den Stradun, dann Fisch und Fleischplatte in einem Lokal in der Altstadt.",
-   "teaser": "Erst am Abend geht es in die Stadt, wie oft auf dieser Reise mit den Fahrrädern vom Hotel aus: angestrahlte Stadtmauern und Festungen am Pile-Tor, die Gassen glänzen im Lampenlicht, Blumen in den Mauernischen. Danach Abendessen in einem Lokal in der Altstadt – Salat, Fischteller und eine große Grillplatte.",
+   "satz": "Abendspaziergang vom Pile-Tor über den Stradun, dann Fisch und Grillplatte in der Konoba Kapetan.",
+   "teaser": "Erst am Abend geht es in die Stadt, wie oft auf dieser Reise mit den Fahrrädern vom Hotel aus: angestrahlte Stadtmauern und Festungen am Pile-Tor, die Gassen glänzen im Lampenlicht, Blumen in den Mauernischen. Danach Abendessen in der Konoba Kapetan – Salat, Fischteller und eine große Grillplatte.",
    "stationen": [
     {
      "name": "Pile-Tor",
@@ -118,7 +125,14 @@
      "lat": 42.641,
      "lon": 18.11,
      "art": "besuch",
-     "notiz": "Gassen bei Nacht, Abendessen"
+     "notiz": "Gassen bei Nacht"
+    },
+    {
+     "name": "Konoba Kapetan",
+     "lat": 42.6417,
+     "lon": 18.1094,
+     "art": "essen",
+     "notiz": "Fischteller und Grillplatte"
     }
    ],
    "uebernachtung": "Hotel Valamar Lacroma",
@@ -131,7 +145,7 @@
    "wien_faden": [],
    "epochen": [],
    "quelle_datei": "Google-Fotos-Album, Foto-GPS",
-   "hinweise": "Name des Restaurants nicht bekannt.",
+   "hinweise": "Restaurantnamen: Chris 2026-10-24.",
    "status": "nur-fotos"
   },
   {
@@ -142,7 +156,7 @@
    ],
    "titel": "Ruhetag auf Babin Kuk",
    "satz": "Ein Tag auf der Halbinsel: Palmen, Pool und Yuccablüten, am Abend Sonnenuntergang über den Elaphiten.",
-   "teaser": "Kein Ausflug, sondern Zeit auf Babin Kuk und in Lapad: blühende Yucca und Alpenveilchen, der Hotelpool, Spaziergang entlang der Küste. Am Abend färbt sich der Himmel über den vorgelagerten Inseln orange, Abendessen mit Blick aufs Meer.",
+   "teaser": "Kein Ausflug, sondern Zeit auf Babin Kuk und in Lapad: blühende Yucca und Alpenveilchen, der Hotelpool, Spaziergang entlang der Küste. Am Abend färbt sich der Himmel über den vorgelagerten Inseln orange, Spritz im Restaurant Piramda.",
    "stationen": [
     {
      "name": "Babin Kuk",
@@ -157,6 +171,13 @@
      "lon": 18.068,
      "art": "aussicht",
      "notiz": "Sonnenuntergang"
+    },
+    {
+     "name": "Restaurant Piramda",
+     "lat": 42.6567,
+     "lon": 18.0659,
+     "art": "essen",
+     "notiz": "Spritz am Abend"
     },
     {
      "name": "Hotel Valamar Lacroma, Babin Kuk",
@@ -175,7 +196,7 @@
    "wien_faden": [],
    "epochen": [],
    "quelle_datei": "Google-Fotos-Album, Foto-GPS",
-   "hinweise": "Inseln am Horizont vermutlich Elaphiten – nicht bestätigt.",
+   "hinweise": "Inseln am Horizont vermutlich Elaphiten – nicht bestätigt. Restaurantnamen: Chris 2026-10-24.",
    "status": "nur-fotos"
   },
   {
@@ -186,7 +207,7 @@
    ],
    "titel": "Altstadt und Berg Srđ",
    "satz": "Seilbahn hinauf auf den Srđ, zu Fuß zurück, dazwischen Gassen, Chorwettbewerb und eine Begegnung aus Linz.",
-   "teaser": "Vormittags Blick auf die Inseln vom Hotel, dann in die Altstadt: Schlösser am Zaun über dem Meer, Gassen, Kirchenfenster. Am Nachmittag mit der Seilbahn hinauf auf den Srđ mit dem großen Blick über Dubrovnik, die Sonne geht hinter dem Meer unter, zu Fuß geht es wieder hinunter. Abends glänzt der Stradun, Ausklang bei einem Glas Wein. In der Stadt läuft ein Chorwettbewerb – und zufällig treffen Renate und Chris eine Sängerin, die im Kepler Blasorchester Klarinette spielt, wo Chris manchmal am Kontrabass mitspielt.",
+   "teaser": "Vormittags Blick auf die Inseln vom Hotel, dann in die Altstadt: Schlösser am Zaun über dem Meer, Gassen, Kirchenfenster. Am Nachmittag mit der Seilbahn hinauf auf den Srđ mit dem großen Blick über Dubrovnik, die Sonne geht hinter dem Meer unter, zu Fuß geht es wieder hinunter. Abends glänzt der Stradun, Ausklang bei einem Glas Wein in der Buzz Bar. In der Stadt läuft ein Chorwettbewerb – und zufällig treffen Renate und Chris eine Sängerin, die im Kepler Blasorchester Klarinette spielt, wo Chris manchmal am Kontrabass mitspielt.",
    "stationen": [
     {
      "name": "Altstadt Dubrovnik",
@@ -208,6 +229,13 @@
      "lon": 18.11,
      "art": "besuch",
      "notiz": "Abends am Stradun"
+    },
+    {
+     "name": "Buzz Bar",
+     "lat": 42.6418,
+     "lon": 18.1094,
+     "art": "essen",
+     "notiz": "Ein Glas Wein zum Ausklang"
     }
    ],
    "uebernachtung": "Hotel Valamar Lacroma",
@@ -219,7 +247,7 @@
    "wien_faden": [],
    "epochen": [],
    "quelle_datei": "Google-Fotos-Album, Foto-GPS",
-   "hinweise": "Seilbahn hinauf / zu Fuß hinunter: Chris 2026-10-24. Chorwettbewerb und Begegnung mit KBO-Klarinettistin: Chris 2026-10-24 (Name des Wettbewerbs nicht bekannt).",
+   "hinweise": "Seilbahn hinauf / zu Fuß hinunter: Chris 2026-10-24. Chorwettbewerb und Begegnung mit KBO-Klarinettistin: Chris 2026-10-24 (Name des Wettbewerbs nicht bekannt). Restaurantnamen: Chris 2026-10-24.",
    "status": "nur-fotos"
   },
   {
@@ -231,7 +259,7 @@
    ],
    "titel": "Ausflug nach Mostar",
    "satz": "Nach Bosnien und Herzegowina: Stari Most, Basar und Altstadt von Mostar, auf dem Rückweg Počitelj und die Pelješac-Brücke.",
-   "teaser": "Mit dem orangen Peugeot Traveller geht es über die Grenze nach Mostar. Rund um die Alte Brücke über die Neretva: Kupferschmiede, Teppiche, steile Pflastergassen, Minarette und die Franziskanerkirche. Auf dem Rückweg ein Halt in Počitelj mit seiner Festung über dem Fluss, dann über die Pelješac-Brücke zurück nach Dubrovnik und Burger zum Abendessen.",
+   "teaser": "Mit dem orangen Peugeot Traveller geht es über die Grenze nach Mostar. Rund um die Alte Brücke über die Neretva: Kupferschmiede, Teppiche, steile Pflastergassen, Minarette und die Franziskanerkirche. Auf dem Rückweg ein Halt in Počitelj mit seiner Festung über dem Fluss, dann über die Pelješac-Brücke zurück nach Dubrovnik und Burger im Restaurant Piramda.",
    "stationen": [
     {
      "name": "Mostar, Stari Most",
@@ -255,6 +283,13 @@
      "notiz": "Rückweg nach Dubrovnik"
     },
     {
+     "name": "Restaurant Piramda",
+     "lat": 42.6567,
+     "lon": 18.0659,
+     "art": "essen",
+     "notiz": "Burger zum Abendessen"
+    },
+    {
      "name": "Hotel Valamar Lacroma, Babin Kuk",
      "lat": 42.66,
      "lon": 18.062,
@@ -274,7 +309,7 @@
     "osmanisch"
    ],
    "quelle_datei": "Google-Fotos-Album, Foto-GPS",
-   "hinweise": "Eigenes Auto und Rückweg über die Pelješac-Brücke: Chris 2026-10-24. Grenzübergänge nicht bekannt.",
+   "hinweise": "Eigenes Auto und Rückweg über die Pelješac-Brücke: Chris 2026-10-24. Grenzübergänge nicht bekannt. Restaurantnamen: Chris 2026-10-24.",
    "status": "nur-fotos"
   },
   {
@@ -284,8 +319,8 @@
     "HR"
    ],
    "titel": "Sonnenuntergang in Lapad",
-   "satz": "Ein ruhiger Tag mit Feuerhimmel über dem Meer und Abendessen mit Muscheln und Paella in Lapad.",
-   "teaser": "Am späten Nachmittag brennt der Himmel über Babin Kuk: Sonnenuntergang zwischen Palmen und Hotelterrassen. Danach zum Abendessen in ein Lokal in Lapad – schwarze Muscheln, Paella, Pommes, Käse und Oliven.",
+   "satz": "Feuerhimmel über dem Meer, danach schwarze Muscheln und Paella im Restaurant Konavoka.",
+   "teaser": "Am späten Nachmittag brennt der Himmel über Babin Kuk: Sonnenuntergang zwischen Palmen und Hotelterrassen. Danach zum Abendessen ins Restaurant Konavoka in Lapad – schwarze Muscheln, Paella, Pommes, Käse und Oliven.",
    "stationen": [
     {
      "name": "Babin Kuk",
@@ -295,11 +330,11 @@
      "notiz": "Sonnenuntergang"
     },
     {
-     "name": "Lokal in Lapad",
-     "lat": 42.656,
-     "lon": 18.073,
+     "name": "Restaurant Konavoka",
+     "lat": 42.6561,
+     "lon": 18.0736,
      "art": "essen",
-     "notiz": "Muscheln und Paella"
+     "notiz": "Schwarze Muscheln und Paella"
     },
     {
      "name": "Hotel Valamar Lacroma, Babin Kuk",
@@ -318,7 +353,7 @@
    "wien_faden": [],
    "epochen": [],
    "quelle_datei": "Google-Fotos-Album, Foto-GPS",
-   "hinweise": "Name des Lokals nicht bekannt.",
+   "hinweise": "Restaurantnamen: Chris 2026-10-24.",
    "status": "nur-fotos"
   },
   {
@@ -382,7 +417,7 @@
     "venezianisch"
    ],
    "quelle_datei": "Google-Fotos-Album, Foto-GPS",
-   "hinweise": "Keine Fähre Kamenari, ganz um die Bucht gefahren: Chris 2026-10-24. Grenzübergang nicht bekannt.",
+   "hinweise": "Keine Fähre Kamenari, ganz um die Bucht gefahren: Chris 2026-10-24. Grenzübergang nicht bekannt. Restaurantnamen: Chris 2026-10-24.",
    "status": "nur-fotos"
   },
   {
@@ -393,7 +428,7 @@
    ],
    "titel": "Ston und Lichter",
    "satz": "Vormittags Ston mit seiner langen Mauer, abends Kreuzfahrtschiffe in Gruž und Lichtbilder auf den Fassaden der Altstadt.",
-   "teaser": "Ausflug nach Ston auf Pelješac: die Festungsmauer zieht sich über den Hügel, eine Kirche unter blauem Himmel, eine Katze auf der Mauer. Am Abend liegen in Gruž die großen Kreuzfahrtschiffe, in der Altstadt werden bunte Muster auf die Fassaden projiziert. Abendessen mit Fisch und Pommes.",
+   "teaser": "Ausflug nach Ston auf Pelješac: die Festungsmauer zieht sich über den Hügel, eine Kirche unter blauem Himmel, eine Katze auf der Mauer. Am Abend liegen in Gruž die großen Kreuzfahrtschiffe, in der Altstadt werden bunte Muster auf die Fassaden projiziert. Abendessen mit Fisch und Pommes in der Konoba Kapetan.",
    "stationen": [
     {
      "name": "Ston",
@@ -415,6 +450,13 @@
      "lon": 18.11,
      "art": "besuch",
      "notiz": "Lichtprojektionen auf den Fassaden"
+    },
+    {
+     "name": "Konoba Kapetan",
+     "lat": 42.6417,
+     "lon": 18.1094,
+     "art": "essen",
+     "notiz": "Fisch und Pommes"
     }
    ],
    "uebernachtung": "Hotel Valamar Lacroma",
@@ -427,7 +469,7 @@
    "wien_faden": [],
    "epochen": [],
    "quelle_datei": "Google-Fotos-Album, Foto-GPS",
-   "hinweise": "Anlass der Lichtprojektionen nicht bekannt.",
+   "hinweise": "Anlass der Lichtprojektionen nicht bekannt. Restaurantnamen: Chris 2026-10-24.",
    "status": "nur-fotos"
   },
   {
@@ -437,8 +479,8 @@
     "HR"
    ],
    "titel": "Letzter Tag in Dubrovnik",
-   "satz": "Schaukel im Sonnenuntergang, Bierprobe in einer Brauerei in Gruž und Muscheln in Lapad zum Abschied.",
-   "teaser": "Der letzte volle Tag: am Nachmittag eine Schaukel an der Küste von Babin Kuk, Selfie im Abendlicht. Danach in Gruž eine Bierprobe zwischen Braukesseln (DBC-Fässer im Bild). Zum Abschluss Muscheln in Lapad.",
+   "satz": "Schaukel im Sonnenuntergang, Bierprobe bei der Dubrovnik Beer Company und Muscheln im Konavoka zum Abschied.",
+   "teaser": "Der letzte volle Tag: am Nachmittag eine Schaukel an der Küste von Babin Kuk, Selfie im Abendlicht. Danach in Gruž eine Bierprobe zwischen den Braukesseln der Dubrovnik Beer Company. Zum Abschluss noch einmal Muscheln im Restaurant Konavoka.",
    "stationen": [
     {
      "name": "Küste Babin Kuk",
@@ -448,18 +490,18 @@
      "notiz": "Schaukel im Sonnenuntergang"
     },
     {
-     "name": "Brauerei in Gruž",
-     "lat": 42.66,
-     "lon": 18.086,
+     "name": "Dubrovnik Beer Company",
+     "lat": 42.6608,
+     "lon": 18.0859,
      "art": "essen",
-     "notiz": "Bierprobe"
+     "notiz": "Bierprobe in der Brauerei"
     },
     {
-     "name": "Lokal in Lapad",
-     "lat": 42.656,
-     "lon": 18.074,
+     "name": "Restaurant Konavoka",
+     "lat": 42.6561,
+     "lon": 18.0736,
      "art": "essen",
-     "notiz": "Muscheln"
+     "notiz": "Noch einmal Muscheln"
     },
     {
      "name": "Hotel Valamar Lacroma, Babin Kuk",
@@ -478,7 +520,7 @@
    "wien_faden": [],
    "epochen": [],
    "quelle_datei": "Google-Fotos-Album, Foto-GPS",
-   "hinweise": "Brauerei vermutlich Dubrovnik Beer Company (DBC auf Fass) – nicht bestätigt.",
+   "hinweise": "Restaurantnamen: Chris 2026-10-24.",
    "status": "nur-fotos"
   },
   {
@@ -489,7 +531,7 @@
    ],
    "titel": "Split und Zadar",
    "satz": "Heimweg nach Norden: Diokletianpalast in Split, abends Sv. Donat und die Altstadt von Zadar.",
-   "teaser": "Abschied von Dubrovnik. Ein Obststand im Neretva-Tal, dann Split: Riva, Gassen im Diokletianpalast, ein Foto zu zweit an der Treppe, Prokurative. Am Abend Zadar: Uhrturm und die Rundkirche Sv. Donat bei Nacht, Abendessen mit großer Grillplatte. Übernachtet wird im Auto auf einem Parkplatz mitten in der Stadt.",
+   "teaser": "Abschied von Dubrovnik. Ein Obststand im Neretva-Tal, dann Split: Riva, Gassen im Diokletianpalast, ein Foto zu zweit an der Treppe, Prokurative. Am Abend Zadar: Uhrturm und die Rundkirche Sv. Donat bei Nacht, große Grillplatte im Hedonist. Übernachtet wird im Auto auf einem Parkplatz mitten in der Stadt.",
    "stationen": [
     {
      "name": "Neretva-Tal",
@@ -504,6 +546,13 @@
      "lon": 16.44,
      "art": "besuch",
      "notiz": "Riva, Palast, Prokurative"
+    },
+    {
+     "name": "Hedonist, Zadar",
+     "lat": 44.1156,
+     "lon": 15.2262,
+     "art": "essen",
+     "notiz": "Grillplatte"
     },
     {
      "name": "Zadar, Altstadt",
@@ -524,7 +573,7 @@
     "roemisch"
    ],
    "quelle_datei": "Google-Fotos-Album, Foto-GPS",
-   "hinweise": "Übernachtung im Auto auf Parkplatz in Zadar: Chris 2026-10-24.",
+   "hinweise": "Übernachtung im Auto auf Parkplatz in Zadar: Chris 2026-10-24. Restaurantnamen: Chris 2026-10-24.",
    "status": "nur-fotos"
   },
   {
