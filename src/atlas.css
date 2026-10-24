@@ -311,3 +311,14 @@ input[type=range]#tempoR,input[type=range]#cTempo{width:100%;accent-color:var(--
 #dPlay>*{pointer-events:none}
 body.touch #dock #dPlay{touch-action:none}
 #dPlay .tacho{background:rgba(10,14,12,.55);border-radius:20px 20px 6px 6px;padding:2px 3px 0;width:40px;height:24px;color:#fff}
+
+/* Tag-Reiter 180° gedreht (liest von unten nach oben) */
+body.touch #cardTab{transform:rotate(180deg);border-radius:0 12px 12px 0;border-left:0;border-right:1px solid var(--hair)}
+/* Tacho: Nadel schwenkt, Stopp = weiß, Vollgas pulsiert */
+.tacho .nadel{transform-origin:24px 24px;transition:transform .55s cubic-bezier(.3,1.5,.5,1)}
+.tacho path{transition:opacity .3s}
+#dPlay.steht small{background:rgba(0,0,0,.08);color:#555}
+#dPlay.vollgas{animation:vollgas .9s ease-in-out infinite}
+@keyframes vollgas{50%{box-shadow:0 0 0 6px rgba(230,60,40,.35),0 0 24px rgba(230,60,40,.5)}}
+@media (prefers-reduced-motion:reduce){.tacho .nadel{transition:none}#dPlay.vollgas{animation:none}}
+#dPlay .lbl,#dPlay small{color:#10140f!important;text-transform:none;font:15px var(--mono)}#dPlay.steht small{color:#5a5a50!important}

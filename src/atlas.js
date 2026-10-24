@@ -22,14 +22,17 @@
     wien:{n:"Österreich-Spurensucher",k:"Quest",d:"Folge den Fäden, die von hier nach Österreich führen.",s:{tempo:5,breite:2,tiefe:3,thema:"habsburg",play:false}}
   };
   // Tempo 1–10 wie ein Tacho: Name, Farbe (grün → gelb → rot) und Zeitfaktor je Stufe
-  const TEMPO = ["", "Schritttempo", "sehr langsam", "langsam", "gemächlich", "mittel", "zügig", "schnell", "sehr schnell", "rasant", "Vollgas"];
+  const TEMPO = ["Stopp", "Schritttempo", "sehr langsam", "langsam", "gemächlich", "mittel", "zügig", "schnell", "sehr schnell", "rasant", "Vollgas"];
   const TMAX = 10;
-  const tempoFarbe = (t) => `hsl(${Math.round(130 - (t - 1) * 14.4)} 72% 52%)`;
+  const tempoFarbe = (t) => t <= 0 ? "#f3ecdc" : `hsl(${Math.round(130 - (t - 1) * 14.4)} 72% 52%)`;
   const tz = (ms, t) => Math.round(ms * Math.pow(0.7, t - 5)); // Basis = Stufe 5 „mittel“
-  const tachoSvg = (t, gross) => { const a = (-90 + (t - 1) / (TMAX - 1) * 180) * Math.PI / 180, r = 20, cx = 24, cy = 24;
-    let bog = ""; for (let i = 0; i < TMAX; i++) { const w0 = Math.PI + i / TMAX * Math.PI, w1 = Math.PI + (i + 1) / TMAX * Math.PI - 0.06;
-      bog += `<path d="M${cx + r * Math.cos(w0)} ${cy + r * Math.sin(w0)} A${r} ${r} 0 0 1 ${cx + r * Math.cos(w1)} ${cy + r * Math.sin(w1)}" stroke="${tempoFarbe(i + 1)}" stroke-width="5" fill="none" opacity="${i < t ? 1 : .28}"/>`; }
-    return `<svg class="tacho${gross ? " gross" : ""}" viewBox="0 0 48 28" aria-hidden="true">${bog}<line x1="${cx}" y1="${cy}" x2="${cx + 16 * Math.sin(a)}" y2="${cy - 16 * Math.cos(a)}" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="3" fill="currentColor"/></svg>`; };
+  // Tacho: 0 = steht (weiß), 1–10 = Fahrstufe. Wird einmal gebaut und dann nur aktualisiert, damit die Nadel schwenkt.
+  const tachoSvg = (v, gross) => { const r = 20, cx = 24, cy = 24; let bog = "";
+    for (let i = 0; i < TMAX; i++) { const w0 = Math.PI + i / TMAX * Math.PI, w1 = Math.PI + (i + 1) / TMAX * Math.PI - 0.06;
+      bog += `<path d="M${cx + r * Math.cos(w0)} ${cy + r * Math.sin(w0)} A${r} ${r} 0 0 1 ${cx + r * Math.cos(w1)} ${cy + r * Math.sin(w1)}" stroke="${tempoFarbe(i + 1)}" stroke-width="5" fill="none" opacity="${i < v ? 1 : .25}"/>`; }
+    return `<svg class="tacho${gross ? " gross" : ""}" viewBox="0 0 48 28" aria-hidden="true">${bog}<g class="nadel" style="transform:rotate(${-90 + v / TMAX * 180}deg)"><line x1="${cx}" y1="${cy}" x2="${cx}" y2="${cy - 16}" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></g><circle cx="${cx}" cy="${cy}" r="3" fill="currentColor"/></svg>`; };
+  const tachoSetzen = (el, v, gross) => { let svg = el.querySelector("svg.tacho"); if (!svg) { el.insertAdjacentHTML("afterbegin", tachoSvg(v, gross)); return; }
+    [...svg.querySelectorAll("path")].forEach((pa, i) => pa.setAttribute("opacity", i < v ? 1 : .25)); svg.querySelector(".nadel").style.transform = `rotate(${-90 + v / TMAX * 180}deg)`; };
   const KAMERA = [["nord","Nord"],["fahrt","Fahrt"],["frei","Frei"]];
   const VORLESEN = [["aus","aus"],["chris","Chris"],["renate","Renate"],["abwechselnd","abwechselnd"],["zufall","zufällig"]];
   const SPRECHER = { chris: "Chris", renate: "Renate" };
@@ -128,7 +131,7 @@
         <div class="panel"><h4>Smartphone als Controller</h4>
           <div id="qrBox"><div id="qr" aria-label="QR-Code zum Controller"></div><p>Mit der Handy-Kamera scannen<br>oder Code eingeben:<br><b id="codeTxt">······</b></p></div></div>
         <div class="panel" id="tonPanel"><button class="sucheBtn" id="sucheBtn" title="Taste /">🔎 Suchen &amp; fragen</button><button class="fernBtn" id="fernBtn">📱 Dieses Gerät als Fernbedienung für einen anderen Bildschirm</button><h4>Tempo</h4>
-          <div class="tachoBox"><span id="tachoGross"></span><div><b id="tempoTxt"></b><input type="range" id="tempoR" min="1" max="10" step="1" aria-label="Tempo 1 bis 10 (Tasten − / +)"></div></div>
+          <div class="tachoBox"><span id="tachoGross"></span><div><b id="tempoTxt"></b><input type="range" id="tempoR" min="0" max="10" step="1" aria-label="Fahrstufe 0 (Stopp) bis 10 (Tasten − / +)"></div></div>
           <h4>Breite</h4>
           <div class="seg" style="--n:3" data-ks="breite"><button data-v="1">Highlights</button><button data-v="2">Stationen</button><button data-v="3">alles</button></div>
           <h4>Tiefe</h4>
@@ -489,6 +492,10 @@
     function afterArrive() { if (!S.playing) return; clearTimeout(timer); if (ton.liest()) { ton.danach(afterArrive); return; } const tr = track();
       if (S.idx >= tr.length - 1) { setPlay(false); return; }
       timer = setTimeout(() => { S.idx++; go(false); }, tz(2200, S.tempo) + (S.tiefe >= 2 ? 1500 : 0)); }
+    // Fahrstufe 0 = anhalten (letztes Tempo bleibt gemerkt), 1–10 = mit diesem Tempo fahren
+    const gang = () => (S.playing ? S.tempo : 0);
+    function fahrstufe(v) { v = Math.max(0, Math.min(TMAX, Math.round(v))); if (v === 0) { if (S.playing) setPlay(false); }
+      else { S.tempo = v; if (!S.playing) setPlay(true); else render(); } broadcast(); }
     function setPlay(p) { S.playing = p; clearTimeout(timer); if (p && !anim) afterArrive(); render(); }
     function step(n) { stopAnim(); clearTimeout(timer); const tr = track(); S.idx = Math.min(tr.length - 1, Math.max(0, S.idx + n)); go(n < 0); }
     function gotoDay(t) { stopAnim(); let k = track().findIndex((s) => s.day >= t); if (k < 0) { S.thema = null; S.breite = 3; k = track().findIndex((s) => s.day >= t); } S.idx = Math.max(0, k); go(true); }
@@ -536,15 +543,15 @@
     document.getElementById("cardTab").onclick = () => setKarteZu(false);
     if (merk.get("karteZu", false) === true) setKarteZu(true);
     // Tempo mit dem Daumen: auf „Fahren“ nach links/rechts ziehen
-    { const pb = document.getElementById("dPlay"); let px = null, start = 2, gezogen = false; const blase = document.getElementById("tempoBlase");
-      pb.addEventListener("pointerdown", (e) => { px = e.clientX; start = S.tempo; gezogen = false; pb.setPointerCapture(e.pointerId); });
+    { const pb = document.getElementById("dPlay"); let px = null, start = 0, gezogen = false; const blase = document.getElementById("tempoBlase");
+      pb.addEventListener("pointerdown", (e) => { px = e.clientX; start = gang(); gezogen = false; pb.setPointerCapture(e.pointerId); });
       pb.addEventListener("pointermove", (e) => { if (px == null) return; const dx = e.clientX - px; if (Math.abs(dx) < 18 && !gezogen) return;
-        gezogen = true; const t = Math.max(1, Math.min(TMAX, start + Math.round(dx / 22))); if (t !== S.tempo) { S.tempo = t; render(); broadcast(); }
-        blase.innerHTML = tachoSvg(S.tempo) + ` Tempo ${S.tempo}/10 · ${TEMPO[S.tempo]}`; blase.style.background = tempoFarbe(S.tempo); blase.hidden = false; });
+        gezogen = true; const t = Math.max(0, Math.min(TMAX, start + Math.round(dx / 22))); if (t !== gang()) { fahrstufe(t); if (t === 0 && start > 0) { S.tempo = start; render(); } } // bis 0 gezogen: Ausgangstempo merken
+        blase.innerHTML = tachoSvg(gang()) + ` ${gang()} · ${TEMPO[gang()]}`; blase.style.background = tempoFarbe(gang()); blase.hidden = false; });
       const ende = () => { px = null; setTimeout(() => (blase.hidden = true), 700); };
       pb.addEventListener("pointerup", ende); pb.addEventListener("pointercancel", ende);
       pb.addEventListener("click", (e) => { if (gezogen) { e.stopImmediatePropagation(); e.preventDefault(); gezogen = false; } }, true); }
-    { const r = document.getElementById("tempoR"); r.addEventListener("input", () => { S.tempo = +r.value; render(); broadcast(); }); }
+    { const r = document.getElementById("tempoR"); r.addEventListener("input", () => fahrstufe(+r.value)); }
     document.getElementById("fernBtn").onclick = () => chooseMode();
     function setBreite(v) { S.breite = v; const cur = (go.last || ST[0]).day; S.idx = Math.max(0, track().findIndex((s) => s.day >= cur)); go(true); broadcast(); }
     function setRole(k) { const r = ROLLEN[k]; if (!r) return; S.rolle = k; Object.assign(S, { tempo: r.s.tempo, breite: r.s.breite, tiefe: r.s.tiefe, thema: r.s.thema });
@@ -567,9 +574,14 @@
       [...row.children].forEach((b, k) => { const dd = DAYS[k]; b.classList.toggle("cur", dd.tag === d.tag); b.classList.toggle("seen", S.seen.has(dd.tag)); b.classList.toggle("dim", !dayMatches(dd)); });
       ST.forEach((x, k) => pinEls[k] && pinEls[k].classList.toggle("cur", x === s));
       document.getElementById("metaDay").textContent = "Tag " + d.tag;
-      { const tt = document.getElementById("tempoTxt"); if (tt) { tt.textContent = `Tempo ${S.tempo}/10 · ${TEMPO[S.tempo]}`; document.getElementById("tachoGross").innerHTML = tachoSvg(S.tempo, true);
-        const r = document.getElementById("tempoR"); r.value = S.tempo; r.style.setProperty("--f", tempoFarbe(S.tempo)); } }
-      { const dp = document.getElementById("dPlay"); if (dp) { dp.innerHTML = tachoSvg(S.tempo) + `<span>${S.playing ? "❚❚ Halt" : "▶ Fahren"}</span><small>${S.tempo}</small>`; dp.style.setProperty("--tf", tempoFarbe(S.tempo)); dp.title = `Tempo ${S.tempo}/10 – seitlich ziehen zum Ändern`; } }
+      { const g = gang(), tt = document.getElementById("tempoTxt");
+        if (tt) { tt.textContent = g ? `Stufe ${g}/10 · ${TEMPO[g]}` : `Stufe 0 · steht (zuletzt ${S.tempo})`; tachoSetzen(document.getElementById("tachoGross"), g, true);
+          const r = document.getElementById("tempoR"); r.value = g; r.style.setProperty("--f", tempoFarbe(g)); }
+        const dp = document.getElementById("dPlay");
+        if (dp) { if (!dp.querySelector(".lbl")) dp.innerHTML = `<span class="lbl"></span><small></small>`; tachoSetzen(dp, g);
+          dp.querySelector(".lbl").textContent = g ? "❚❚ Halt" : "▶ Fahren"; dp.querySelector("small").textContent = g ? g : "↺ " + S.tempo;
+          dp.style.setProperty("--tf", tempoFarbe(g)); dp.classList.toggle("steht", !g); dp.classList.toggle("vollgas", g >= 9);
+          dp.title = g ? `Stufe ${g}/10 – tippen = Stopp, seitlich ziehen = schneller/langsamer` : `Steht – tippen = weiter mit Stufe ${S.tempo}, nach rechts ziehen = anfahren`; } }
       document.getElementById("metaDate").textContent = fmtDate(d.datum);
       document.getElementById("metaMode").textContent = `${S.playing ? "▶ fährt" : "❚❚ steht"} · Tempo ${TEMPO[S.tempo]} · Breite ${["", "Highlights", "Stationen", "alles"][S.breite]}${S.thema ? " · Thema " + themaName(S.thema) : ""}`;
 
@@ -623,8 +635,8 @@
       else if (e.key === " ") { setPlay(!S.playing); e.preventDefault(); }
       else if (e.key === "ArrowDown") { S.tiefe = Math.min(3, S.tiefe + 1); go(true); e.preventDefault(); }
       else if (e.key === "ArrowUp") { S.tiefe = Math.max(0, S.tiefe - 1); go(true); e.preventDefault(); }
-      else if (e.key === "+" || e.key === "=") { S.tempo = Math.min(TMAX, S.tempo + 1); render(); broadcast(); }
-      else if (e.key === "-" || e.key === "_") { S.tempo = Math.max(1, S.tempo - 1); render(); broadcast(); }
+      else if (e.key === "+" || e.key === "=") fahrstufe(gang() + 1);
+      else if (e.key === "-" || e.key === "_") fahrstufe(gang() - 1);
       else if (e.key === "b" || e.key === "B") setBreite(S.breite % 3 + 1);
       else if (e.key === "t" || e.key === "T") setKarteZu(!document.getElementById("card").classList.contains("zu"));
       else if (e.key === "k" || e.key === "K") setKamera(KAMERA[(KAMERA.findIndex((k) => k[0] === S.kamera) + 1) % KAMERA.length][0]);
@@ -733,7 +745,7 @@
       </div>
       <div class="secTitle">Regler</div>
       <div class="sliders">
-        <div class="sl"><label>Tempo <b id="cTempoTxt"></b></label><input type="range" id="cTempo" min="1" max="10" step="1"></div>
+        <div class="sl"><label>Tempo <b id="cTempoTxt"></b></label><input type="range" id="cTempo" min="0" max="10" step="1"></div>
         <div class="sl"><label>Breite</label><div class="seg" style="--n:3" data-k="breite"><button data-v="1">Highlights</button><button data-v="2">Stationen</button><button data-v="3">alles</button></div></div>
         <div class="sl"><label>Tiefe</label><div class="seg" style="--n:4" data-k="tiefe"><button data-v="0">Ort</button><button data-v="1">Satz</button><button data-v="2">Teaser</button><button data-v="3">alles</button></div></div>
       </div>
@@ -767,7 +779,7 @@
     fb.addEventListener("pointerup", (e) => { if (fx == null) return; const dx = e.clientX - fx, dy = e.clientY - fy; fx = null;
       if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) send({ step: dx < 0 ? 1 : -1 }); });
     $("bZoomIn").onclick = () => send({ zoom: 1 }); $("bZoomOut").onclick = () => send({ zoom: -1 });
-    { const r = document.getElementById("cTempo"); r.addEventListener("change", () => send({ tempo: +r.value })); r.addEventListener("input", () => { r.style.setProperty("--f", tempoFarbe(+r.value)); document.getElementById("cTempoTxt").textContent = r.value + "/10"; }); }
+    { const r = document.getElementById("cTempo"); r.addEventListener("change", () => send(+r.value ? { tempo: +r.value, playing: true } : { playing: false })); r.addEventListener("input", () => { r.style.setProperty("--f", tempoFarbe(+r.value)); document.getElementById("cTempoTxt").textContent = r.value + "/10"; }); }
     document.querySelectorAll("#ctl .seg[data-k]").forEach((g) => g.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) send({ [g.dataset.k]: +b.dataset.v }); }));
     document.querySelectorAll("#ctl .seg[data-ks]").forEach((g) => g.addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return;
       send({ [g.dataset.ks]: g.dataset.ks === "musik" ? b.dataset.v === "an" : b.dataset.v }); }));
@@ -787,7 +799,7 @@
       $("bFoto").firstChild.textContent = fo ? "Foto schließen" : "Fotos";
       $("bFoto").querySelector("small").textContent = fo ? `Tag ${fo.tag} · ${fo.i}/${fo.n} – ◀ ▶ blättern` : "groß ansehen";
       $("bPrev").querySelector("small").textContent = fo ? "Foto" : "Station"; $("bNext").querySelector("small").textContent = fo ? "Foto" : "Station";
-      { const r = document.getElementById("cTempo"); if (r && document.activeElement !== r && p.tempo) { r.value = p.tempo; r.style.setProperty("--f", tempoFarbe(p.tempo)); document.getElementById("cTempoTxt").textContent = p.tempo + "/10 · " + (TEMPO[p.tempo] || ""); } }
+      { const r = document.getElementById("cTempo"); if (r && document.activeElement !== r && p.tempo) { const g = p.playing ? p.tempo : 0; r.value = g; r.style.setProperty("--f", tempoFarbe(g)); document.getElementById("cTempoTxt").textContent = g + "/10 · " + (TEMPO[g] || ""); } }
       document.querySelectorAll("#ctl .seg[data-k]").forEach((g) => [...g.children].forEach((b) => b.classList.toggle("on", +b.dataset.v === p[g.dataset.k])));
       document.querySelectorAll("#ctl .seg[data-ks]").forEach((g) => [...g.children].forEach((b) => b.classList.toggle("on", b.dataset.v === (g.dataset.ks === "musik" ? (p.musik ? "an" : "aus") : p[g.dataset.ks]))));
       $("cTon").hidden = !(p.hatMusik || p.hatVorlesen); $("cMusikSl").hidden = !p.hatMusik; $("cVlSl").hidden = !p.hatVorlesen;
