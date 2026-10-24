@@ -13,7 +13,8 @@
     <aside id="panel">
       <header><span class="eyebrow">Renate &amp; Chris · Reise-Atlas</span><h1>Unsere Reisen</h1><p class="sum mono" id="sum"></p>
         <div class="acts"><button class="btn primary" id="tour">▶ Rundflug</button><a class="btn" href="/atlas/statistik/">📊 Statistik</a><a class="btn" href="/reisen">Liste</a></div></header>
-      <input id="such" type="search" placeholder="🔎 Alle Reisen durchsuchen …" aria-label="Alle Reisen durchsuchen">
+      <form class="frage" id="frageForm" role="search"><label for="such">🔎 Suchen oder ✨ fragen</label>
+        <div class="frRow"><input id="such" type="search" placeholder="z. B. Meteora – oder: Wo war es am heißesten?" autocomplete="off"><button class="btn primary" type="submit">Fragen</button></div></form>
       <div id="antwort" hidden></div>
       <ol id="treffer" hidden aria-label="Suchergebnisse"></ol>
       <ol id="list" aria-label="Reisen"></ol>
@@ -36,9 +37,8 @@
   let SUCHE = null;
   const such = document.getElementById("such"), tr = document.getElementById("treffer");
   const norm = (t) => String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  such.placeholder = "🔎 Suchen – oder fragen + Enter ✨";
-  such.addEventListener("keydown", async (e) => {
-    if (e.key !== "Enter") return; const f = such.value.trim(); if (f.length < 3) return;
+  document.getElementById("frageForm").addEventListener("submit", async (e) => {
+    e.preventDefault(); const f = such.value.trim(); if (f.length < 3) return; tr.hidden = true;
     const an = document.getElementById("antwort"); an.hidden = false; an.innerHTML = "<p class='hint'>Claude liest im Tagebuch nach …</p>";
     try { const j = await fetch("/api/frage", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ frage: f, reise: "" }) }).then((r) => r.json());
       an.innerHTML = j.fehler ? `<p class="hint">${esc(j.fehler)}</p>` : `<p>${esc(j.antwort)}</p>${(j.quellen || []).map((q) => `<a href="/atlas/${esc(q.reise)}/?tag=${q.tag}">→ ${esc(q.titelReise)} · Tag ${q.tag}</a>`).join("")}`;

@@ -12,14 +12,14 @@
     BA:{n:"Bosnien und Herzegowina",c:"#c98f6a"},XK:{n:"Kosovo",c:"#8fb3a0"},BG:{n:"Bulgarien",c:"#b98fb0"},RO:{n:"Rumänien",c:"#d9a05b"},HU:{n:"Ungarn",c:"#a7c07a"},SK:{n:"Slowakei",c:"#8aa8c9"},CZ:{n:"Tschechien",c:"#c97f7f"},PL:{n:"Polen",c:"#d4b05e"},
     DE:{n:"Deutschland",c:"#b0a090"},CH:{n:"Schweiz",c:"#d97a6a"},IT:{n:"Italien",c:"#7fb08a"},FR:{n:"Frankreich",c:"#7f9ad0"},ES:{n:"Spanien",c:"#e0a050"},PT:{n:"Portugal",c:"#90b070"},TR:{n:"Türkei",c:"#d0706a"},NL:{n:"Niederlande",c:"#e09a50"},
     BE:{n:"Belgien",c:"#c0b060"},LU:{n:"Luxemburg",c:"#90a0c0"},DK:{n:"Dänemark",c:"#d08080"},NO:{n:"Norwegen",c:"#80a0c8"},SE:{n:"Schweden",c:"#7fa8d8"},FI:{n:"Finnland",c:"#a0c0d8"},GB:{n:"Großbritannien",c:"#a090c0"},IE:{n:"Irland",c:"#80b080"}};
-  const THEMEN = [["geschichte","Geschichte"],["habsburg","Wien-Faden"],["mythencheck","Legenden"],["kulinarik","Essen"],["kloster","Klöster"],["burg","Burgen"],["natur","Natur"],["strand","Strand"],["grenze","Grenzen"],["panne","Pannen"],["eisenbahn","Eisenbahn"],["faehre","Fähren"]];
+  const THEMEN = [["geschichte","Geschichte"],["habsburg","Österreich-Bezug"],["mythencheck","Legenden"],["kulinarik","Essen"],["kloster","Klöster"],["burg","Burgen"],["natur","Natur"],["strand","Strand"],["grenze","Grenzen"],["panne","Pannen"],["eisenbahn","Eisenbahn"],["faehre","Fähren"]];
   const ROLLEN = {
     zuschauer:{n:"Zuschauer",k:"im Flug",d:"Die ganze Route am Stück. Nur Orte und ein Satz pro Tag.",s:{tempo:3,breite:1,tiefe:1,thema:null,play:true}},
     entdecker:{n:"Entdecker",k:"frei",d:"Selbst fahren, anhalten, jede Station öffnen.",s:{tempo:1,breite:3,tiefe:2,thema:null,play:false}},
     zeitreisender:{n:"Zeitreisender",k:"Geschichte",d:"Durch die Schichten: Antike, Osmanen, Habsburg.",s:{tempo:1,breite:2,tiefe:3,thema:"geschichte",play:false}},
     geniesser:{n:"Genießer",k:"Kulinarik",d:"Lokale, Gerichte und woher sie kommen.",s:{tempo:2,breite:3,tiefe:2,thema:"kulinarik",play:false}},
     abenteurer:{n:"Abenteurer",k:"Pannen & Grenzen",d:"Offroad, Reifen, Staus – die ehrliche Seite.",s:{tempo:2,breite:3,tiefe:2,thema:"panne",play:false}},
-    wien:{n:"Wien-Spurensucher",k:"Quest",d:"Folge den Fäden, die von hier nach Wien führen.",s:{tempo:2,breite:2,tiefe:3,thema:"habsburg",play:false}}
+    wien:{n:"Österreich-Spurensucher",k:"Quest",d:"Folge den Fäden, die von hier nach Österreich führen.",s:{tempo:2,breite:2,tiefe:3,thema:"habsburg",play:false}}
   };
   const KAMERA = [["nord","Nord"],["fahrt","Fahrt"],["frei","Frei"]];
   const VORLESEN = [["aus","aus"],["chris","Chris"],["renate","Renate"],["abwechselnd","abwechselnd"],["zufall","zufällig"]];
@@ -107,7 +107,7 @@
           <a class="chip" href="/atlas/statistik/#${esc(REISE)}" title="Kilometer, Wetter, Rekorde und Abzeichen">📊 Statistik</a>
           <button class="chip" id="chipRoleBtn" title="Rolle wechseln (R)">Rolle <b id="chipRole">–</b></button>
           <span class="chip opt">Legenden <b class="mono" id="chipMyth">0</b></span>
-          <span class="chip opt">Wien-Fäden <b class="mono" id="chipWien">0</b></span>
+          <span class="chip opt">Österreich-Fäden <b class="mono" id="chipWien">0</b></span>
           <span class="chip opt"><b class="mono" id="chipKm">0</b> km</span>
         </div>
       </div>
@@ -119,12 +119,12 @@
           <div id="musikBox" hidden><h4>Musik</h4><div class="seg" style="--n:2" data-ks="musik"><button data-v="aus">aus</button><button data-v="an">an</button></div><p class="note" id="musikInfo"></p></div>
           <div id="vlBox" hidden><h4>Vorlesen</h4><div class="seg vl" data-ks="vorlesen">${VORLESEN.map(([k, n]) => `<button data-v="${k}">${n}</button>`).join("")}</div><p class="note" id="vlInfo"></p></div>
         </div>
-        <div class="panel"><h4>Tastatur</h4><div class="kbd"><kbd>←</kbd> <kbd>→</kbd> Station · <kbd>⇧</kbd>+Pfeil Tag<br><kbd>Leer</kbd> Fahren / Anhalten<br><kbd>↑</kbd> <kbd>↓</kbd> Tiefe · <kbd>R</kbd> Rolle · <kbd>F</kbd> Vollbild<br><kbd>K</kbd> Kamera · <kbd>M</kbd> Musik · <kbd>V</kbd> Vorlesen</div></div>
+        <div class="panel"><h4>Tastatur</h4><div class="kbd"><kbd>←</kbd> <kbd>→</kbd> Station · <kbd>⇧</kbd>+Pfeil Tag<br><kbd>Leer</kbd> Fahren / Anhalten<br><kbd>↓</kbd> tiefer <kbd>↑</kbd> weniger · <kbd>R</kbd> Rolle · <kbd>F</kbd> Vollbild<br><kbd>K</kbd> Kamera · <kbd>M</kbd> Musik · <kbd>V</kbd> Vorlesen</div></div>
       </div>
       <aside class="hud" id="card" aria-live="polite"></aside>
       <div class="hud" id="rail"><div id="railRow" role="group" aria-label="Reisetage"></div>
         <div id="railMeta"><span><b id="metaDay">Tag 1</b> · <span id="metaDate"></span> · <span id="metaMode"></span></span><span class="legend" id="legend"></span></div></div>
-      <div id="roles"><div class="rolesIn"><h2>Wie willst du reisen?</h2>
+      <div id="roles"><div class="rolesIn"><a class="backBtn rolesBack" href="/atlas/">← Zurück zu allen Reisen</a><h2>Wie willst du reisen?</h2>
         <p id="rolesLead">Wähle, wie viel du sehen willst – mit Maus, Tastatur oder dem Smartphone. Jederzeit wechselbar.</p>
         <div class="roleGrid" id="roleGrid"></div></div></div>
       <div id="lightbox" hidden role="dialog" aria-label="Foto groß"><button class="big" id="lbClose">Schließen</button><button class="lbNav" id="lbPrev" aria-label="Vorheriges Foto">‹</button><figure><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure><button class="lbNav" id="lbNext" aria-label="Nächstes Foto">›</button></div>
@@ -290,8 +290,8 @@
         if (!lautRegelbar) { if (ziel === 0) musik.pause(); else spiele(musik); return; }
         if (ziel > 0 && musik.paused && musikUrl) { musik.volume = 0; spiele(musik); }
         fadeT = setInterval(() => { const v = musik.volume, d = ziel - v;
-          if (Math.abs(d) < 0.02) { musik.volume = ziel; clearInterval(fadeT); if (ziel === 0) musik.pause(); return; }
-          musik.volume = Math.max(0, Math.min(1, v + Math.sign(d) * 0.02)); }, 40);
+          if (Math.abs(d) < 0.004) { musik.volume = ziel; clearInterval(fadeT); if (ziel === 0) musik.pause(); return; }
+          musik.volume = Math.max(0, Math.min(1, v + Math.sign(d) * (d < 0 ? 0.0035 : 0.009))); }, 40);
       }
       function spiele(a) { const p = a.play(); if (p && p.catch) p.then(() => { if (gesperrt) { gesperrt = false; hinweis(); } }).catch((e) => { if (e && e.name === "NotAllowedError") { gesperrt = true; hinweis(); } }); }
       function hinweis() { const c = document.getElementById("tonChip"); if (c) c.hidden = !gesperrt; }
@@ -506,7 +506,7 @@
       }
       if (S.tiefe >= 2 && (d.mythen || []).length) h += `<div class="sect"><h3>Mythencheck</h3>${d.mythen.slice(0, S.tiefe >= 3 ? 9 : 1).map((m) => `<div class="myth"><span class="claim">${esc(m.behauptung)}</span>${S.tiefe >= 3 ? `<span class="fact">${esc(m.befund)}</span>` : ""}</div>`).join("")}</div>`;
       if (S.tiefe >= 3) {
-        if ((d.wien_faden || []).length) h += `<div class="sect"><h3>Faden nach Wien</h3>${d.wien_faden.map((w) => `<p style="font-size:14px"><b>${esc(w.person_oder_thema)}</b> – ${esc(w.bezug)}</p>`).join("")}</div>`;
+        if ((d.wien_faden || []).length) h += `<div class="sect"><h3>Faden nach Österreich</h3>${d.wien_faden.map((w) => `<p style="font-size:14px"><b>${esc(w.person_oder_thema)}</b> – ${esc(w.bezug)}</p>`).join("")}</div>`;
         const all = d.stationen || []; if (all.length > 1) h += `<div class="sect"><h3>Alle Stationen</h3><p class="note">${all.map((x) => esc(x.name)).join(" → ")}</p></div>`;
         if (d.seite) h += `<a class="more" href="${esc(d.seite)}">Ganzes Tagebuch von Tag ${d.tag} lesen →</a>`;
       }
@@ -531,8 +531,8 @@
       if (e.key === "ArrowRight") { e.shiftKey ? dayStep(1) : step(1); e.preventDefault(); }
       else if (e.key === "ArrowLeft") { e.shiftKey ? dayStep(-1) : step(-1); e.preventDefault(); }
       else if (e.key === " ") { setPlay(!S.playing); e.preventDefault(); }
-      else if (e.key === "ArrowUp") { S.tiefe = Math.min(3, S.tiefe + 1); go(true); e.preventDefault(); }
-      else if (e.key === "ArrowDown") { S.tiefe = Math.max(0, S.tiefe - 1); go(true); e.preventDefault(); }
+      else if (e.key === "ArrowDown") { S.tiefe = Math.min(3, S.tiefe + 1); go(true); e.preventDefault(); }
+      else if (e.key === "ArrowUp") { S.tiefe = Math.max(0, S.tiefe - 1); go(true); e.preventDefault(); }
       else if (e.key === "r" || e.key === "R") document.getElementById("chipRoleBtn").click();
       else if (e.key === "k" || e.key === "K") setKamera(KAMERA[(KAMERA.findIndex((k) => k[0] === S.kamera) + 1) % KAMERA.length][0]);
       else if ((e.key === "m" || e.key === "M") && HAT_MUSIK) ton.setMusik(!S.musik);

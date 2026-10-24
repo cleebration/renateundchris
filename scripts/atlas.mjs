@@ -162,7 +162,7 @@ export async function buildAtlas({ ROOT, DIST, site }) {
       fakten: [d.route && d.route.km ? `${Math.round(d.route.km)} km` : "keine Fahrt", d.wetter && d.wetter.max != null ? `${Math.round(d.wetter.max)}/${Math.round(d.wetter.min)} °C, ${d.wetter.regen || 0} mm Regen` : "", d.sonne ? `Sonne ${d.sonne.auf}–${d.sonne.unter}` : "", (d.fotos || []).length ? `${d.fotos.length} Fotos` : ""].filter(Boolean).join(", "),
       text: [d.satz, d.teaser, "Stationen: " + (d.stationen || []).map((s) => s.name + (s.notiz ? ` (${s.notiz})` : "")).join("; "),
         (d.mythen || []).length ? "Legenden: " + d.mythen.map((m) => `${m.behauptung} – ${m.befund}`).join("; ") : "",
-        (d.wien_faden || []).length ? "Wien-Bezug: " + d.wien_faden.map((w) => `${w.person_oder_thema}: ${w.bezug}`).join("; ") : "",
+        (d.wien_faden || []).length ? "Österreich-Bezug: " + d.wien_faden.map((w) => `${w.person_oder_thema}: ${w.bezug}`).join("; ") : "",
         (d.passend || []).length ? "Dazu passend: " + d.passend.map((p) => `${p.titel}${p.ort ? " in " + p.ort : ""} (${p.seite}${p.gleicherTag ? ", an diesem Tag" : ", " + p.jahr} ${p.url})`).join("; ") : ""].filter(Boolean).join("\n").slice(0, 2500),
     })),
   }))));
