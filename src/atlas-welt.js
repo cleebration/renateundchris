@@ -13,6 +13,8 @@
     <aside id="panel">
       <header><span class="eyebrow">Renate &amp; Chris · Reise-Atlas</span><h1>Unsere Reisen</h1><p class="sum mono" id="sum"></p>
         <div class="acts"><button class="btn primary" id="tour">▶ Rundflug</button><a class="btn" href="/atlas/statistik/">📊 Statistik</a><a class="btn" href="/reisen">Liste</a></div></header>
+      <input id="such" type="search" placeholder="🔎 Alle Reisen durchsuchen …" aria-label="Alle Reisen durchsuchen">
+      <ol id="treffer" hidden aria-label="Suchergebnisse"></ol>
       <ol id="list" aria-label="Reisen"></ol>
       <p class="hint mono">Globus mit Maus oder Fingern drehen · ← → wählen · Enter öffnet</p>
     </aside>`;
@@ -28,6 +30,20 @@
     box.addEventListener("click", (e) => { if (e.target === box || e.target.hasAttribute("data-x")) zu(); });
     addEventListener("keydown", esc_); document.body.appendChild(box); box.querySelector("[data-x]").focus();
   }
+
+  // Suche über alle Reisen (/atlas/data/suche.json, beim ersten Tippen geladen)
+  let SUCHE = null;
+  const such = document.getElementById("such"), tr = document.getElementById("treffer");
+  const norm = (t) => String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  such.addEventListener("input", async () => {
+    const q = norm(such.value).trim();
+    if (q.length < 2) { tr.hidden = true; document.getElementById("list").hidden = false; return; }
+    if (!SUCHE) { try { SUCHE = await fetch("/atlas/data/suche.json?v=" + V).then((r) => r.json()); } catch (e) { SUCHE = []; } }
+    const t = SUCHE.filter((x) => norm(x.titel + " " + x.text).includes(q)).slice(0, 15);
+    tr.innerHTML = t.length ? t.map((x) => { const i = norm(x.text).indexOf(q); const aus = i >= 0 ? x.text.slice(Math.max(0, i - 30), i + 70) : x.titel;
+      return `<li><a href="/atlas/${esc(x.reise)}/?tag=${x.tag}"><b>${esc(x.titelReise)} · Tag ${x.tag}</b><span>${esc(x.titel)}</span><small>…${esc(aus)}…</small></a></li>`; }).join("") : '<li class="err">Nichts gefunden.</li>';
+    tr.hidden = false; document.getElementById("list").hidden = true;
+  });
 
   fetch("/atlas/data/welt.json?v=" + V).then((r) => r.json()).then(start).catch(() => {
     document.getElementById("list").innerHTML = '<li class="err">Die Reisen konnten nicht geladen werden. <a href="/reisen">Zur Liste</a></li>';

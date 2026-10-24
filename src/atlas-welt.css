@@ -66,3 +66,10 @@ h1{margin:2px 0 4px;font-family:var(--display);font-weight:800;font-size:54px;li
 .tzIn{display:flex;flex-direction:column;gap:12px;align-items:center;max-width:min(1100px,100%)}
 .tzIn video{max-width:100%;max-height:calc(100vh - 110px);border-radius:12px;background:#000;box-shadow:0 20px 60px rgba(0,0,0,.6)}
 .tzBar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+
+#such{font:15px var(--serif);padding:9px 14px;border-radius:999px;border:1px solid var(--hair);background:rgba(0,0,0,.3);color:var(--ink)}
+#treffer{list-style:none;margin:0;padding:0;overflow:auto;display:flex;flex-direction:column;gap:6px;flex:1;min-height:0}
+#treffer a{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-radius:10px;border:1px solid var(--hair);text-decoration:none;color:var(--ink)}
+#treffer a:hover{border-color:var(--amber)}
+#treffer b{font:12px var(--mono);color:var(--amber)}
+#treffer small{color:var(--muted);font-size:12px}

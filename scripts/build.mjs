@@ -430,6 +430,7 @@ function buildDatenschutz() {
       <li>Höhenkacheln aus dem AWS-Open-Data-Programm „Terrain Tiles“ (Amazon Web Services, USA; <a href="https://registry.opendata.aws/terrain-tiles" target="_blank" rel="noopener">registry.opendata.aws/terrain-tiles</a>)</li>
       <li>Wetter- und Höhendaten von Open-Meteo (<a href="https://open-meteo.com/en/terms" target="_blank" rel="noopener">open-meteo.com</a>)</li>
       <li>die Programmbibliotheken MapLibre, MQTT.js und qrcode-generator über unpkg.com</li>
+      <li>die Mauer-Galerie von babowalls.com über unseren Galerie-Dienst bei Vercel Inc., USA (cleebration-gallery-hub.vercel.app), für die Querverweise „Dazu passend“</li>
       <li>nur wenn du die Musik einschaltest: Musikstücke von Wikimedia Commons (Wikimedia Foundation, USA; <a href="https://foundation.wikimedia.org/wiki/Policy:Privacy_policy" target="_blank" rel="noopener">Datenschutzerklärung</a>) – freie Lizenzen, Nachweis im Atlas beim jeweiligen Stück</li>
     </ul>
     <p>Für die Steuerung mit dem Smartphone verbinden sich Bildschirm und Smartphone über öffentliche MQTT-Vermittlungsdienste (broker.emqx.io, broker.hivemq.com). Übertragen werden nur ein zufälliger Kopplungscode, Steuerbefehle und der angezeigte Stand (Tag, Ort) – keine Namen oder Konten.</p>
@@ -503,5 +504,5 @@ for (const b of books) {
 console.log(`✓ Build fertig: ${books.length} Buchseiten + Übersicht + Über-uns in /dist`);
 const etappen = buildReisen({ ROOT, DIST, page, newsletter, esc, site });
 console.log(`✓ Reisen: ${etappen} Etappen`);
-const atlasTage = buildAtlas({ ROOT, DIST, site });
+const atlasTage = await buildAtlas({ ROOT, DIST, site });
 console.log(`✓ Reise-Atlas: ${atlasTage} Tage`);

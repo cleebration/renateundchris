@@ -103,6 +103,7 @@
           <button class="chip warn" id="tonChip" hidden title="Der Browser hat den Ton blockiert">🔇 Ton einschalten</button>
           <span class="chip"><i class="dot" id="linkDot"></i><b id="linkTxt">Kein Smartphone verbunden</b></span>
           <button class="chip narrowOnly" id="tonBtn" aria-expanded="false">Kamera &amp; Ton</button>
+          <button class="chip" id="sucheBtn" title="In dieser Reise suchen (Taste /)">🔎 Suchen</button>
           <a class="chip" href="/atlas/statistik/#${esc(REISE)}" title="Kilometer, Wetter, Rekorde und Abzeichen">📊 Statistik</a>
           <button class="chip" id="chipRoleBtn" title="Rolle wechseln (R)">Rolle <b id="chipRole">–</b></button>
           <span class="chip opt">Legenden <b class="mono" id="chipMyth">0</b></span>
@@ -209,6 +210,35 @@
         }).catch(() => {});
       }
     }
+    // babowalls.com: Mauern aus dem Galerie-Feed, die nach Datum oder Ortsname zu einem Tag passen (best effort)
+    let MAUERN = [];
+    fetch("https://cleebration-gallery-hub.vercel.app/feed/sites/babowalls.de.json").then((r) => (r.ok ? r.json() : null)).then((j) => {
+      const items = Array.isArray(j) ? j : (j && (j.items || j.galleries || j.entries)) || [];
+      const norm = (t) => String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      for (const it of items) for (const d of DAYS) {
+        const namen = (d.stationen || []).map((s) => norm(s.name).split(/[ ,(]/)[0]).filter((n) => n.length > 3);
+        const t = norm(it.title) + " " + norm(it.name) + " " + (it.tags || []).map(norm).join(" ");
+        if (it.date === d.datum || namen.some((n) => t.includes(n))) { MAUERN.push({ tag: d.tag, symbol: "🧱", titel: it.title, ort: it.name || "", jahr: String(it.date || it.year || "").slice(0, 4), url: `https://babowalls.com/mauer?mauer=${encodeURIComponent(it.slug)}`, gleicherTag: it.date === d.datum }); break; }
+      }
+      if (MAUERN.length) try { render(); } catch (e) {}
+    }).catch(() => {});
+    // Suche über diese Reise: Taste „/“ oder Knopf 🔎
+    function suche() {
+      const box = document.createElement("div"); box.className = "tzBox suche";
+      box.innerHTML = `<div class="suIn"><input type="search" placeholder="Suchen: Ort, Essen, Burg, Fähre …" aria-label="In dieser Reise suchen"><ol></ol><button class="big" data-x>Schließen</button></div>`;
+      const inp = box.querySelector("input"), ol = box.querySelector("ol");
+      const norm = (t) => String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      inp.oninput = () => { const q = norm(inp.value).trim(); if (q.length < 2) { ol.innerHTML = ""; return; }
+        const treffer = DAYS.map((d) => ({ d, txt: [d.titel, d.satz, d.teaser, ...(d.stationen || []).map((s) => s.name + " " + (s.notiz || "")), ...(d.fotos || []).map((f) => f.text), ...(d.passend || []).map((x) => x.titel + " " + x.ort)].filter(Boolean).join(" · ") }))
+          .filter((x) => norm(x.txt).includes(q)).slice(0, 12);
+        ol.innerHTML = treffer.length ? treffer.map((x) => { const i = norm(x.txt).indexOf(q); const aus = x.txt.slice(Math.max(0, i - 40), i + 80);
+          return `<li><button data-t="${x.d.tag}"><b>Tag ${x.d.tag} · ${esc(x.d.titel || "")}</b><span>…${esc(aus)}…</span></button></li>`; }).join("") : "<li class='leer'>Nichts gefunden.</li>"; };
+      ol.onclick = (e) => { const b = e.target.closest("[data-t]"); if (b) { box.remove(); gotoDay(+b.dataset.t); } };
+      box.onclick = (e) => { if (e.target === box || e.target.hasAttribute("data-x")) box.remove(); };
+      document.body.appendChild(box); inp.focus();
+    }
+    document.getElementById("sucheBtn").onclick = suche;
+    addEventListener("keydown", (e) => { if (e.key === "/" && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) { e.preventDefault(); suche(); } });
     const wmoIcon = (c) => c == null ? "" : c === 0 ? "☀️" : c <= 2 ? "🌤️" : c === 3 ? "☁️" : c <= 48 ? "🌫️" : c <= 57 ? "🌦️" : c <= 67 ? "🌧️" : c <= 77 ? "🌨️" : c <= 82 ? "🌦️" : c <= 86 ? "🌨️" : "⛈️";
 
     // Lightbox
@@ -453,6 +483,8 @@
         if (bits.length) h += `<span class="wx" title="Wetter am Übernachtungsort (Open-Meteo) · Sonnenauf- und -untergang">${bits.join(" · ")}</span>`; }
       h += `<div class="depth" aria-label="Tiefe ${S.tiefe} von 3">Tiefe ${[0, 1, 2, 3].map((k) => `<i class="${k <= S.tiefe ? "on" : ""}"></i>`).join("")}</div>`;
       if (S.tiefe >= 1 && d.satz) h += `<p class="lead">${esc(d.satz)}</p>`;
+      { const pa = (d.passend || []).concat((MAUERN || []).filter((m) => m.tag === d.tag));
+        if (S.tiefe >= 1 && pa.length) h += `<div class="passend"><span class="pl">Dazu passend</span>${pa.map((x) => `<a href="${esc(x.url)}" target="_blank" rel="noopener" title="${esc(x.ort ? x.ort + " · " : "")}${x.gleicherTag ? "an diesem Tag" : "früher/später hier, " + esc(x.jahr)}">${x.symbol} ${esc(x.titel)}${x.gleicherTag ? "" : ` <small>${esc(x.jahr)}</small>`}</a>`).join("")}</div>`; }
       if (S.tiefe >= 1 && (d.clips || []).length) h += `<div class="clips">${d.clips.map((c, k) => `<button class="clip" data-c="${k}" aria-label="Video von Tag ${d.tag} abspielen">${c.poster ? `<img src="${esc(c.poster)}" alt="" loading="lazy">` : ""}<span>▶ Video</span></button>`).join("")}</div>`;
       const fotos = d.fotos || [];
       if (S.tiefe >= 2) {

@@ -20,6 +20,7 @@ import path from "node:path";
 import { slugify } from "./reisen.mjs";
 import { buildStatistik, tagStatistik } from "./atlas-statistik.mjs";
 import { buildWelt } from "./atlas-welt.mjs";
+import { ladeQuellen, verknuepfe, schreibeRueckverweise } from "./atlas-querbezuege.mjs";
 
 const readJson = (f) => (fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, "utf8")) : null);
 
@@ -119,7 +120,7 @@ function shell(site, trips) {
 </body></html>`;
 }
 
-export function buildAtlas({ ROOT, DIST, site }) {
+export async function buildAtlas({ ROOT, DIST, site }) {
   const reisen = readJson(path.join(ROOT, "reisen.json"));
   if (!reisen) return 0;
   const trips = neuesteZuerst(ROOT, reisen.trips.filter((t) => fs.existsSync(path.join(ROOT, "content", "reisen", t.slug, "_atlas.json"))));
@@ -128,7 +129,7 @@ export function buildAtlas({ ROOT, DIST, site }) {
   const out = path.join(DIST, "atlas");
   fs.mkdirSync(path.join(out, "data"), { recursive: true });
   let n = 0;
-  const fuerStatistik = [];
+  const fuerStatistik = [], alle = [];
   for (const t of trips) {
     const data = tripData(ROOT, t.slug);
     if (!data) continue;
@@ -144,9 +145,20 @@ export function buildAtlas({ ROOT, DIST, site }) {
     // Sonnenauf-/-untergang je Tag (berechnet) und Ort für das Wetter – für die Stationskarte im Atlas
     const wetterFest = readJson(path.join(ROOT, "content", "reisen", t.slug, "_wetter.json"));
     for (const d of data.tage) { const k = tagStatistik(d); d.sonne = k.sonne; d.wetterOrt = k.ort; d.wetter = wetterFest ? wetterFest.tage[String(d.tag)] || null : null; }
-    fs.writeFileSync(path.join(out, "data", `${t.slug}.json`), JSON.stringify(data));
+    alle.push({ slug: t.slug, title: t.title, data });
     n += data.tage.length;
   }
+  // Querbezüge zu cleebration.food / .beer / cars (je Tag d.passend) und Rückverweise für diese Seiten
+  const quellen = await ladeQuellen(ROOT);
+  const rueck = verknuepfe(alle.map((x) => ({ slug: x.slug, title: x.title, tage: x.data.tage })), quellen, site);
+  for (const x of alle) fs.writeFileSync(path.join(out, "data", `${x.slug}.json`), JSON.stringify(x.data));
+  schreibeRueckverweise(DIST, rueck, quellen);
+  console.log(`✓ Querbezüge: ${Object.entries(quellen).map(([k, q]) => `${k} ${q.eintraege.length} (${q.herkunft || "keine"})`).join(", ")} · ${Object.keys(rueck).length} Rückverweise`);
+  // Suche über alle Reisen (Weltkugel): je Tag Titel, Satz, Stationen, Fotos, Querbezüge
+  fs.writeFileSync(path.join(out, "data", "suche.json"), JSON.stringify(alle.flatMap((x) => x.data.tage.map((d) => ({
+    reise: x.slug, titelReise: x.title, tag: d.tag, datum: d.datum, titel: d.titel || "",
+    text: [d.satz, d.teaser, ...(d.stationen || []).map((s) => s.name + (s.notiz ? " " + s.notiz : "")), ...(d.fotos || []).map((f) => f.text), ...(d.passend || []).map((p) => p.titel + " " + p.ort)].filter(Boolean).join(" · ").slice(0, 1500),
+  })))));
   buildStatistik({ ROOT, DIST, site, reisen: fuerStatistik });
   for (const f of ["atlas.js", "atlas.css"]) {
     const src = path.join(ROOT, "src", f);
