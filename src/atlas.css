@@ -294,3 +294,20 @@ body.touch #side:not(.zu) .sideKopf{border-radius:12px}
 .depth b{color:var(--ink);font-weight:500}
 .eng .tick:not(.f5):not(.on){color:transparent}
 .eng .tick{font-size:8px;overflow:visible;letter-spacing:-.5px}
+
+/* Reiter unten am Rand, senkrecht beschriftet */
+body.touch #side.zu{top:auto!important;bottom:calc(122px + env(safe-area-inset-bottom,0px))}
+body.touch #cardTab{writing-mode:vertical-rl;transform:none;top:auto;bottom:calc(122px + env(safe-area-inset-bottom,0px));padding:14px 8px;border-radius:12px 0 0 12px}
+/* Tacho */
+.tacho{width:34px;height:20px;flex:none;color:currentColor}
+.tacho.gross{width:72px;height:42px;color:var(--ink)}
+#dPlay{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--tf,var(--amber))!important;border-color:var(--tf,var(--amber))!important;color:#10140f!important;transition:background .3s}
+#dPlay small{font:12px var(--mono);background:rgba(0,0,0,.18);border-radius:999px;padding:1px 7px}
+#tempoBlase{display:flex;align-items:center;gap:8px;color:#10140f}
+.tachoBox{display:flex;gap:12px;align-items:center}
+.tachoBox>div{flex:1;display:flex;flex-direction:column;gap:6px;min-width:0}
+.tachoBox b{font:12px var(--mono);font-weight:500}
+input[type=range]#tempoR,input[type=range]#cTempo{width:100%;accent-color:var(--f,var(--amber));height:28px}
+#dPlay>*{pointer-events:none}
+body.touch #dock #dPlay{touch-action:none}
+#dPlay .tacho{background:rgba(10,14,12,.55);border-radius:20px 20px 6px 6px;padding:2px 3px 0;width:40px;height:24px;color:#fff}

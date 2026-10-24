@@ -14,14 +14,22 @@
     BE:{n:"Belgien",c:"#c0b060"},LU:{n:"Luxemburg",c:"#90a0c0"},DK:{n:"Dänemark",c:"#d08080"},NO:{n:"Norwegen",c:"#80a0c8"},SE:{n:"Schweden",c:"#7fa8d8"},FI:{n:"Finnland",c:"#a0c0d8"},GB:{n:"Großbritannien",c:"#a090c0"},IE:{n:"Irland",c:"#80b080"}};
   const THEMEN = [["geschichte","Geschichte"],["habsburg","Österreich-Bezug"],["mythencheck","Legenden"],["kulinarik","Essen"],["kloster","Klöster"],["burg","Burgen"],["natur","Natur"],["strand","Strand"],["grenze","Grenzen"],["panne","Pannen"],["eisenbahn","Eisenbahn"],["faehre","Fähren"]];
   const ROLLEN = {
-    zuschauer:{n:"Zuschauer",k:"im Flug",d:"Die ganze Route am Stück. Nur Orte und ein Satz pro Tag.",s:{tempo:4,breite:1,tiefe:1,thema:null,play:true}},
-    entdecker:{n:"Entdecker",k:"frei",d:"Selbst fahren, anhalten, jede Station öffnen.",s:{tempo:2,breite:3,tiefe:2,thema:null,play:false}},
-    zeitreisender:{n:"Zeitreisender",k:"Geschichte",d:"Durch die Schichten: Antike, Osmanen, Habsburg.",s:{tempo:2,breite:2,tiefe:3,thema:"geschichte",play:false}},
-    geniesser:{n:"Genießer",k:"Kulinarik",d:"Lokale, Gerichte und woher sie kommen.",s:{tempo:3,breite:3,tiefe:2,thema:"kulinarik",play:false}},
-    abenteurer:{n:"Abenteurer",k:"Pannen & Grenzen",d:"Offroad, Reifen, Staus – die ehrliche Seite.",s:{tempo:3,breite:3,tiefe:2,thema:"panne",play:false}},
-    wien:{n:"Österreich-Spurensucher",k:"Quest",d:"Folge den Fäden, die von hier nach Österreich führen.",s:{tempo:3,breite:2,tiefe:3,thema:"habsburg",play:false}}
+    zuschauer:{n:"Zuschauer",k:"im Flug",d:"Die ganze Route am Stück. Nur Orte und ein Satz pro Tag.",s:{tempo:7,breite:1,tiefe:1,thema:null,play:true}},
+    entdecker:{n:"Entdecker",k:"frei",d:"Selbst fahren, anhalten, jede Station öffnen.",s:{tempo:3,breite:3,tiefe:2,thema:null,play:false}},
+    zeitreisender:{n:"Zeitreisender",k:"Geschichte",d:"Durch die Schichten: Antike, Osmanen, Habsburg.",s:{tempo:3,breite:2,tiefe:3,thema:"geschichte",play:false}},
+    geniesser:{n:"Genießer",k:"Kulinarik",d:"Lokale, Gerichte und woher sie kommen.",s:{tempo:5,breite:3,tiefe:2,thema:"kulinarik",play:false}},
+    abenteurer:{n:"Abenteurer",k:"Pannen & Grenzen",d:"Offroad, Reifen, Staus – die ehrliche Seite.",s:{tempo:5,breite:3,tiefe:2,thema:"panne",play:false}},
+    wien:{n:"Österreich-Spurensucher",k:"Quest",d:"Folge den Fäden, die von hier nach Österreich führen.",s:{tempo:5,breite:2,tiefe:3,thema:"habsburg",play:false}}
   };
-  const TEMPO = ["", "sehr langsam", "langsam", "mittel", "schnell", "sehr schnell"];
+  // Tempo 1–10 wie ein Tacho: Name, Farbe (grün → gelb → rot) und Zeitfaktor je Stufe
+  const TEMPO = ["", "Schritttempo", "sehr langsam", "langsam", "gemächlich", "mittel", "zügig", "schnell", "sehr schnell", "rasant", "Vollgas"];
+  const TMAX = 10;
+  const tempoFarbe = (t) => `hsl(${Math.round(130 - (t - 1) * 14.4)} 72% 52%)`;
+  const tz = (ms, t) => Math.round(ms * Math.pow(0.7, t - 5)); // Basis = Stufe 5 „mittel“
+  const tachoSvg = (t, gross) => { const a = (-90 + (t - 1) / (TMAX - 1) * 180) * Math.PI / 180, r = 20, cx = 24, cy = 24;
+    let bog = ""; for (let i = 0; i < TMAX; i++) { const w0 = Math.PI + i / TMAX * Math.PI, w1 = Math.PI + (i + 1) / TMAX * Math.PI - 0.06;
+      bog += `<path d="M${cx + r * Math.cos(w0)} ${cy + r * Math.sin(w0)} A${r} ${r} 0 0 1 ${cx + r * Math.cos(w1)} ${cy + r * Math.sin(w1)}" stroke="${tempoFarbe(i + 1)}" stroke-width="5" fill="none" opacity="${i < t ? 1 : .28}"/>`; }
+    return `<svg class="tacho${gross ? " gross" : ""}" viewBox="0 0 48 28" aria-hidden="true">${bog}<line x1="${cx}" y1="${cy}" x2="${cx + 16 * Math.sin(a)}" y2="${cy - 16 * Math.cos(a)}" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="3" fill="currentColor"/></svg>`; };
   const KAMERA = [["nord","Nord"],["fahrt","Fahrt"],["frei","Frei"]];
   const VORLESEN = [["aus","aus"],["chris","Chris"],["renate","Renate"],["abwechselnd","abwechselnd"],["zufall","zufällig"]];
   const SPRECHER = { chris: "Chris", renate: "Renate" };
@@ -120,7 +128,7 @@
         <div class="panel"><h4>Smartphone als Controller</h4>
           <div id="qrBox"><div id="qr" aria-label="QR-Code zum Controller"></div><p>Mit der Handy-Kamera scannen<br>oder Code eingeben:<br><b id="codeTxt">······</b></p></div></div>
         <div class="panel" id="tonPanel"><button class="sucheBtn" id="sucheBtn" title="Taste /">🔎 Suchen &amp; fragen</button><button class="fernBtn" id="fernBtn">📱 Dieses Gerät als Fernbedienung für einen anderen Bildschirm</button><h4>Tempo</h4>
-          <div class="seg tempo5" style="--n:5" data-ks="tempo">${[1, 2, 3, 4, 5].map((v) => `<button data-v="${v}" title="${TEMPO[v]} (Tasten − / +)">${["", "◀◀", "◀", "●", "▶", "▶▶"][v]}</button>`).join("")}</div><p class="note" id="tempoTxt"></p>
+          <div class="tachoBox"><span id="tachoGross"></span><div><b id="tempoTxt"></b><input type="range" id="tempoR" min="1" max="10" step="1" aria-label="Tempo 1 bis 10 (Tasten − / +)"></div></div>
           <h4>Breite</h4>
           <div class="seg" style="--n:3" data-ks="breite"><button data-v="1">Highlights</button><button data-v="2">Stationen</button><button data-v="3">alles</button></div>
           <h4>Tiefe</h4>
@@ -179,7 +187,7 @@
     // Rollen ohne passende Inhalte ausblenden (z. B. keine Wien-Fäden)
     if (!DAYS.some((d) => (d.wien_faden || []).length)) delete ROLLEN.wien;
 
-    const S = { rolle:null, idx:0, playing:false, tempo:3, breite:2, tiefe:1, thema:null, seen:new Set(), mythen:new Set(), wien:new Set(),
+    const S = { rolle:null, idx:0, playing:false, tempo:5, breite:2, tiefe:1, thema:null, seen:new Set(), mythen:new Set(), wien:new Set(),
       kamera: KAMERA.some((k) => k[0] === merk.get("kamera")) ? merk.get("kamera") : "fahrt",
       musik: merk.get("musik", false) === true, vorlesen: VORLESEN.some((k) => k[0] === merk.get("vorlesen")) ? merk.get("vorlesen") : "aus" };
     const MUSIK = DATA.musik || {};
@@ -205,11 +213,11 @@
     Object.entries(ROLLEN).forEach(([k, r]) => { const b = document.createElement("button"); b.className = "role"; b.innerHTML = `<span class="k">${r.k}</span><span class="n">${r.n}</span><span class="d">${r.d}</span>`; b.onclick = () => setRole(k); rg.appendChild(b); });
 
     // Kurzer Hinweis beim Start (statt Rollen-Fenster)
-    { const t = document.createElement("div"); t.className = "startHint"; t.innerHTML = (matchMedia("(pointer: coarse)").matches || innerWidth <= 900) ? "Karte: tippen oder ↑ wischen = mehr · ↓ = weniger · ← → = Station · „Fahren“ seitlich ziehen = Tempo · links „Steuerung“" : "<kbd>Leertaste</kbd> fahren · <kbd>←</kbd><kbd>→</kbd> Station · <kbd>↓</kbd><kbd>↑</kbd> Tiefe · <kbd>−</kbd><kbd>+</kbd> Tempo · <kbd>/</kbd> suchen &amp; fragen";
+    { const t = document.createElement("div"); t.className = "startHint"; t.innerHTML = (matchMedia("(pointer: coarse)").matches || innerWidth <= 900) ? "Karte: tippen = Tiefe · ↑ = mehr · → oder ↓ = ausblenden · „Fahren“ seitlich ziehen = Tempo 1–10 · links „Steuerung“" : "<kbd>Leertaste</kbd> fahren · <kbd>←</kbd><kbd>→</kbd> Station · <kbd>↓</kbd><kbd>↑</kbd> Tiefe · <kbd>−</kbd><kbd>+</kbd> Tempo · <kbd>/</kbd> suchen &amp; fragen";
       document.getElementById("screen").appendChild(t); setTimeout(() => t.classList.add("weg"), 7000); setTimeout(() => t.remove(), 8200); addEventListener("keydown", () => t.classList.add("weg"), { once: true }); }
     // Direkt zu einem Tag springen: /atlas/<reise>/?tag=7 (z. B. aus der Reise-Statistik)
     { const t0 = +new URLSearchParams(location.search).get("tag");
-      if (t0 && dayOf(t0)) { Object.assign(S, { rolle: "entdecker", tempo: 2, breite: 3, tiefe: 2, thema: null }); S.idx = Math.max(0, track().findIndex((s) => s.day >= t0)); document.getElementById("roles").hidden = true; } }
+      if (t0 && dayOf(t0)) { Object.assign(S, { rolle: "entdecker", tempo: 3, breite: 3, tiefe: 2, thema: null }); S.idx = Math.max(0, track().findIndex((s) => s.day >= t0)); document.getElementById("roles").hidden = true; } }
     // Wetter je Tag (Open-Meteo Archiv, gleicher Zwischenspeicher wie die Reise-Statistik)
     const WETTER = DAYS.some((d) => d.wetter) ? Object.fromEntries(DAYS.filter((d) => d.wetter).map((d) => [d.tag, d.wetter])) : (() => { try { return JSON.parse(localStorage.getItem("atlas.stat.wetter.v1." + REISE)) || null; } catch (e) { return null; } })() || {};
     if (!Object.keys(WETTER).length) {
@@ -468,19 +476,19 @@
       // fahren entlang der Straße, wenn möglich
       if (!jump && prev && d.line && prev.day === s.day && prev.ri != null && s.ri != null && s.ri > prev.ri) {
         const path = d.line.slice(prev.ri, s.ri + 1);
-        animateAlong(path, [0, 7500, 5200, 3200, 1700, 900][S.tempo], finish, { zoom: Math.min(zoom, 9.2), pitch });
+        animateAlong(path, tz(3200, S.tempo), finish, { zoom: Math.min(zoom, 9.2), pitch });
       } else if (!jump && prev && d.line && s.day === prev.day + 1 && s.ri != null && dayOf(prev.day).line && prev.ri != null) {
         const pl = dayOf(prev.day).line.slice(prev.ri); const path = pl.concat(d.line.slice(0, s.ri + 1));
-        animateAlong(path, [0, 9500, 7000, 4200, 2200, 1200][S.tempo], finish, { zoom: 8.6, pitch });
+        animateAlong(path, tz(4200, S.tempo), finish, { zoom: 8.6, pitch });
       } else {
-        stopAnim(); map.flyTo({ center: [s.lon, s.lat], zoom, pitch, bearing: kameraZiel(s), duration: reduced ? 0 : [0, 3400, 2600, 1800, 1000, 600][S.tempo], essential: true });
+        stopAnim(); map.flyTo({ center: [s.lon, s.lat], zoom, pitch, bearing: kameraZiel(s), duration: reduced ? 0 : tz(1800, S.tempo), essential: true });
         finish();
       }
       render();
     }
     function afterArrive() { if (!S.playing) return; clearTimeout(timer); if (ton.liest()) { ton.danach(afterArrive); return; } const tr = track();
       if (S.idx >= tr.length - 1) { setPlay(false); return; }
-      timer = setTimeout(() => { S.idx++; go(false); }, [0, 6500, 4200, 2200, 700, 250][S.tempo] + (S.tiefe >= 2 ? 1500 : 0)); }
+      timer = setTimeout(() => { S.idx++; go(false); }, tz(2200, S.tempo) + (S.tiefe >= 2 ? 1500 : 0)); }
     function setPlay(p) { S.playing = p; clearTimeout(timer); if (p && !anim) afterArrive(); render(); }
     function step(n) { stopAnim(); clearTimeout(timer); const tr = track(); S.idx = Math.min(tr.length - 1, Math.max(0, S.idx + n)); go(n < 0); }
     function gotoDay(t) { stopAnim(); let k = track().findIndex((s) => s.day >= t); if (k < 0) { S.thema = null; S.breite = 3; k = track().findIndex((s) => s.day >= t); } S.idx = Math.max(0, k); go(true); }
@@ -490,12 +498,21 @@
     // Seitenleiste zusammenklappen (gemerkt), Touch-Dock, Karte als ausklappbares Blatt
     const side = document.getElementById("side");
     // Leiste beginnt unter dem Kopf; Tagesnummern bei schmalen Quadraten nur jeden 5. Tag
-    const lage = () => { if (document.body.classList.contains("touch")) side.style.top = Math.round(document.getElementById("hudTop").getBoundingClientRect().bottom + 10) + "px"; else side.style.top = "";
+    const lage = () => { if (document.body.classList.contains("touch") && !side.classList.contains("zu")) side.style.top = Math.round(document.getElementById("hudTop").getBoundingClientRect().bottom + 10) + "px"; else side.style.top = "";
       const rr = document.getElementById("railRow"); rr.classList.toggle("eng", rr.clientWidth / Math.max(1, DAYS.length) < 22); };
     addEventListener("resize", lage); setTimeout(lage, 50); setTimeout(lage, 800);
-    const setZu = (zu) => { side.classList.toggle("zu", zu); document.getElementById("sideKopf").setAttribute("aria-expanded", !zu); merk.set("sideZu", zu); };
+    const setZu = (zu) => { side.classList.toggle("zu", zu); document.getElementById("sideKopf").setAttribute("aria-expanded", !zu); merk.set("sideZu", zu); if (typeof lage === "function") lage(); };
     setZu(merk.get("sideZu", matchMedia("(pointer: coarse)").matches || innerWidth <= 900) === true);
     document.getElementById("sideKopf").onclick = () => setZu(!side.classList.contains("zu"));
+    { let sx = null, sy = 0, oben = true; const pan = document.getElementById("tonPanel");
+      side.addEventListener("touchstart", (e) => { if (e.target.closest("input[type=range]")) { sx = null; return; } const t = e.touches[0]; sx = t.clientX; sy = t.clientY; oben = pan.scrollTop <= 0; }, { passive: true });
+      side.addEventListener("touchend", (e) => { if (sx == null) return; const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy; sx = null; const zu = side.classList.contains("zu");
+        if (!zu && ((dx < -60 && -dx > Math.abs(dy) * 1.5) || (dy > 60 && dy > Math.abs(dx) * 1.5 && oben))) setZu(true);
+        else if (zu && (dx > 40 || dy < -40)) setZu(false); }, { passive: true }); }
+    { let tx = null, ty = 0; const tab = document.getElementById("cardTab");
+      tab.addEventListener("touchstart", (e) => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+      tab.addEventListener("touchend", (e) => { if (tx == null) return; const t = e.changedTouches[0], dx = t.clientX - tx, dy = t.clientY - ty; tx = null;
+        if (dx < -40 || dy < -40 || (Math.abs(dx) < 12 && Math.abs(dy) < 12)) { e.preventDefault(); setKarteZu(false); } }); }
     const touchModus = () => document.body.classList.toggle("touch", matchMedia("(pointer: coarse)").matches || innerWidth <= 900);
     touchModus(); addEventListener("resize", touchModus);
     document.getElementById("dock").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; const a = b.dataset.a;
@@ -507,8 +524,10 @@
       let kopf = false; // senkrechtes Wischen nur im Kopf der Karte (Griff, Tag, Ort) – darunter scrollt der Inhalt
       card.addEventListener("touchstart", (e) => { const t = e.touches[0]; x0 = t.clientX; y0 = t.clientY; kopf = t.clientY - card.getBoundingClientRect().top < 100; }, { passive: true });
       card.addEventListener("touchend", (e) => { if (x0 == null) return; const t = e.changedTouches[0]; const dx = t.clientX - x0, dy = t.clientY - y0; x0 = null;
-        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) { step(dx < 0 ? 1 : -1); return; }
-        if (kopf && Math.abs(dy) > 40 && Math.abs(dy) > Math.abs(dx) * 1.5) { if (dy < 0) setTiefe(S.tiefe + 1); else if (S.tiefe === 0) setKarteZu(true); else setTiefe(S.tiefe - 1); return; }
+        if (e.target.closest(".gal")) return; // Fotostreifen wischt selbst
+        if (dx > 60 && dx > Math.abs(dy) * 1.5) { setKarteZu(true); return; }
+        if (dy > 60 && dy > Math.abs(dx) * 1.5 && (kopf || card.scrollTop <= 0)) { setKarteZu(true); return; }
+        if (kopf && dy < -40 && -dy > Math.abs(dx) * 1.5) { setTiefe(S.tiefe + 1); return; }
         if (Math.abs(dx) < 8 && Math.abs(dy) < 8 && !e.target.closest("a,button,.gal,.hero")) { if (S.tiefe + tiefeRichtung > 3 || S.tiefe + tiefeRichtung < 0) tiefeRichtung = -tiefeRichtung; setTiefe(S.tiefe + tiefeRichtung); } }); }
     // Tageskarte ein-/ausblenden; ausgeblendet bleibt rechts ein schmaler Reiter sichtbar
     let tiefeRichtung = 1; // Tippen: 1→2→3→4→3→2→1 …
@@ -520,11 +539,12 @@
     { const pb = document.getElementById("dPlay"); let px = null, start = 2, gezogen = false; const blase = document.getElementById("tempoBlase");
       pb.addEventListener("pointerdown", (e) => { px = e.clientX; start = S.tempo; gezogen = false; pb.setPointerCapture(e.pointerId); });
       pb.addEventListener("pointermove", (e) => { if (px == null) return; const dx = e.clientX - px; if (Math.abs(dx) < 18 && !gezogen) return;
-        gezogen = true; const t = Math.max(1, Math.min(5, start + Math.round(dx / 35))); if (t !== S.tempo) { S.tempo = t; render(); broadcast(); }
-        blase.textContent = "Tempo: " + TEMPO[S.tempo]; blase.hidden = false; });
+        gezogen = true; const t = Math.max(1, Math.min(TMAX, start + Math.round(dx / 22))); if (t !== S.tempo) { S.tempo = t; render(); broadcast(); }
+        blase.innerHTML = tachoSvg(S.tempo) + ` Tempo ${S.tempo}/10 · ${TEMPO[S.tempo]}`; blase.style.background = tempoFarbe(S.tempo); blase.hidden = false; });
       const ende = () => { px = null; setTimeout(() => (blase.hidden = true), 700); };
       pb.addEventListener("pointerup", ende); pb.addEventListener("pointercancel", ende);
       pb.addEventListener("click", (e) => { if (gezogen) { e.stopImmediatePropagation(); e.preventDefault(); gezogen = false; } }, true); }
+    { const r = document.getElementById("tempoR"); r.addEventListener("input", () => { S.tempo = +r.value; render(); broadcast(); }); }
     document.getElementById("fernBtn").onclick = () => chooseMode();
     function setBreite(v) { S.breite = v; const cur = (go.last || ST[0]).day; S.idx = Math.max(0, track().findIndex((s) => s.day >= cur)); go(true); broadcast(); }
     function setRole(k) { const r = ROLLEN[k]; if (!r) return; S.rolle = k; Object.assign(S, { tempo: r.s.tempo, breite: r.s.breite, tiefe: r.s.tiefe, thema: r.s.thema });
@@ -547,8 +567,9 @@
       [...row.children].forEach((b, k) => { const dd = DAYS[k]; b.classList.toggle("cur", dd.tag === d.tag); b.classList.toggle("seen", S.seen.has(dd.tag)); b.classList.toggle("dim", !dayMatches(dd)); });
       ST.forEach((x, k) => pinEls[k] && pinEls[k].classList.toggle("cur", x === s));
       document.getElementById("metaDay").textContent = "Tag " + d.tag;
-      { const tt = document.getElementById("tempoTxt"); if (tt) tt.textContent = "Tempo: " + TEMPO[S.tempo]; }
-      { const dp = document.getElementById("dPlay"); if (dp) dp.textContent = S.playing ? "❚❚ Halt" : "▶ Fahren"; }
+      { const tt = document.getElementById("tempoTxt"); if (tt) { tt.textContent = `Tempo ${S.tempo}/10 · ${TEMPO[S.tempo]}`; document.getElementById("tachoGross").innerHTML = tachoSvg(S.tempo, true);
+        const r = document.getElementById("tempoR"); r.value = S.tempo; r.style.setProperty("--f", tempoFarbe(S.tempo)); } }
+      { const dp = document.getElementById("dPlay"); if (dp) { dp.innerHTML = tachoSvg(S.tempo) + `<span>${S.playing ? "❚❚ Halt" : "▶ Fahren"}</span><small>${S.tempo}</small>`; dp.style.setProperty("--tf", tempoFarbe(S.tempo)); dp.title = `Tempo ${S.tempo}/10 – seitlich ziehen zum Ändern`; } }
       document.getElementById("metaDate").textContent = fmtDate(d.datum);
       document.getElementById("metaMode").textContent = `${S.playing ? "▶ fährt" : "❚❚ steht"} · Tempo ${TEMPO[S.tempo]} · Breite ${["", "Highlights", "Stationen", "alles"][S.breite]}${S.thema ? " · Thema " + themaName(S.thema) : ""}`;
 
@@ -602,7 +623,7 @@
       else if (e.key === " ") { setPlay(!S.playing); e.preventDefault(); }
       else if (e.key === "ArrowDown") { S.tiefe = Math.min(3, S.tiefe + 1); go(true); e.preventDefault(); }
       else if (e.key === "ArrowUp") { S.tiefe = Math.max(0, S.tiefe - 1); go(true); e.preventDefault(); }
-      else if (e.key === "+" || e.key === "=") { S.tempo = Math.min(5, S.tempo + 1); render(); broadcast(); }
+      else if (e.key === "+" || e.key === "=") { S.tempo = Math.min(TMAX, S.tempo + 1); render(); broadcast(); }
       else if (e.key === "-" || e.key === "_") { S.tempo = Math.max(1, S.tempo - 1); render(); broadcast(); }
       else if (e.key === "b" || e.key === "B") setBreite(S.breite % 3 + 1);
       else if (e.key === "t" || e.key === "T") setKarteZu(!document.getElementById("card").classList.contains("zu"));
@@ -627,7 +648,7 @@
       document.getElementById("roles").hidden = true;
       if (m.rolle && ROLLEN[m.rolle]) { setRole(m.rolle); return; }
       let redraw = false;
-      if ([1, 2, 3, 4, 5].includes(+m.tempo)) S.tempo = +m.tempo;
+      if (+m.tempo >= 1 && +m.tempo <= TMAX) S.tempo = Math.round(+m.tempo);
       if ([1, 2, 3].includes(m.breite)) { S.breite = m.breite; redraw = true; }
       if ([0, 1, 2, 3].includes(m.tiefe)) { S.tiefe = m.tiefe; }
       if ("thema" in m && (m.thema === null || THEMEN.some((t) => t[0] === m.thema))) { S.thema = m.thema; redraw = true; }
@@ -712,7 +733,7 @@
       </div>
       <div class="secTitle">Regler</div>
       <div class="sliders">
-        <div class="sl"><label>Tempo</label><div class="seg" style="--n:5" data-k="tempo"><button data-v="1">◀◀</button><button data-v="2">◀</button><button data-v="3">●</button><button data-v="4">▶</button><button data-v="5">▶▶</button></div></div>
+        <div class="sl"><label>Tempo <b id="cTempoTxt"></b></label><input type="range" id="cTempo" min="1" max="10" step="1"></div>
         <div class="sl"><label>Breite</label><div class="seg" style="--n:3" data-k="breite"><button data-v="1">Highlights</button><button data-v="2">Stationen</button><button data-v="3">alles</button></div></div>
         <div class="sl"><label>Tiefe</label><div class="seg" style="--n:4" data-k="tiefe"><button data-v="0">Ort</button><button data-v="1">Satz</button><button data-v="2">Teaser</button><button data-v="3">alles</button></div></div>
       </div>
@@ -746,6 +767,7 @@
     fb.addEventListener("pointerup", (e) => { if (fx == null) return; const dx = e.clientX - fx, dy = e.clientY - fy; fx = null;
       if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) send({ step: dx < 0 ? 1 : -1 }); });
     $("bZoomIn").onclick = () => send({ zoom: 1 }); $("bZoomOut").onclick = () => send({ zoom: -1 });
+    { const r = document.getElementById("cTempo"); r.addEventListener("change", () => send({ tempo: +r.value })); r.addEventListener("input", () => { r.style.setProperty("--f", tempoFarbe(+r.value)); document.getElementById("cTempoTxt").textContent = r.value + "/10"; }); }
     document.querySelectorAll("#ctl .seg[data-k]").forEach((g) => g.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) send({ [g.dataset.k]: +b.dataset.v }); }));
     document.querySelectorAll("#ctl .seg[data-ks]").forEach((g) => g.addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return;
       send({ [g.dataset.ks]: g.dataset.ks === "musik" ? b.dataset.v === "an" : b.dataset.v }); }));
@@ -765,6 +787,7 @@
       $("bFoto").firstChild.textContent = fo ? "Foto schließen" : "Fotos";
       $("bFoto").querySelector("small").textContent = fo ? `Tag ${fo.tag} · ${fo.i}/${fo.n} – ◀ ▶ blättern` : "groß ansehen";
       $("bPrev").querySelector("small").textContent = fo ? "Foto" : "Station"; $("bNext").querySelector("small").textContent = fo ? "Foto" : "Station";
+      { const r = document.getElementById("cTempo"); if (r && document.activeElement !== r && p.tempo) { r.value = p.tempo; r.style.setProperty("--f", tempoFarbe(p.tempo)); document.getElementById("cTempoTxt").textContent = p.tempo + "/10 · " + (TEMPO[p.tempo] || ""); } }
       document.querySelectorAll("#ctl .seg[data-k]").forEach((g) => [...g.children].forEach((b) => b.classList.toggle("on", +b.dataset.v === p[g.dataset.k])));
       document.querySelectorAll("#ctl .seg[data-ks]").forEach((g) => [...g.children].forEach((b) => b.classList.toggle("on", b.dataset.v === (g.dataset.ks === "musik" ? (p.musik ? "an" : "aus") : p[g.dataset.ks]))));
       $("cTon").hidden = !(p.hatMusik || p.hatVorlesen); $("cMusikSl").hidden = !p.hatMusik; $("cVlSl").hidden = !p.hatVorlesen;
