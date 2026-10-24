@@ -34,18 +34,34 @@
   }
 
   // ---------- Nachladen: Wetter und Höhen (Open-Meteo, CC BY 4.0) ----------
-  const WKEY = (s) => "atlas.stat.wetter.v1." + s, HKEY = (s) => "atlas.stat.hoehe.v1." + s;
+  // Open-Meteo zählt jede Koordinate als Abruf (Grenze je Minute) → Abrufe nacheinander, bei „zu viele“ (429) warten und wiederholen
+  let kette = Promise.resolve();
+  function holen(url) {
+    const job = kette.then(async () => {
+      for (let v = 0; v < 4; v++) {
+        let x;
+        try { x = await fetch(url); } catch (e) { if (v === 3) throw new Error("Netz"); await new Promise((r) => setTimeout(r, 2000)); continue; }
+        if (x.ok) return x.json();
+        if (x.status !== 429 || v === 3) { let grund = ""; try { grund = (await x.json()).reason || ""; } catch (e) {} throw new Error(x.status + (grund ? " " + grund : "")); }
+        const warte = Math.min(65, +(x.headers.get("Retry-After") || 0) || 15 * (v + 1));
+        await new Promise((r) => setTimeout(r, warte * 1000));
+      }
+    });
+    kette = job.catch(() => {});
+    return job;
+  }
+  const WKEY = (s) => "atlas.stat.wetter.v1." + s, HKEY = (s) => "atlas.stat.hoehe.v2." + s;
   async function ladeWetter(r) {
     const c = merk.get(WKEY(r.slug)); if (c) return c;
     const tage = r.tage.filter((d) => d.ort && d.datum);
     if (!tage.length) return {};
     const out = {};
-    for (let i = 0; i < tage.length; i += 40) {
-      const g = tage.slice(i, i + 40);
+    for (let i = 0; i < tage.length; i += 10) {
+      const g = tage.slice(i, i + 10);
       const q = new URLSearchParams({ latitude: g.map((d) => d.ort.lat).join(","), longitude: g.map((d) => d.ort.lon).join(","),
         start_date: tage[0].datum, end_date: tage[tage.length - 1].datum, timezone: "auto",
         daily: "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,sunshine_duration,wind_speed_10m_max" });
-      const j = await fetch("https://archive-api.open-meteo.com/v1/archive?" + q).then((x) => { if (!x.ok) throw new Error(x.status); return x.json(); });
+      const j = await holen("https://archive-api.open-meteo.com/v1/archive?" + q);
       const arr = Array.isArray(j) ? j : [j];
       g.forEach((d, k) => { const dl = (arr[k] || {}).daily; if (!dl) return; const ix = dl.time.indexOf(d.datum); if (ix < 0) return;
         out[d.tag] = { code: dl.weather_code[ix], max: dl.temperature_2m_max[ix], min: dl.temperature_2m_min[ix], regen: dl.precipitation_sum[ix],
@@ -61,7 +77,7 @@
     for (let i = 0; i < pts.length; i += 100) {
       const g = pts.slice(i, i + 100);
       const q = new URLSearchParams({ latitude: g.map((x) => x.p[0]).join(","), longitude: g.map((x) => x.p[1]).join(",") });
-      const j = await fetch("https://api.open-meteo.com/v1/elevation?" + q).then((x) => { if (!x.ok) throw new Error(x.status); return x.json(); });
+      const j = await holen("https://api.open-meteo.com/v1/elevation?" + q);
       g.forEach((x, k) => { (out[x.tag] ||= [])[x.i] = Math.max(0, Math.round(j.elevation[k])); });
     }
     if (Object.keys(out).length) merk.set(HKEY(r.slug), out);
@@ -192,7 +208,8 @@
       ${kpi(A.sonneH != null ? n0(A.sonneH) : "…", "Sonnenstunden")}${kpi(A.tmaxAvg != null ? n1(A.tmaxAvg) + "°" : "…", "Ø Höchsttemperatur")}
     </section>`;
     if (laden) h += `<p class="status">Wetter und Höhen werden geladen …</p>`;
-    if (fehler) h += `<p class="status warn">Wetter oder Höhen konnten gerade nicht geladen werden. Kennzahlen und Sonnenzeiten stimmen trotzdem.</p>`;
+    if (fehler) { const was = auswahl.filter((r) => r.status === "fehler").map((r) => `${esc(r.title)}: ${[r.fehlerW && "Wetter (" + esc(r.fehlerW) + ")", r.fehlerH && "Höhen (" + esc(r.fehlerH) + ")"].filter(Boolean).join(", ")}`).join(" · ");
+      h += `<p class="status warn">Nicht geladen – ${was}. Kennzahlen und Sonnenzeiten stimmen trotzdem. <button class="chipBtn" id="nochmal">Neu versuchen</button></p>`; }
 
     if (!alle) h += `<section><h3>Reise-Kurve</h3>${kurve(R.tage.map((d) => A.tageListe.find((x) => x.tag === d.tag)))}</section>`;
 
@@ -228,9 +245,10 @@
         ${d.sonne ? `<span class="ds mono">↑ ${d.sonne.auf} · ↓ ${d.sonne.unter}</span>` : ""}
         ${d.h ? sparkline(d.h.profil, 160, 34) + `<span class="dh2 mono">${n0(d.h.min)}–${n0(d.h.max)} m</span>` : ""}</a>`; }).join("")}</div></section>`;
 
-    h += `<footer class="foot"><p>Quellen: Kilometer und Fahrzeit aus Straßenrouten (OSRM, Näherung zwischen den Stationen, nicht die GPS-Spur). Sonnenzeiten berechnet für den Übernachtungsort (Ortszeit). Wetter und Höhen: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a> (CC BY 4.0), Tageswerte am Übernachtungsort, Höhen aus Copernicus DEM entlang der Route (grob, ca. 24 Punkte je Tag).</p>
+    h += `<footer class="foot"><p>Quellen: Kilometer und Fahrzeit aus Straßenrouten (OSRM, Näherung zwischen den Stationen, nicht die GPS-Spur). Sonnenzeiten berechnet für den Übernachtungsort (Ortszeit). Wetter und Höhen: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a> (CC BY 4.0), Tageswerte am Übernachtungsort, Höhen aus Copernicus DEM entlang der Route (grob, ca. 12 Punkte je Tag).</p>
       <p><a href="/reisen">Alle Reisen</a> · <a href="/datenschutz">Datenschutz</a></p></footer>`;
     ROOT.innerHTML = h;
+    const nb = document.getElementById("nochmal"); if (nb) nb.onclick = () => { auswahl.forEach((r) => { if (r.status === "fehler") r.status = null; }); auswahl.forEach(nachladen); };
     const tq = document.getElementById("trumpf"); if (tq) tq.onclick = () => trumpf(reisen);
     document.title = (alle ? "Reise-Statistik" : `Statistik · ${R.title}`) + " · Renate & Chris";
   }
@@ -258,7 +276,9 @@
   // ---------- Start ----------
   async function nachladen(r) {
     if (r.status) return; r.status = "laedt"; render();
-    const [w, hh] = await Promise.allSettled([ladeWetter(r), ladeHoehe(r)]);
+    const [w, hh] = await Promise.allSettled([r.wetter ? r.wetter : ladeWetter(r), r.hoehe ? r.hoehe : ladeHoehe(r)]);
+    r.fehlerW = w.status === "rejected" ? String(w.reason && w.reason.message || "Fehler") : null;
+    r.fehlerH = hh.status === "rejected" ? String(hh.reason && hh.reason.message || "Fehler") : null;
     if (w.status === "fulfilled") r.wetter = w.value; if (hh.status === "fulfilled") r.hoehe = hh.value;
     r.status = w.status === "rejected" || hh.status === "rejected" ? "fehler" : "fertig";
     render();

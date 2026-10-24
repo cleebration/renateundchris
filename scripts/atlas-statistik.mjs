@@ -78,8 +78,8 @@ export function tagStatistik(t) {
     if (s) sun = { auf: hhmm(s.rise, zone), unter: hhmm(s.set, zone), min: Math.round((s.set - s.rise) / 6e4) };
   }
   let hp = [];
-  if (t.route && t.route.poly) hp = sample(decodePoly(t.route.poly), 24);
-  else if (st.length) hp = sample(st.map((s) => [s.lat, s.lon]), 12);
+  if (t.route && t.route.poly) hp = sample(decodePoly(t.route.poly), 12);
+  else if (st.length) hp = sample(st.map((s) => [s.lat, s.lon]), 8);
   const art = (a) => st.filter((s) => s.art === a).length;
   return {
     tag: t.tag, datum: t.datum, titel: t.titel || "", land: t.land || [],
