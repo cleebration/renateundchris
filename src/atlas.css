@@ -242,7 +242,7 @@ a.chip{text-decoration:none;color:var(--ink)}
 #dock{display:none}
 
 /* Tablet und Smartphone: Dock unten, Karte als Blatt, Einstellungen als Blatt */
-body.touch #dock{display:grid;grid-template-columns:repeat(2,1fr) 2.2fr repeat(4,1fr);gap:6px;left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px));bottom:calc(8px + env(safe-area-inset-bottom,0px));z-index:12}
+body.touch #dock{display:grid;grid-template-columns:1fr 1fr 2.4fr 1fr 1fr;gap:6px;left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px));bottom:calc(8px + env(safe-area-inset-bottom,0px));z-index:12}
 body.touch #dock button{all:unset;text-align:center;padding:14px 0;border-radius:14px;background:var(--panel);border:1px solid var(--hair);font:18px var(--mono);color:var(--ink);touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 body.touch #dock button.primary{background:var(--amber);color:#1b1206;font-size:15px}
 body.touch #dock button:active{transform:scale(.96)}
@@ -257,11 +257,7 @@ body.touch #card h2{font-size:24px}
 body.touch #hudTop .chips .chip:not(.tzChip){display:none}
 body.touch .brand h1{font-size:26px}
 body.touch .brand .eyebrow{display:none}
-body.touch #side{display:none;position:fixed;left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px));top:auto;bottom:calc(72px + env(safe-area-inset-bottom,0px));width:auto;max-height:65vh;z-index:25;box-shadow:0 -10px 40px rgba(0,0,0,.6)}
-body.touch #side.offen{display:flex}
 body.touch #side .panel:not(#tonPanel){display:none}
-body.touch #side.zu .panel{display:flex!important}
-body.touch .sideKopf i{transform:rotate(-90deg)}
 body.touch .fernBtn{display:block;all:unset;cursor:pointer;font:12px var(--mono);color:var(--muted);text-align:center;padding:8px;border:1px dashed var(--hair);border-radius:10px}
 body.touch .narrowOnly{display:none!important}
 body.touch .startHint{bottom:auto;top:calc(130px + env(safe-area-inset-top,0px));white-space:normal;text-align:center;width:min(92vw,520px);border-radius:14px}
@@ -284,3 +280,17 @@ body.touch #dPlay{touch-action:none}
 #side.zu .sideKopf{writing-mode:vertical-rl;padding:12px 8px}
 #side.zu .sideKopf i{transform:rotate(90deg)}
 body.touch #card>.day,body.touch #card>h2{touch-action:none}
+
+/* Steuerung links: Reiter am Rand, aufgeklappt als Leiste (auch Touch) */
+body.touch #side{display:flex!important;position:absolute;left:0;top:calc(112px + env(safe-area-inset-top,0px));bottom:calc(122px + env(safe-area-inset-bottom,0px));width:min(300px,84vw);max-height:none;z-index:14;padding-left:max(8px,env(safe-area-inset-left,0px))}
+body.touch #side.zu{width:auto;bottom:auto;padding-left:0}
+#side.zu{left:0}
+#side.zu .sideKopf{border-left:0;border-radius:0 12px 12px 0}
+body.touch #side:not(.zu) .sideKopf{border-radius:12px}
+.sucheBtn{all:unset;cursor:pointer;text-align:center;padding:10px;border-radius:10px;background:var(--amber);color:#1b1206;font:13px var(--mono)}
+.tick{font:10px var(--mono);color:rgba(10,20,25,.75);display:grid;place-items:center;overflow:hidden}
+.tick.gap{color:var(--muted)}
+.seg.tempo5 button{font-size:12px}
+.depth b{color:var(--ink);font-weight:500}
+.eng .tick:not(.f5):not(.on){color:transparent}
+.eng .tick{font-size:8px;overflow:visible;letter-spacing:-.5px}
