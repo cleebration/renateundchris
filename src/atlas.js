@@ -114,12 +114,14 @@
       <div class="hud" id="side">
         <div class="panel"><h4>Smartphone als Controller</h4>
           <div id="qrBox"><div id="qr" aria-label="QR-Code zum Controller"></div><p>Mit der Handy-Kamera scannen<br>oder Code eingeben:<br><b id="codeTxt">······</b></p></div></div>
-        <div class="panel" id="tonPanel"><h4>Kamera</h4>
+        <div class="panel" id="tonPanel"><h4>Tempo</h4>
+          <div class="seg" style="--n:3" data-ks="tempo"><button data-v="1" title="Taste −">langsam</button><button data-v="2">mittel</button><button data-v="3" title="Taste +">schnell</button></div>
+          <h4>Kamera</h4>
           <div class="seg" style="--n:3" data-ks="kamera">${KAMERA.map(([k, n]) => `<button data-v="${k}" title="${k === "nord" ? "Norden oben" : k === "fahrt" ? "Blick in Fahrtrichtung" : "selbst drehen"}">${n}</button>`).join("")}</div>
           <div id="musikBox" hidden><h4>Musik</h4><div class="seg" style="--n:2" data-ks="musik"><button data-v="aus">aus</button><button data-v="an">an</button></div><p class="note" id="musikInfo"></p></div>
           <div id="vlBox" hidden><h4>Vorlesen</h4><div class="seg vl" data-ks="vorlesen">${VORLESEN.map(([k, n]) => `<button data-v="${k}">${n}</button>`).join("")}</div><p class="note" id="vlInfo"></p></div>
         </div>
-        <div class="panel"><h4>Tastatur</h4><div class="kbd"><kbd>←</kbd> <kbd>→</kbd> Station · <kbd>⇧</kbd>+Pfeil Tag<br><kbd>Leer</kbd> Fahren / Anhalten<br><kbd>↓</kbd> tiefer <kbd>↑</kbd> weniger · <kbd>R</kbd> Rolle · <kbd>F</kbd> Vollbild<br><kbd>K</kbd> Kamera · <kbd>M</kbd> Musik · <kbd>V</kbd> Vorlesen</div></div>
+        <div class="panel"><h4>Tastatur</h4><div class="kbd"><kbd>←</kbd> <kbd>→</kbd> Station · <kbd>⇧</kbd>+Pfeil Tag<br><kbd>Leer</kbd> Fahren / Anhalten · <kbd>−</kbd> <kbd>+</kbd> Tempo<br><kbd>↓</kbd> tiefer <kbd>↑</kbd> weniger · <kbd>R</kbd> Rolle · <kbd>F</kbd> Vollbild<br><kbd>K</kbd> Kamera · <kbd>M</kbd> Musik · <kbd>V</kbd> Vorlesen</div></div>
       </div>
       <aside class="hud" id="card" aria-live="polite"></aside>
       <div class="hud" id="rail"><div id="railRow" role="group" aria-label="Reisetage"></div>
@@ -290,8 +292,8 @@
         if (!lautRegelbar) { if (ziel === 0) musik.pause(); else spiele(musik); return; }
         if (ziel > 0 && musik.paused && musikUrl) { musik.volume = 0; spiele(musik); }
         fadeT = setInterval(() => { const v = musik.volume, d = ziel - v;
-          if (Math.abs(d) < 0.004) { musik.volume = ziel; clearInterval(fadeT); if (ziel === 0) musik.pause(); return; }
-          musik.volume = Math.max(0, Math.min(1, v + Math.sign(d) * (d < 0 ? 0.0035 : 0.009))); }, 40);
+          if (Math.abs(d) < 0.006) { musik.volume = ziel; clearInterval(fadeT); if (ziel === 0) musik.pause(); return; }
+          musik.volume = d < 0 ? Math.max(ziel, Math.max(0, v * 0.92 - 0.0008)) : Math.min(1, v + 0.012); }, 40);
       }
       function spiele(a) { const p = a.play(); if (p && p.catch) p.then(() => { if (gesperrt) { gesperrt = false; hinweis(); } }).catch((e) => { if (e && e.name === "NotAllowedError") { gesperrt = true; hinweis(); } }); }
       function hinweis() { const c = document.getElementById("tonChip"); if (c) c.hidden = !gesperrt; }
@@ -308,8 +310,8 @@
         land = neu; nr = 0;
         if (!S.musik || musik.paused) { laden(); return; }
         if (!lautRegelbar) { laden(); spiele(musik); return; }
-        clearInterval(fadeT); const t = setInterval(() => { musik.volume = Math.max(0, musik.volume - 0.03);
-          if (musik.volume <= 0.01) { clearInterval(t); laden(); musik.volume = 0; spiele(musik); blende(); } }, 40);
+        clearInterval(fadeT); const t = setInterval(() => { musik.volume = Math.max(0, musik.volume * 0.92 - 0.0008);
+          if (musik.volume <= 0.006) { clearInterval(t); laden(); musik.volume = 0; spiele(musik); blende(); } }, 40);
       }
       function info() {
         const x = stueck(), el = document.getElementById("musikInfo"); if (!el) return;
@@ -345,7 +347,7 @@
       if (map && van && !anim) { const s = go.last; if (k === "nord") map.easeTo({ bearing: 0, duration: 700 }); else if (k === "fahrt") map.easeTo({ bearing: kameraZiel(s), pitch: narrow ? 50 : 70, duration: 900 }); }
       render(); }
     document.querySelectorAll("#tonPanel .seg").forEach((g) => g.addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return;
-      if (g.dataset.ks === "kamera") setKamera(b.dataset.v); else if (g.dataset.ks === "musik") ton.setMusik(b.dataset.v === "an"); else if (g.dataset.ks === "vorlesen") ton.setVorlesen(b.dataset.v); }));
+      if (g.dataset.ks === "tempo") { S.tempo = +b.dataset.v; render(); broadcast(); } else if (g.dataset.ks === "kamera") setKamera(b.dataset.v); else if (g.dataset.ks === "musik") ton.setMusik(b.dataset.v === "an"); else if (g.dataset.ks === "vorlesen") ton.setVorlesen(b.dataset.v); }));
 
     setTimeout(() => { if (!van) render(); }, 0);
     // ---------- Karte ----------
@@ -474,7 +476,7 @@
     function render() {
       const tr = track(); const s = tr[S.idx]; const d = s ? dayOf(s.day) : DAYS[0];
       document.getElementById("chipRole").textContent = S.rolle ? ROLLEN[S.rolle].n : "–";
-      document.querySelectorAll("#tonPanel .seg").forEach((g) => [...g.children].forEach((b) => b.classList.toggle("on", b.dataset.v === (g.dataset.ks === "musik" ? (S.musik ? "an" : "aus") : S[g.dataset.ks]))));
+      document.querySelectorAll("#tonPanel .seg").forEach((g) => [...g.children].forEach((b) => b.classList.toggle("on", b.dataset.v === (g.dataset.ks === "musik" ? (S.musik ? "an" : "aus") : String(S[g.dataset.ks])))));
       document.getElementById("chipMyth").textContent = S.mythen.size + "/" + DAYS.reduce((a, x) => a + (x.mythen || []).length, 0);
       document.getElementById("chipWien").textContent = S.wien.size + "/" + DAYS.reduce((a, x) => a + (x.wien_faden || []).length, 0);
       const kmSoFar = DAYS.filter((x) => x.tag < d.tag).reduce((a, x) => a + ((x.route && x.route.km) || 0), 0);
@@ -533,6 +535,8 @@
       else if (e.key === " ") { setPlay(!S.playing); e.preventDefault(); }
       else if (e.key === "ArrowDown") { S.tiefe = Math.min(3, S.tiefe + 1); go(true); e.preventDefault(); }
       else if (e.key === "ArrowUp") { S.tiefe = Math.max(0, S.tiefe - 1); go(true); e.preventDefault(); }
+      else if (e.key === "+" || e.key === "=") { S.tempo = Math.min(3, S.tempo + 1); render(); broadcast(); }
+      else if (e.key === "-" || e.key === "_") { S.tempo = Math.max(1, S.tempo - 1); render(); broadcast(); }
       else if (e.key === "r" || e.key === "R") document.getElementById("chipRoleBtn").click();
       else if (e.key === "k" || e.key === "K") setKamera(KAMERA[(KAMERA.findIndex((k) => k[0] === S.kamera) + 1) % KAMERA.length][0]);
       else if ((e.key === "m" || e.key === "M") && HAT_MUSIK) ton.setMusik(!S.musik);
