@@ -326,3 +326,31 @@ body.touch #cardTab{transform:rotate(180deg);border-radius:0 12px 12px 0;border-
 .tagFort{position:relative;height:16px;border-radius:8px;background:rgba(255,255,255,.07);overflow:hidden;margin:2px 0}
 .tagFort i{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,rgba(224,145,58,.55),var(--amber));border-radius:8px}
 .tagFort span{position:relative;display:block;text-align:center;font:11px/16px var(--mono);color:var(--ink)}
+
+/* Touch-Layout ohne Dock: Zeitleiste ganz unten, links Tage/Stopps über „Steuerung“, rechts Tacho über „Tag“ */
+body.touch{--u:calc(66px + env(safe-area-inset-bottom,0px));--rand:max(6px,env(safe-area-inset-left,0px))}
+body.touch #rail{bottom:calc(8px + env(safe-area-inset-bottom,0px))}
+body.touch #card{bottom:var(--u);left:60px;right:60px}
+@media (min-width:901px){body.touch #card{left:auto;right:60px;width:min(520px,calc(100vw - 132px))}}
+body.touch #side.zu,body.touch #cardTab{bottom:var(--u)!important}
+body.touch #side{bottom:var(--u)}
+body.touch #dock{display:flex;flex-direction:column;gap:6px;left:var(--rand);right:auto;bottom:calc(var(--u) + 132px);width:48px;background:none;border:0;padding:0;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none}
+body.touch #dock button{padding:0;height:46px;width:48px;display:grid;place-items:center;border-radius:12px;font-size:17px}
+body.touch #dock [data-a=dayNext]{order:1}body.touch #dock [data-a=next]{order:2}body.touch #dock [data-a=prev]{order:3}body.touch #dock [data-a=dayPrev]{order:4}
+body.touch #dock #dPlay{position:fixed;left:auto;right:max(6px,env(safe-area-inset-right,0px));bottom:calc(var(--u) + 104px);width:58px;height:58px;border-radius:50%;padding:0;gap:0;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+body.touch #dock #dPlay .tacho{width:46px;height:28px;padding:2px 3px 0}
+body.touch #card.zu~#dPlay,body.touch:has(#card:not(.zu)) #dock #dPlay{bottom:calc(var(--u) + 8px)}
+body.touch:has(#card:not(.zu)) #card{right:72px}
+
+/* Uhr nach Fotos */
+#uhr{left:50%;transform:translateX(-50%);top:calc(14px + env(safe-area-inset-top,0px));display:flex;align-items:center;gap:8px;padding:6px 12px 6px 8px;border-radius:999px;background:var(--panel);border:1px solid var(--hair);color:var(--ink);z-index:13}
+#uhr svg{width:34px;height:34px}
+#uhr svg line{transition:transform .4s}
+#uhr div{display:flex;flex-direction:column;line-height:1.1}
+#uhr b{font:500 16px var(--mono)}
+#uhr small{font:10px var(--mono);color:var(--muted)}
+#uhr.leer{opacity:.6}
+.uhrBtn{all:unset;cursor:pointer;text-align:center;padding:9px;border-radius:10px;border:1px solid var(--hair);font:12px var(--mono);color:var(--ink)}
+.uhrBtn.on{border-color:var(--amber);color:var(--amber)}
+@media (max-width:520px){#uhr{top:auto;bottom:auto;left:auto;right:8px;transform:none;top:calc(64px + env(safe-area-inset-top,0px))}}
+@media (max-width:520px){#uhr{top:calc(88px + env(safe-area-inset-top,0px));right:8px;padding:4px 10px 4px 6px}#uhr svg{width:28px;height:28px}#uhr b{font-size:14px}}

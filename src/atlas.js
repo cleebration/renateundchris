@@ -131,7 +131,7 @@
       <div class="hud" id="side"><button class="sideKopf" id="sideKopf" aria-expanded="true"><span>Steuerung</span><i>‹</i></button>
         <div class="panel"><h4>Smartphone als Controller</h4>
           <div id="qrBox"><div id="qr" aria-label="QR-Code zum Controller"></div><p>Mit der Handy-Kamera scannen<br>oder Code eingeben:<br><b id="codeTxt">······</b></p></div></div>
-        <div class="panel" id="tonPanel"><button class="sucheBtn" id="sucheBtn" title="Taste /">🔎 Suchen &amp; fragen</button><button class="fernBtn" id="fernBtn">📱 Dieses Gerät als Fernbedienung für einen anderen Bildschirm</button><h4>Tempo</h4>
+        <div class="panel" id="tonPanel"><button class="sucheBtn" id="sucheBtn" title="Taste /">🔎 Suchen &amp; fragen</button><button class="uhrBtn" id="uhrBtn" aria-pressed="false">🕐 Uhr nach Fotozeiten</button><button class="fernBtn" id="fernBtn">📱 Dieses Gerät als Fernbedienung für einen anderen Bildschirm</button><h4>Tempo</h4>
           <div class="tachoBox"><span id="tachoGross"></span><div><b id="tempoTxt"></b><input type="range" id="tempoR" min="0" max="10" step="1" aria-label="Fahrstufe 0 (Stopp) bis 10 (Tasten − / +)"></div></div>
           <h4>Breite</h4>
           <div class="seg" style="--n:3" data-ks="breite"><button data-v="1">Highlights</button><button data-v="2">Stationen</button><button data-v="3">alles</button></div>
@@ -145,6 +145,7 @@
         <div class="panel"><h4>Tastatur</h4><div class="kbd"><kbd>←</kbd> <kbd>→</kbd> Station · <kbd>⇧</kbd>+Pfeil Tag<br><kbd>Leer</kbd> Fahren / Anhalten · <kbd>−</kbd> <kbd>+</kbd> Tempo<br><kbd>↓</kbd> tiefer <kbd>↑</kbd> weniger · <kbd>B</kbd> Breite · <kbd>T</kbd> Tageskarte · <kbd>F</kbd> Vollbild<br><kbd>/</kbd> Suchen &amp; fragen<br><kbd>K</kbd> Kamera · <kbd>M</kbd> Musik · <kbd>V</kbd> Vorlesen</div></div>
       </div>
       <aside class="hud" id="card" aria-live="polite"></aside>
+      <div class="hud" id="uhr" hidden title="Uhrzeit aus den Aufnahmezeiten der Fotos, zwischen zwei Fotos geschätzt"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="2"/>${[...Array(12)].map((_, i) => `<line x1="20" y1="4" x2="20" y2="${i % 3 ? 6 : 8}" stroke="currentColor" stroke-width="${i % 3 ? 1 : 2}" transform="rotate(${i * 30} 20 20)"/>`).join("")}<line class="h" x1="20" y1="20" x2="20" y2="11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><line class="m" x1="20" y1="20" x2="20" y2="6" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"/><circle cx="20" cy="20" r="2" fill="currentColor"/></svg><div><b></b><small></small></div></div>
       <button class="hud" id="cardTab" hidden aria-label="Tagesübersicht einblenden">‹ Tag</button>
       <div class="hud" id="tempoBlase" hidden></div>
       <div class="hud" id="rail"><div id="railRow" role="group" aria-label="Reisetage"></div>
@@ -382,7 +383,7 @@
       if (map && van && !anim) { const s = go.last; if (k === "nord") map.easeTo({ bearing: 0, duration: 700 }); else if (k === "fahrt") map.easeTo({ bearing: kameraZiel(s), pitch: narrow ? 50 : 70, duration: 900 }); }
       render(); }
     document.querySelectorAll("#tonPanel .seg").forEach((g) => g.addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return;
-      if (g.dataset.ks === "tempo") { S.tempo = +b.dataset.v; render(); broadcast(); } else if (g.dataset.ks === "breite") setBreite(+b.dataset.v); else if (g.dataset.ks === "tiefe") { S.tiefe = +b.dataset.v; go(true); } else if (g.dataset.ks === "kamera") setKamera(b.dataset.v); else if (g.dataset.ks === "musik") ton.setMusik(b.dataset.v === "an"); else if (g.dataset.ks === "vorlesen") ton.setVorlesen(b.dataset.v); }));
+      if (g.dataset.ks === "tempo") { S.tempo = +b.dataset.v; render(); broadcast(); } else if (g.dataset.ks === "breite") setBreite(+b.dataset.v); else if (g.dataset.ks === "tiefe") setTiefeOhne(+b.dataset.v); else if (g.dataset.ks === "kamera") setKamera(b.dataset.v); else if (g.dataset.ks === "musik") ton.setMusik(b.dataset.v === "an"); else if (g.dataset.ks === "vorlesen") ton.setVorlesen(b.dataset.v); }));
 
     setTimeout(() => { if (!van) render(); }, 0);
     // ---------- Karte ----------
@@ -473,7 +474,26 @@
       return Math.max(500, Math.min(30000, km / kmProSek(S.tempo) * 1000)); };
     let rollt = false; // fährt gerade durch (kein Anfahren/Abbremsen an Zwischenstationen)
     // Fortschritt des Tages (Balken + km) – aus dem Punkt-Index auf der Tageslinie
-    function tagFort(day, ri) { const el = document.querySelector("#card .tagFort"); const d = dayOf(day); if (!el || !d || !d.line) return;
+    // Uhr nach Fotos: Aufnahmezeiten auf die Tagesroute legen und zwischen zwei Fotos linear schätzen
+    const uhrCache = {};
+    function uhrAnker(d) { if (uhrCache[d.tag]) return uhrCache[d.tag]; const L = d.line || [], roh = [];
+      (d.fotos || []).forEach((f) => { if (!f.zeit || typeof f.lat !== "number" || !L.length) return; const [h, m] = f.zeit.split(":").map(Number); if (isNaN(h)) return;
+        let bi = 0, bd = Infinity; for (let i = 0; i < L.length; i++) { const v = d2(L[i], [f.lon, f.lat]); if (v < bd) { bd = v; bi = i; } }
+        if (bd < 0.0004) roh.push({ i: bi, min: h * 60 + (m || 0) }); }); // nur Fotos nahe der Route (~2 km)
+      /* nach Zeit; nur Fotos, die auf der Route vorwärts liegen (Rundfahrten: Abendfoto am Start fällt weg) */ roh.sort((a, b) => a.min - b.min || a.i - b.i); const out = [];
+      roh.forEach((a) => { if (!out.length || (a.min >= out[out.length - 1].min && a.i >= out[out.length - 1].i)) out.push(a); });
+      return (uhrCache[d.tag] = out); }
+    function uhrSetzen(day, ri) { const el = document.getElementById("uhr"); if (!el || el.hidden) return; const d = dayOf(day); const A = d ? uhrAnker(d) : [];
+      const b = el.querySelector("b"), sm = el.querySelector("small");
+      if (!A.length) { b.textContent = "–:–"; sm.textContent = "keine Fotozeit"; el.classList.add("leer"); return; } el.classList.remove("leer");
+      let min, art; if (ri <= A[0].i) { min = A[0].min; art = ri < A[0].i ? "vor dem 1. Foto" : "Foto"; } else if (ri >= A[A.length - 1].i) { min = A[A.length - 1].min; art = ri > A[A.length - 1].i ? "nach dem letzten Foto" : "Foto"; }
+      else { let k = 1; while (A[k].i < ri) k++; const a = A[k - 1], c = A[k]; min = a.min + (c.min - a.min) * ((ri - a.i) / ((c.i - a.i) || 1)); art = "geschätzt"; }
+      const h = Math.floor(min / 60) % 24, m = Math.floor(min % 60); b.textContent = `${art === "geschätzt" ? "≈ " : ""}${h}:${String(m).padStart(2, "0")}`; sm.textContent = art;
+      el.querySelector(".h").setAttribute("transform", `rotate(${(h % 12) * 30 + m / 2} 20 20)`); el.querySelector(".m").setAttribute("transform", `rotate(${m * 6} 20 20)`); }
+    { const ub = document.getElementById("uhrBtn"), u = document.getElementById("uhr");
+      const setUhr = (an) => { u.hidden = !an; ub.setAttribute("aria-pressed", an); ub.classList.toggle("on", an); merk.set("uhr", an); if (an) { const s = track()[S.idx]; if (s) uhrSetzen(s.day, s.ri || 0); } };
+      ub.onclick = () => setUhr(u.hidden); setTimeout(() => setUhr(merk.get("uhr", false) === true), 0); }
+    function tagFort(day, ri) { uhrSetzen(day, ri); const el = document.querySelector("#card .tagFort"); const d = dayOf(day); if (!el || !d || !d.line) return;
       const f = Math.max(0, Math.min(1, ri / (d.line.length - 1))); el.querySelector("i").style.width = (f * 100).toFixed(1) + "%";
       el.querySelector("span").textContent = `${Math.round(f * d.route.km)} / ${Math.round(d.route.km)} km`; }
     function animateAlong(path, ms, done, ziel, farbe, fort) {
@@ -570,7 +590,7 @@
     touchModus(); addEventListener("resize", touchModus);
     document.getElementById("dock").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; const a = b.dataset.a;
       if (a === "prev") step(-1); else if (a === "next") step(1); else if (a === "dayPrev") dayStep(-1); else if (a === "dayNext") dayStep(1);
-      else if (a === "play") setPlay(!S.playing); else if (a === "suche") suche();
+      else if (a === "play") { angehalten = false; setPlay(!S.playing); } else if (a === "suche") suche();
     });
     { const card = document.getElementById("card"); let x0 = null, y0 = 0;
       // Touch-Ereignisse statt Pointer: beim Wischen über scrollbaren Inhalt bricht der Browser Pointer-Gesten ab
@@ -585,8 +605,13 @@
     // Tageskarte ein-/ausblenden; ausgeblendet bleibt rechts ein schmaler Reiter sichtbar
     let tiefeRichtung = 1; // Tippen: 1→2→3→4→3→2→1 …
     function setTiefe(t) { handZoom = null; setTiefeOhne(t); }
-    function setTiefeOhne(t) { S.tiefe = Math.max(0, Math.min(3, t)); go(true); broadcast(); }
-    function setKarteZu(zu) { document.getElementById("card").classList.toggle("zu", zu); document.getElementById("cardTab").hidden = !zu; merk.set("karteZu", zu); }
+    function setTiefeOhne(t) { S.tiefe = Math.max(0, Math.min(3, t)); autoHalt(); go(true); broadcast(); }
+    function setKarteZu(zu) { document.getElementById("card").classList.toggle("zu", zu); document.getElementById("cardTab").hidden = !zu; merk.set("karteZu", zu); autoHalt(); }
+    // Lesen hält an: Tageskarte offen und Tiefe 3 oder 4 → Auto steht; zugeklappt oder zurück auf Tiefe 1–2 → fährt weiter
+    let angehalten = false;
+    function autoHalt() { const lesen = !document.getElementById("card").classList.contains("zu") && S.tiefe >= 2;
+      if (lesen && S.playing) { angehalten = true; setPlay(false); broadcast(); }
+      else if (!lesen && angehalten) { angehalten = false; setPlay(true); broadcast(); } }
     document.getElementById("cardTab").onclick = () => setKarteZu(false);
     if (merk.get("karteZu", false) === true) setKarteZu(true);
     // Tempo mit dem Daumen: auf „Fahren“ nach links/rechts ziehen
