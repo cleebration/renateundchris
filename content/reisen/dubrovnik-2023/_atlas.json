@@ -5,12 +5,49 @@
    "tag": 1,
    "datum": "2023-10-26",
    "land": [
+    "AT",
+    "SI",
     "HR"
    ],
    "titel": "Durch Kroatien nach Dubrovnik",
-   "satz": "Morgens Regenbogen über der Autobahn bei Ogulin, mittags das Neretva-Tal, abends die erste Runde durch Dubrovniks Altstadt.",
-   "teaser": "Der Tag beginnt mit einem Regenbogen über den Wäldern an der A1 und führt durch die Lika bis ins Neretva-Tal. Am Nachmittag Ankunft im Hotel Valamar Lacroma auf der Halbinsel Babin Kuk. Am Abend geht es gleich in die Altstadt: Stradun, Sponza-Palast, Hafen im letzten Licht und ein Aperitif zum Ausklang.",
+   "satz": "Nachtfahrt nach Chris' Gig in Stadl-Paura: über Spielfeld und Macelj nach Kroatien, Fahrerwechsel am Morgen, abends Dubrovniks Altstadt.",
+   "teaser": "Am Abend des 25. Oktober spielt Chris noch mit Jazz Exclusive in Stadl-Paura, danach geht es direkt los: Tankstopps bei Gralla und Vukova Gorica, Grenzen in Spielfeld und Macelj mitten in der Nacht. Am Morgen übernimmt Renate das Steuer, mit einem Regenbogen über den Wäldern an der A1 und weiter durch die Lika bis ins Neretva-Tal. Am Nachmittag Ankunft im Hotel Valamar Lacroma auf Babin Kuk, am Abend gleich die erste Runde durch die Altstadt.",
    "stationen": [
+    {
+     "name": "Landesmusikschule Stadl-Paura",
+     "lat": 48.077,
+     "lon": 13.865,
+     "art": "besuch",
+     "notiz": "Gig mit Jazz Exclusive, 25.10. abends"
+    },
+    {
+     "name": "Shell Gralla",
+     "lat": 46.812,
+     "lon": 15.552,
+     "art": "besuch",
+     "notiz": "Tankstopp 01:21"
+    },
+    {
+     "name": "Grenze Spielfeld–Šentilj",
+     "lat": 46.699,
+     "lon": 15.645,
+     "art": "grenze",
+     "notiz": "01:41, Österreich → Slowenien"
+    },
+    {
+     "name": "Grenze Gruškovje–Macelj",
+     "lat": 46.262,
+     "lon": 15.866,
+     "art": "grenze",
+     "notiz": "02:16, Slowenien → Kroatien"
+    },
+    {
+     "name": "INA Vukova Gorica",
+     "lat": 45.531,
+     "lon": 15.365,
+     "art": "besuch",
+     "notiz": "Tankstopp 03:33"
+    },
     {
      "name": "A1 bei Ogulin",
      "lat": 45.24,
@@ -23,7 +60,7 @@
      "lat": 44.922,
      "lon": 15.169,
      "art": "besuch",
-     "notiz": "Weiter nach Süden"
+     "notiz": "Regenbogen, Fahrerwechsel zu Renate"
     },
     {
      "name": "Neretva-Tal bei Opuzen",
@@ -49,14 +86,15 @@
    ],
    "uebernachtung": "Hotel Valamar Lacroma",
    "themen": [
+    "grenze",
     "geschichte"
    ],
    "mythen": [],
    "wien_faden": [],
    "epochen": [],
-   "quelle_datei": "Google-Fotos-Album, Foto-GPS",
-   "hinweise": "Abfahrt und Anreise vor 08:00 unbekannt (erstes Foto 08:09 bei Ogulin) – nicht bestätigt. Ort Mittagshalt aus Foto-GPS.",
-   "status": "nur-fotos"
+   "quelle_datei": "Google-Fotos-Album, Foto-GPS, Polarsteps-Screenshot",
+   "hinweise": "Nachtfahrt-Stationen aus Polarsteps (Chris, 2026-10-24); Koordinaten der Tankstellen/Grenzen geschätzt. Ort des Fahrerwechsels nicht genau bekannt (\"in der Früh\").",
+   "status": "teilweise"
   },
   {
    "tag": 2,
@@ -66,7 +104,7 @@
    ],
    "titel": "Altstadt bei Nacht",
    "satz": "Abendspaziergang vom Pile-Tor über den Stradun, dann Fisch und Fleischplatte in einem Lokal in der Altstadt.",
-   "teaser": "Erst am Abend geht es in die Stadt: angestrahlte Stadtmauern und Festungen am Pile-Tor, die Gassen glänzen im Lampenlicht, Blumen in den Mauernischen. Danach Abendessen in einem Lokal in der Altstadt – Salat, Fischteller und eine große Grillplatte.",
+   "teaser": "Erst am Abend geht es in die Stadt, wie oft auf dieser Reise mit den Fahrrädern vom Hotel aus: angestrahlte Stadtmauern und Festungen am Pile-Tor, die Gassen glänzen im Lampenlicht, Blumen in den Mauernischen. Danach Abendessen in einem Lokal in der Altstadt – Salat, Fischteller und eine große Grillplatte.",
    "stationen": [
     {
      "name": "Pile-Tor",
@@ -147,8 +185,8 @@
     "HR"
    ],
    "titel": "Altstadt und Berg Srđ",
-   "satz": "Mittags in der Altstadt, nachmittags auf den Srđ mit Blick über Stadt und Meer, abends zurück auf den Stradun.",
-   "teaser": "Vormittags Blick auf die Inseln vom Hotel, dann in die Altstadt: Schlösser am Zaun über dem Meer, Gassen, Kirchenfenster. Am Nachmittag oben auf dem Srđ mit dem großen Blick über Dubrovnik, die Sonne geht hinter dem Meer unter. Abends glänzt der Stradun, Ausklang bei einem Glas Wein. Laut Albumtitel trat an diesem Tag ein Chor auf, die Academy Singers.",
+   "satz": "Seilbahn hinauf auf den Srđ, zu Fuß zurück, dazwischen Gassen, Chorwettbewerb und eine Begegnung aus Linz.",
+   "teaser": "Vormittags Blick auf die Inseln vom Hotel, dann in die Altstadt: Schlösser am Zaun über dem Meer, Gassen, Kirchenfenster. Am Nachmittag mit der Seilbahn hinauf auf den Srđ mit dem großen Blick über Dubrovnik, die Sonne geht hinter dem Meer unter, zu Fuß geht es wieder hinunter. Abends glänzt der Stradun, Ausklang bei einem Glas Wein. In der Stadt läuft ein Chorwettbewerb – und zufällig treffen Renate und Chris eine Sängerin, die im Kepler Blasorchester Klarinette spielt, wo Chris manchmal am Kontrabass mitspielt.",
    "stationen": [
     {
      "name": "Altstadt Dubrovnik",
@@ -162,7 +200,7 @@
      "lat": 42.649,
      "lon": 18.112,
      "art": "aussicht",
-     "notiz": "Blick über Stadt und Meer"
+     "notiz": "Mit der Seilbahn hinauf, zu Fuß hinunter"
     },
     {
      "name": "Altstadt Dubrovnik",
@@ -181,7 +219,7 @@
    "wien_faden": [],
    "epochen": [],
    "quelle_datei": "Google-Fotos-Album, Foto-GPS",
-   "hinweise": "Srđ aus Foto-GPS (42.649, 18.112) abgeleitet – Weg hinauf (Seilbahn?) nicht bestätigt. Konzert Academy Singers nur aus Albumtitel.",
+   "hinweise": "Seilbahn hinauf / zu Fuß hinunter: Chris 2026-10-24. Chorwettbewerb und Begegnung mit KBO-Klarinettistin: Chris 2026-10-24 (Name des Wettbewerbs nicht bekannt).",
    "status": "nur-fotos"
   },
   {
@@ -193,7 +231,7 @@
    ],
    "titel": "Ausflug nach Mostar",
    "satz": "Nach Bosnien und Herzegowina: Stari Most, Basar und Altstadt von Mostar, auf dem Rückweg Počitelj und die Pelješac-Brücke.",
-   "teaser": "Der Ausflug führt über die Grenze nach Mostar. Rund um die Alte Brücke über die Neretva: Kupferschmiede, Teppiche, steile Pflastergassen, Minarette und die Franziskanerkirche. Auf dem Rückweg ein Halt in Počitelj mit seiner Festung über dem Fluss, dann über die Pelješac-Brücke zurück nach Dubrovnik und Burger zum Abendessen.",
+   "teaser": "Mit dem orangen Peugeot Traveller geht es über die Grenze nach Mostar. Rund um die Alte Brücke über die Neretva: Kupferschmiede, Teppiche, steile Pflastergassen, Minarette und die Franziskanerkirche. Auf dem Rückweg ein Halt in Počitelj mit seiner Festung über dem Fluss, dann über die Pelješac-Brücke zurück nach Dubrovnik und Burger zum Abendessen.",
    "stationen": [
     {
      "name": "Mostar, Stari Most",
@@ -236,7 +274,7 @@
     "osmanisch"
    ],
    "quelle_datei": "Google-Fotos-Album, Foto-GPS",
-   "hinweise": "Ausflugsart (eigenes Auto oder Bustour) nicht bestätigt. Pelješac-Brücke aus Foto-GPS und Brückenfoto abgeleitet – nicht bestätigt. Grenzübergänge nicht bekannt.",
+   "hinweise": "Eigenes Auto und Rückweg über die Pelješac-Brücke: Chris 2026-10-24. Grenzübergänge nicht bekannt.",
    "status": "nur-fotos"
   },
   {
@@ -292,7 +330,7 @@
    ],
    "titel": "Bucht von Kotor",
    "satz": "Nach Montenegro: entlang der Bucht nach Kotor, römische Mosaike in Risan und die Festung von Herceg Novi.",
-   "teaser": "Allerheiligen in Montenegro. Die Straße folgt der Bucht von Kotor zwischen Kalkbergen und Wasser. In Kotor durch die Altstadtgassen, vorbei an Kirchen und Kanonen, der Festungsweg zieht sich den Berg hinauf. Am Nachmittag die römischen Mosaike in Risan, dann Herceg Novi mit Festung und Kanonen über dem Meer. Abends Salat mit Garnelen im Hotel.",
+   "teaser": "Allerheiligen in Montenegro. Ohne Fähre einmal rund um die Bucht von Kotor: die Straße folgt dem Ufer zwischen Kalkbergen und Wasser. In Kotor durch die Altstadtgassen, vorbei an Kirchen und Kanonen, der Festungsweg zieht sich den Berg hinauf. Am Nachmittag die römischen Mosaike in Risan, dann Herceg Novi mit Festung und Kanonen über dem Meer. Abends Salat mit Garnelen im Hotel.",
    "stationen": [
     {
      "name": "Bucht von Kotor bei Morinj",
@@ -344,7 +382,7 @@
     "venezianisch"
    ],
    "quelle_datei": "Google-Fotos-Album, Foto-GPS",
-   "hinweise": "Reihenfolge aus Fotozeiten. Grenzübergang und Fähre Kamenari nicht bekannt.",
+   "hinweise": "Keine Fähre Kamenari, ganz um die Bucht gefahren: Chris 2026-10-24. Grenzübergang nicht bekannt.",
    "status": "nur-fotos"
   },
   {
@@ -399,8 +437,8 @@
     "HR"
    ],
    "titel": "Letzter Tag in Dubrovnik",
-   "satz": "Schaukel im Sonnenuntergang, Bierprobe in einer Brauerei in Gruž und Live-Musik zum Abschluss.",
-   "teaser": "Der letzte volle Tag: am Nachmittag eine Schaukel an der Küste von Babin Kuk, Selfie im Abendlicht. Danach in Gruž eine Bierprobe zwischen Braukesseln (DBC-Fässer im Bild). Abendessen mit Muscheln wieder in Lapad, später Live-Musik im Hotel.",
+   "satz": "Schaukel im Sonnenuntergang, Bierprobe in einer Brauerei in Gruž und Muscheln in Lapad zum Abschied.",
+   "teaser": "Der letzte volle Tag: am Nachmittag eine Schaukel an der Küste von Babin Kuk, Selfie im Abendlicht. Danach in Gruž eine Bierprobe zwischen Braukesseln (DBC-Fässer im Bild). Zum Abschluss Muscheln in Lapad.",
    "stationen": [
     {
      "name": "Küste Babin Kuk",
@@ -440,7 +478,7 @@
    "wien_faden": [],
    "epochen": [],
    "quelle_datei": "Google-Fotos-Album, Foto-GPS",
-   "hinweise": "Brauerei vermutlich Dubrovnik Beer Company (DBC auf Fass) – nicht bestätigt. Musik im Hotel aus Fotos und Programmblatt – nicht bestätigt.",
+   "hinweise": "Brauerei vermutlich Dubrovnik Beer Company (DBC auf Fass) – nicht bestätigt.",
    "status": "nur-fotos"
   },
   {
@@ -451,7 +489,7 @@
    ],
    "titel": "Split und Zadar",
    "satz": "Heimweg nach Norden: Diokletianpalast in Split, abends Sv. Donat und die Altstadt von Zadar.",
-   "teaser": "Abschied von Dubrovnik. Ein Obststand im Neretva-Tal, dann Split: Riva, Gassen im Diokletianpalast, ein Foto zu zweit an der Treppe, Prokurative. Am Abend Zadar: Uhrturm und die Rundkirche Sv. Donat bei Nacht, Abendessen mit großer Grillplatte.",
+   "teaser": "Abschied von Dubrovnik. Ein Obststand im Neretva-Tal, dann Split: Riva, Gassen im Diokletianpalast, ein Foto zu zweit an der Treppe, Prokurative. Am Abend Zadar: Uhrturm und die Rundkirche Sv. Donat bei Nacht, Abendessen mit großer Grillplatte. Übernachtet wird im Auto auf einem Parkplatz mitten in der Stadt.",
    "stationen": [
     {
      "name": "Neretva-Tal",
@@ -471,11 +509,11 @@
      "name": "Zadar, Altstadt",
      "lat": 44.116,
      "lon": 15.226,
-     "art": "besuch",
-     "notiz": "Sv. Donat, Abendessen"
+     "art": "uebernachtung",
+     "notiz": "Sv. Donat, Abendessen, Nacht im Auto"
     }
    ],
-   "uebernachtung": "Zadar (nicht bestätigt)",
+   "uebernachtung": "Im Auto auf einem Parkplatz in Zadar",
    "themen": [
     "geschichte",
     "kulinarik"
@@ -486,7 +524,7 @@
     "roemisch"
    ],
    "quelle_datei": "Google-Fotos-Album, Foto-GPS",
-   "hinweise": "Übernachtung in Zadar angenommen – nicht bestätigt.",
+   "hinweise": "Übernachtung im Auto auf Parkplatz in Zadar: Chris 2026-10-24.",
    "status": "nur-fotos"
   },
   {
