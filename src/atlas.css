@@ -654,3 +654,7 @@ body.touch #navPad .pTag:first-child{border-radius:14px 14px 0 0}
 body.touch #navPad .pTag:last-child{border-radius:0 0 14px 14px}
 body.touch #navPad .pT{cursor:pointer}
 body.handy .pad{bottom:calc(env(safe-area-inset-bottom,0px) + 104px);height:min(36vh,270px)}
+/* Fortschritt links von unten nach oben */
+body.touch #navPad::after{top:auto;bottom:10px}
+/* Tempo steht: ▶ = tippen zum Losfahren */
+#tempoPad.steht .pZ{font-size:26px;color:#34c759;text-shadow:0 0 10px rgba(52,199,89,.5)}

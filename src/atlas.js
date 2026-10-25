@@ -723,7 +723,7 @@
       tp.addEventListener("pointermove", (e) => { if (y0 == null) return; const dy = y0 - e.clientY; if (!bewegt && Math.abs(dy) < 10) return; bewegt = true;
         const t = Math.max(0, Math.min(TMAX, st + Math.round(dy / 16))); if (t !== gang()) { fahrstufe(t); if (t === 0) { S.tempo = st || mem; render(); } }
         zeig(gang() ? `Tempo ${gang()} · ${TEMPO[gang()]}` : "Stopp", tempoFarbe(gang())); });
-      const tEnde = () => { if (y0 == null) return; y0 = null; if (!bewegt) { angehalten = false; setPlay(!S.playing); broadcast(); zeig(S.playing ? `▶ weiter · Tempo ${S.tempo}` : "❚❚ Stopp", tempoFarbe(gang())); } weg(); };
+      const tEnde = () => { if (y0 == null) return; y0 = null; if (!bewegt) { angehalten = false; setPlay(!S.playing); broadcast(); zeig(S.playing ? `▶ fährt · Tempo ${S.tempo}` : "■ angehalten", tempoFarbe(gang())); } weg(); };
       tp.addEventListener("pointerup", tEnde); tp.addEventListener("pointercancel", () => { y0 = null; weg(); });
       const np = document.getElementById("navPad"); let ny = null, nb = false; const was = (dy) => Math.abs(dy) < 22 ? 0 : (Math.abs(dy) < 110 ? 1 : 2) * Math.sign(dy);
       np.addEventListener("pointerdown", (e) => { ny = e.clientY; nb = false; np.setPointerCapture(e.pointerId); });
@@ -842,7 +842,7 @@
         if (tt) { tt.textContent = g ? `Stufe ${g}/10 · ${TEMPO[g]}` : `Stufe 0 · steht (zuletzt ${S.tempo})`; tachoSetzen(document.getElementById("tachoGross"), g, true);
           const r = document.getElementById("tempoR"); r.value = g; r.style.setProperty("--f", tempoFarbe(g)); }
         { const tp = document.getElementById("tempoPad"); if (tp) { const lv = g || S.tempo; tp.querySelector(".pF").style.height = (lv / TMAX * 100) + "%"; tp.style.setProperty("--tf", g ? tempoFarbe(g) : "#f3ecdc");
-          tp.classList.toggle("steht", !g); tp.querySelector(".pZ").textContent = g ? g : "❚❚"; } }
+          tp.classList.toggle("steht", !g); tp.querySelector(".pZ").textContent = g ? g : "▶"; tp.title = g ? "Tempo " + g + " – tippen = anhalten" : "steht – tippen = losfahren"; } }
         const dp = document.getElementById("dPlay");
         if (dp) { if (dp.querySelector(".lbl") || !dp.querySelector("svg")) dp.innerHTML = ""; tachoSetzen(dp, g);
           dp.setAttribute("aria-label", g ? `Fährt mit Stufe ${g} – tippen zum Anhalten` : `Steht – tippen zum Weiterfahren mit Stufe ${S.tempo}`);
