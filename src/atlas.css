@@ -658,3 +658,31 @@ body.handy .pad{bottom:calc(env(safe-area-inset-bottom,0px) + 104px);height:min(
 body.touch #navPad::after{top:auto;bottom:10px}
 /* Tempo steht: ▶ = tippen zum Losfahren */
 #tempoPad.steht .pZ{font-size:26px;color:#34c759;text-shadow:0 0 10px rgba(52,199,89,.5)}
+
+/* ================= iPhone quer (body.handy.quer) – wie hochkant, an die geringe Höhe angepasst ================= */
+body.handy.quer #topbar{padding:6px max(10px,env(safe-area-inset-right,0px)) 4px max(10px,env(safe-area-inset-left,0px));justify-content:center}
+body.handy.quer #insel{flex:0 1 420px}
+body.handy.quer #tbTitel{display:none}
+body.handy.quer .pad{bottom:calc(env(safe-area-inset-bottom,0px) + 74px);height:calc(100vh - 60px - 82px);height:calc(100dvh - 60px - 82px);max-height:none}
+body.handy.quer #navPad{left:max(8px,env(safe-area-inset-left,0px))}
+body.handy.quer #tempoPad{right:max(8px,env(safe-area-inset-right,0px))}
+body.handy.quer #navPad .pZ{padding:2px 0;font-size:14px}
+body.handy.quer #navPad .pZ small{display:none}
+body.handy.quer #navPad .pTag{font-size:17px}
+body.handy.quer #navPad .pT small{display:none}
+body.handy.quer #navPad .pT em{margin-top:2px}
+/* Zeile unten mittig zwischen den Feldern, Blatt groß und mittig */
+body.handy.quer #cardTab{left:max(84px,calc(env(safe-area-inset-left,0px) + 76px));right:max(84px,calc(env(safe-area-inset-right,0px) + 76px));bottom:calc(env(safe-area-inset-bottom,0px) + 6px)!important;padding:4px 10px 6px}
+body.handy.quer #cardTab .griff{display:none}
+body.handy.quer #cardTab .ctPfeil{flex-basis:34px;height:34px;font-size:22px}
+body.handy.quer #card{left:max(84px,calc(env(safe-area-inset-left,0px) + 76px))!important;right:max(84px,calc(env(safe-area-inset-right,0px) + 76px))!important;bottom:calc(env(safe-area-inset-bottom,0px) + 6px);top:58px;height:auto}
+body.handy.quer #card .blatt::after{content:"antippen oder nach unten wischen = schließen"}
+body.handy.quer #side:not(.zu){top:56px!important;bottom:6px;left:max(8px,env(safe-area-inset-left,0px));right:auto;width:min(420px,60vw)}
+body.handy.quer #waehler{top:56px;bottom:6px;left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px))}
+body.handy.quer .tzBox.suche.oben{top:56px;left:max(84px,calc(env(safe-area-inset-left,0px) + 76px));right:max(84px,calc(env(safe-area-inset-right,0px) + 76px))}
+body.handy.quer .suche.oben .suIn{max-height:calc(100vh - 70px)}
+body.handy.quer #lightbox{padding-top:56px}
+body.handy.quer #lbClose{top:60px}
+body.handy.quer #lightbox img{max-height:calc(100vh - 110px)}
+body.handy.quer #card{max-height:none!important}
+body.handy.quer #card .blatt::after{content:none}body.handy.quer #card .blatt{padding:6px 14px}

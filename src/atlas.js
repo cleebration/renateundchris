@@ -737,12 +737,13 @@
       np.addEventListener("pointercancel", () => { ny = null; np.dataset.w = 0; weg(); }); }
     // ================= iPhone hochkant: Leiste oben, Insel, Info-Tour, Blatt unten, Tag-/Stations-Wähler =================
     { const B = document.body, insel = document.getElementById("insel"), heim = new Map();
-      const handyNoetig = () => B.classList.contains("touch") && innerWidth <= 760 && innerHeight > innerWidth;
+      // iPhone hochkant oder quer (Querformat: niedrige Höhe); class „quer“ für die Anpassungen
+      const handyNoetig = () => B.classList.contains("touch") && ((innerWidth <= 760 && innerHeight > innerWidth) || (innerHeight <= 500 && innerWidth > innerHeight));
       const umziehen = (an) => { ["kompass", "uhr"].forEach((id) => { const el = document.getElementById(id); if (!el) return; if (an) { if (!heim.has(id)) heim.set(id, [el.parentNode, el.nextSibling]); insel.appendChild(el); } else if (heim.has(id)) { const [p, n] = heim.get(id); p.insertBefore(el, n); } });
         const tz = document.querySelector(".tzChip"); if (tz) { if (an) { if (!heim.has("tz")) heim.set("tz", [tz.parentNode, tz.nextSibling]); insel.prepend(tz); } else if (heim.has("tz")) { const [p, n] = heim.get("tz"); p.insertBefore(tz, n); } }
         if (an) { document.getElementById("uhr").hidden = false; const s = track()[S.idx]; if (s) uhrSetzen(s.day, s.ri || 0); } };
       let ersterStart = true;
-      const pruefe = () => { const an = handyNoetig(); if (an === B.classList.contains("handy")) return; B.classList.toggle("handy", an); umziehen(an);
+      const pruefe = () => { const an = handyNoetig(); B.classList.toggle("quer", an && innerWidth > innerHeight); if (an === B.classList.contains("handy")) return; B.classList.toggle("handy", an); umziehen(an);
         if (an && ersterStart) { ersterStart = false; setKarteZu(true); } // am iPhone startet die Karte frei, das Blatt zugeklappt
         else if (an && !document.getElementById("card").classList.contains("zu")) { S.tiefe = 3; render(); } };
       addEventListener("resize", pruefe); setTimeout(pruefe, 0); setTimeout(pruefe, 600);
