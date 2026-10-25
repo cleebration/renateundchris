@@ -211,8 +211,13 @@
     // Zeitleiste
     const row = document.getElementById("railRow");
     row.style.setProperty("--days", DAYS.length);
-    DAYS.forEach((d) => { const b = document.createElement("button"); b.className = "tick" + (d.status === "fehlt" ? " gap" : ""); b.style.background = colOf(d); b.textContent = d.tag; if (d.tag === 1 || d.tag % 5 === 0) b.classList.add("f5");
-      b.title = "Tag " + d.tag + " · " + (d.titel || "noch ohne Eintrag"); b.setAttribute("aria-label", b.title); b.onclick = () => gotoDay(d.tag); row.appendChild(b); });
+    const flagge = (cc) => cc && /^[A-Z]{2}$/.test(cc) ? String.fromCodePoint(...[...cc].map((x) => 0x1f1a5 + x.charCodeAt(0))) : "";
+    let grp = null, grpCC = null;
+    DAYS.forEach((d) => { const cc = ccOf(d);
+      if (!grp || cc !== grpCC) { grpCC = cc; grp = document.createElement("div"); grp.className = "landGrp"; grp.style.setProperty("--lc", colOf(d));
+        grp.innerHTML = `<span class="landName" title="${(COUNTRY[cc] || {}).n || cc}">${flagge(cc)} <em>${(COUNTRY[cc] || {}).n || cc}</em></span><div class="landTicks"></div>`; row.appendChild(grp); }
+      const b = document.createElement("button"); b.className = "tick" + (d.status === "fehlt" ? " gap" : ""); b.style.background = colOf(d); b.textContent = d.tag; if (d.tag === 1 || d.tag % 5 === 0) b.classList.add("f5");
+      b.title = "Tag " + d.tag + " · " + (d.titel || "noch ohne Eintrag"); b.setAttribute("aria-label", b.title); b.onclick = () => gotoDay(d.tag); grp.querySelector(".landTicks").appendChild(b); });
     const used = [...new Set(DAYS.flatMap((d) => d.land || []))].filter((c) => COUNTRY[c]);
     document.getElementById("legend").innerHTML = used.map((c) => `<span><i style="background:${COUNTRY[c].c}"></i>${COUNTRY[c].n}</span>`).join("") + '<span><i style="background:repeating-linear-gradient(135deg,#667 0 2px,transparent 2px 4px)"></i>ohne Eintrag</span>';
 
@@ -440,7 +445,7 @@
       setzeFahrzeug(dayOf(ST[0].day));
       { // Kompass wie in Google Maps: zeigt nach Norden, erscheint wenn gedreht/geneigt; Tippen = Norden oben, flach
         const k = document.getElementById("kompass"), nadel = k.querySelector(".kn");
-        const upd = () => { const b = map.getBearing(), pt = map.getPitch(); nadel.style.transform = `rotateX(${pt * 0.6}deg) rotate(${-b}deg)`; k.classList.toggle("still", Math.abs(b) < 0.5 && pt < 1); };
+        const upd = () => { const b = map.getBearing(), pt = map.getPitch(); nadel.style.transform = `rotate(${-b}deg)`; k.classList.toggle("still", Math.abs(b) < 0.5 && pt < 1); };
         map.on("rotate", upd); map.on("pitch", upd); upd();
         k.onclick = () => { if (S.kamera !== "nord") setKamera("nord"); map.easeTo({ bearing: 0, pitch: 0, duration: reduced ? 0 : 600 }); }; }
       const re = document.createElement("div"); re.className = "reiser"; re.hidden = true;
@@ -654,30 +659,26 @@
     { const card = document.getElementById("card"); let x0 = null, y0 = 0;
       // Touch-Ereignisse statt Pointer: beim Wischen über scrollbaren Inhalt bricht der Browser Pointer-Gesten ab
       let kopf = false; // senkrechtes Wischen nur im Kopf der Karte (Griff, Tag, Ort) – darunter scrollt der Inhalt
-      // Ziehblatt: Kopf der Karte ziehen – klein (Ort + Satz) · halb (Teaser, Fotos) · ganz (alles); unter „klein“ = ausblenden
-      let h0 = 0, zieht = false;
-      const stufenH = () => { const H = innerHeight; return [0, H * 0.30, H * 0.55, H - 150]; };
-      card.addEventListener("touchstart", (e) => { const t = e.touches[0]; x0 = t.clientX; y0 = t.clientY; kopf = t.clientY - card.getBoundingClientRect().top < 100; h0 = card.getBoundingClientRect().height; zieht = false; }, { passive: true });
+      // Ziehblatt stufenlos: am Kopf nach oben ziehen = größer, und je größer, desto mehr Inhalt (Satz → Teaser/Fotos → alles); nach unten = kleiner, ganz unten = ausblenden
+      let h0 = 0, zieht = false, hJetzt = 0;
+      const stufeFuer = (h) => (h < innerHeight * 0.34 ? 1 : h < innerHeight * 0.6 ? 2 : 3);
+      card.addEventListener("touchstart", (e) => { const t = e.touches[0]; x0 = t.clientX; y0 = t.clientY; kopf = t.clientY - card.getBoundingClientRect().top < 90; h0 = card.getBoundingClientRect().height; zieht = false; }, { passive: true });
       card.addEventListener("touchmove", (e) => { if (x0 == null || !kopf || !document.body.classList.contains("touch")) return; const t = e.touches[0], dy = t.clientY - y0, dx = t.clientX - x0;
-        if (!zieht && (Math.abs(dy) < 10 || Math.abs(dy) < Math.abs(dx))) return; zieht = true; e.preventDefault();
-        card.style.transition = "none"; card.style.maxHeight = Math.max(60, Math.min(innerHeight - 140, h0 - dy)) + "px"; }, { passive: false });
+        if (!zieht && (Math.abs(dy) < 8 || Math.abs(dy) < Math.abs(dx))) return; zieht = true; e.preventDefault();
+        hJetzt = Math.max(70, Math.min(innerHeight - 140, h0 - dy)); card.style.transition = "none"; card.style.height = hJetzt + "px"; card.style.maxHeight = "none";
+        const st = stufeFuer(hJetzt); if (st > S.tiefe || (st < S.tiefe && dy > 0)) { S.tiefe = st; render(); } }, { passive: false });
+      card.addEventListener("touchend", (e) => { if (!zieht) return; zieht = false; card.style.transition = "";
+        if (hJetzt < innerHeight * 0.16) { card.style.height = ""; card.style.maxHeight = ""; setKarteZu(true); return; }
+        S.tiefe = stufeFuer(hJetzt); autoHalt(); render(); broadcast(); merk.set("blattH", Math.round(hJetzt / innerHeight * 100)); x0 = null; }, { passive: true });
       card.addEventListener("touchend", (e) => { if (x0 == null) return; const t = e.changedTouches[0]; const dx = t.clientX - x0, dy = t.clientY - y0; x0 = null;
-        if (zieht) { zieht = false; const h = card.getBoundingClientRect().height, Hs = stufenH(); card.style.transition = ""; card.style.maxHeight = "";
-          if (h < innerHeight * 0.17) { setKarteZu(true); return; }
-          let best = 1; for (let k = 1; k <= 3; k++) if (Math.abs(Hs[k] - h) < Math.abs(Hs[best] - h)) best = k;
-          if (dy < -30 && best <= S.tiefe && S.tiefe < 3 && h > h0) best = S.tiefe + 1; // auch kurzer Zug nach oben wirkt
-          if (dy > 30 && best >= S.tiefe && h < h0) { if (S.tiefe <= 1) { setKarteZu(true); return; } best = S.tiefe - 1; }
-          setTiefe(best); return; }
         if (e.target.closest(".gal")) return; // Fotostreifen wischt selbst
-        if (dx > 60 && dx > Math.abs(dy) * 1.5) { setKarteZu(true); return; }
-        if (Math.abs(dx) < 8 && Math.abs(dy) < 8 && kopf && t.clientY - card.getBoundingClientRect().top < 28) setTiefe(S.tiefe >= 3 ? 1 : S.tiefe + 1); // Griff antippen: nächste Stufe
-      }); }
+        if (dx > 60 && dx > Math.abs(dy) * 1.5) { setKarteZu(true); return; } }); }
     // Tageskarte ein-/ausblenden; ausgeblendet bleibt rechts ein schmaler Reiter sichtbar
     document.getElementById("card").addEventListener("click", (e) => { const b = e.target.closest(".blatt [data-st]"); if (!b) return; e.stopPropagation(); const v = +b.dataset.st; if (v === 0) setKarteZu(true); else setTiefe(v); });
     let tiefeRichtung = 1; // Tippen: 1→2→3→4→3→2→1 …
     function setTiefe(t) { handZoom = null; setTiefeOhne(t); }
     function setTiefeOhne(t) { S.tiefe = Math.max(document.body.classList.contains("touch") ? 1 : 0, Math.min(3, t)); autoHalt(); go(true); broadcast(); }
-    function setKarteZu(zu) { document.getElementById("card").classList.toggle("zu", zu); document.getElementById("cardTab").hidden = !zu; merk.set("karteZu", zu); autoHalt(); }
+    function setKarteZu(zu) { if (!zu) { const c = document.getElementById("card"); c.style.height = ""; c.style.maxHeight = ""; if (S.tiefe > 1) S.tiefe = 1; } document.getElementById("card").classList.toggle("zu", zu); document.getElementById("cardTab").hidden = !zu; merk.set("karteZu", zu); autoHalt(); }
     // Lesen hält an: Tageskarte offen und Tiefe 3 oder 4 → Auto steht; zugeklappt oder zurück auf Tiefe 1–2 → fährt weiter
     let angehalten = false;
     function autoHalt() { const lesen = !document.getElementById("card").classList.contains("zu") && S.tiefe >= 2;
@@ -731,8 +732,8 @@
       document.getElementById("chipWien").textContent = S.wien.size + "/" + DAYS.reduce((a, x) => a + (x.wien_faden || []).length, 0);
       const kmSoFar = DAYS.filter((x) => x.tag < d.tag).reduce((a, x) => a + ((x.route && x.route.km) || 0), 0);
       document.getElementById("chipKm").textContent = Math.round(kmSoFar).toLocaleString("de-AT") + " / " + Math.round(kmTotal).toLocaleString("de-AT");
-      [...row.children].forEach((b, k) => { const dd = DAYS[k]; b.classList.toggle("cur", dd.tag === d.tag); b.classList.toggle("seen", S.seen.has(dd.tag)); b.classList.toggle("dim", !dayMatches(dd)); });
-      { const c = row.querySelector(".tick.cur"); if (c && row.scrollWidth > row.clientWidth + 2) { const z = c.offsetLeft - row.clientWidth / 2 + c.offsetWidth / 2; if (Math.abs(row.scrollLeft - z) > c.offsetWidth) row.scrollTo({ left: z, behavior: reduced ? "auto" : "smooth" }); } }
+      [...row.querySelectorAll(".tick")].forEach((b, k) => { const dd = DAYS[k]; b.classList.toggle("cur", dd.tag === d.tag); b.classList.toggle("seen", S.seen.has(dd.tag)); b.classList.toggle("dim", !dayMatches(dd)); });
+      { const c = row.querySelector(".tick.cur"); if (c && row.scrollWidth > row.clientWidth + 2) { const z = row.scrollLeft + (c.getBoundingClientRect().left - row.getBoundingClientRect().left) - row.clientWidth / 2 + c.offsetWidth / 2; if (Math.abs(row.scrollLeft - z) > c.offsetWidth) row.scrollTo({ left: z, behavior: reduced ? "auto" : "smooth" }); } }
       ST.forEach((x, k) => pinEls[k] && pinEls[k].classList.toggle("cur", x === s));
       document.getElementById("metaDay").textContent = "Tag " + d.tag;
       { const g = gang(), tt = document.getElementById("tempoTxt");
@@ -748,7 +749,7 @@
       document.getElementById("metaDate").textContent = fmtDate(d.datum);
       document.getElementById("metaMode").textContent = `${S.playing ? "▶ fährt" : "❚❚ steht"} · Tempo ${TEMPO[S.tempo]} · Breite ${["", "Highlights", "Stationen", "alles"][S.breite]}${S.thema ? " · Thema " + themaName(S.thema) : ""}`;
 
-      let h = `<span class="day">Tag ${d.tag} · ${esc(fmtDate(d.datum))} · ${esc((d.land || []).map((c) => (COUNTRY[c] || {}).n || c).join(" → "))}</span><h2>${esc((s && s.name) || d.titel || "Ohne Eintrag")}</h2>`;
+      let h = `<span class="day">Tag ${d.tag} · ${esc(fmtDate(d.datum))} · ${(d.land || []).map((c) => `<span class="landChip" style="--lc:${(COUNTRY[c] || {}).c || "#e0913a"}">${flagge(c)} ${esc((COUNTRY[c] || {}).n || c)}</span>`).join(" → ")}</span><h2>${esc((s && s.name) || d.titel || "Ohne Eintrag")}</h2>`;
       if (d.titel && s) h += `<span class="stn">${esc(d.titel)}${s.notiz ? " · " + esc(s.notiz) : ""}${d.route && d.route.km ? ` · ${String(d.route.km).replace(".", ",")} km` : ""}</span>`;
       { const w = WETTER[d.tag], so = d.sonne; const bits = [];
         if (w && w.max != null) bits.push(`${wmoIcon(w.code)} ${Math.round(w.max)}° / ${Math.round(w.min)}°${w.regen >= 1 ? ` · ${String(Math.round(w.regen * 10) / 10).replace(".", ",")} mm` : ""}`);
@@ -775,9 +776,9 @@
         if (d.seite) h += `<a class="more" href="${esc(d.seite)}">Ganzes Tagebuch von Tag ${d.tag} lesen →</a>`;
       }
       if (d.status === "fehlt") h += `<p class="note">Für diesen Tag gibt es noch keinen Eintrag.</p>`;
-      const card = document.getElementById("card"); card.innerHTML = `<div class="blatt"><i class="griff" aria-hidden="true"></i><div class="stufen" role="group" aria-label="Wie viel zeigen">${[[1, "Kurz"], [2, "Mehr"], [3, "Alles 📷"]].map(([v, n]) => `<button data-st="${v}" class="${S.tiefe === v || (v === 1 && S.tiefe < 1) ? "on" : ""}">${n}</button>`).join("")}<button data-st="0" aria-label="Tagesübersicht ausblenden">✕</button></div></div><button class="cardX" aria-label="Tagesübersicht ausblenden (T)" title="ausblenden (T)">›</button>` + h; card.dataset.tiefe = S.tiefe; if (!anim) tagFort(d.tag, (s && s.ri) || 0); setTimeout(() => { try { polster(); } catch (e) {} }, 0);
+      const card = document.getElementById("card"); card.innerHTML = `<div class="blatt" aria-label="Griff: nach oben ziehen = mehr, nach unten = weniger"><i class="griff" aria-hidden="true"></i></div><button class="cardX" aria-label="Tagesübersicht ausblenden (T)" title="ausblenden (T)">›</button>` + h; card.dataset.tiefe = S.tiefe; if (!anim) tagFort(d.tag, (s && s.ri) || 0); setTimeout(() => { try { polster(); } catch (e) {} }, 0);
       card.querySelector(".cardX").onclick = () => setKarteZu(true);
-      document.getElementById("cardTab").textContent = `‹ Tag ${d.tag}`;
+      { const ct = document.getElementById("cardTab"); ct.innerHTML = `<i class="griff" aria-hidden="true"></i><span>${esc(d.titel || (s && s.name) || "Tag " + d.tag)}</span>`; ct.title = `Tag ${d.tag} · ${d.titel || ""} – Tagesübersicht einblenden`; }
       card.querySelectorAll("[data-f]").forEach((b) => b.onclick = () => openPhoto(fotos[+b.dataset.f]));
       card.querySelectorAll("[data-c]").forEach((b) => b.onclick = () => { const c = d.clips[+b.dataset.c]; const box = document.createElement("div"); box.className = "tzBox";
         box.innerHTML = `<div class="tzIn"><video src="${esc(c.url)}" ${c.poster ? `poster="${esc(c.poster)}"` : ""} controls autoplay muted playsinline></video><p class="note">Tag ${d.tag} · Ton per Klick auf 🔈 im Video</p><button class="big" data-x>Schließen</button></div>`;

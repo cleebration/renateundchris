@@ -433,3 +433,40 @@ body.touch .stufen button[data-st="0"]{flex:0 0 32px}
 .vollHilfe p,.vollHilfe ol{margin:0;font-size:15px;line-height:1.5}
 body.touch #card{z-index:15}
 body.touch .stufen button{white-space:nowrap}
+
+/* Breitere Daumenfelder (Karte bleibt unberührt) */
+body.touch .pad{width:66px;border-radius:16px}
+body.touch #card{left:78px;right:78px}
+@media (min-width:901px){body.touch #card{left:auto;right:78px;width:min(520px,calc(100vw - 170px))}}
+body.touch:has(#card:not(.zu)) #card{right:78px}
+body.touch #navPad .pT{font-size:10px}
+body.touch #navPad .pA{font-size:18px}
+#tempoPad .pZ{font-size:18px}
+/* Griff: gut sichtbar, nur er zieht */
+body.touch .blatt{padding:10px 14px 12px;border-bottom:0;gap:0}
+body.touch .griff{width:48px;height:6px;background:rgba(255,255,255,.7)}
+body.touch #card{transition:height .25s cubic-bezier(.2,.8,.2,1),max-height .25s cubic-bezier(.2,.8,.2,1)}
+/* Reiter rechts: Tagesname */
+body.touch #cardTab{height:auto;min-height:118px;max-height:42vh;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:12px 0;font-size:12px}
+/* Länder: Flagge + Name über ihren Tagen, Farbband */
+#railRow{align-items:flex-end;gap:8px}
+.landGrp{display:flex;flex-direction:column;gap:3px;flex:0 0 auto;min-width:28px}
+.landName{font:10px/1.2 var(--mono);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;border-bottom:3px solid var(--lc);padding:0 2px 2px}
+.landName em{font-style:normal;color:var(--muted)}
+.landTicks{display:flex;gap:4px}
+.landChip{white-space:nowrap}
+.landChip::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--lc);margin-right:2px;vertical-align:1px}
+/* Kompass wie Google Maps: weißer Kreis, schmale Raute rot (Norden) / grau (Süden) */
+#kompass{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3),0 2px 10px rgba(0,0,0,.15)}
+#kompass .kn{width:10px;height:30px}
+#kompass .kn i,#kompass .kn b{border-left-width:5px;border-right-width:5px}
+#kompass .kn i{border-bottom:15px solid #ea4335}
+#kompass .kn b{border-top:15px solid #9aa0a6}
+
+/* Zeitleiste mit Ländernamen ist höher → alles darüber anheben */
+body.touch{--u:calc(92px + env(safe-area-inset-bottom,0px))}
+/* Ausgeblendete Tageskarte = flaches Blatt unten mit Griff und Tagesnamen (wie Google Maps) */
+body.touch #cardTab{writing-mode:horizontal-tb!important;transform:none!important;left:78px;right:78px;width:auto;height:auto!important;min-height:0;max-height:none;bottom:var(--u)!important;top:auto;border:1px solid var(--hair);border-bottom:0;border-radius:16px 16px 0 0;padding:6px 14px 10px;display:flex!important;flex-direction:column;align-items:center;gap:6px;font:13px var(--mono);white-space:nowrap}
+body.touch #cardTab[hidden]{display:none!important}
+body.touch #cardTab span{max-width:100%;overflow:hidden;text-overflow:ellipsis}
+body.touch #cardTab .griff{display:block;width:44px;height:5px;border-radius:3px;background:rgba(255,255,255,.6)}
