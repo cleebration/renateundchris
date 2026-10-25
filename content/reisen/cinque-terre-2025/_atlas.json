@@ -145,21 +145,24 @@
      "lat": 44.1837,
      "lon": 9.5817,
      "art": "besuch",
-     "notiz": "Kajaks an der Mole"
+     "notiz": "Kajaks an der Mole",
+     "mit": "rad"
     },
     {
      "name": "Framura",
      "lat": 44.2035,
      "lon": 9.5553,
      "art": "aussicht",
-     "notiz": "Felsküste und Bucht"
+     "notiz": "Felsküste und Bucht",
+     "mit": "rad"
     },
     {
      "name": "Strand Levanto",
      "lat": 44.1687,
      "lon": 9.6099,
      "art": "aussicht",
-     "notiz": "Sonnenuntergang"
+     "notiz": "Sonnenuntergang",
+     "mit": "rad"
     }
    ],
    "themen": [
@@ -243,14 +246,16 @@
      "lat": 44.1029,
      "lon": 9.7315,
      "art": "aussicht",
-     "notiz": "Küstenweg nach Riomaggiore"
+     "notiz": "Küstenweg nach Riomaggiore",
+     "mit": "fuss"
     },
     {
      "name": "Riomaggiore",
      "lat": 44.1002,
      "lon": 9.7377,
      "art": "besuch",
-     "notiz": "Burg und Bootsrampe"
+     "notiz": "Burg und Bootsrampe",
+     "mit": "fuss"
     },
     {
      "name": "La Spezia",

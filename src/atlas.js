@@ -123,6 +123,8 @@
           <span class="chip opt"><b class="mono" id="chipKm">0</b> km</span>
         </div>
       </div>
+      <div class="hud pad" id="navPad" role="slider" aria-label="Stationen und Tage: nach oben ziehen = weiter (weit = nächster Tag), nach unten = zurück; oben/unten tippen = Station vor/zurück"><span class="pA">▲</span><span class="pT">Stopp<br>·<br>Tag</span><span class="pA">▼</span></div>
+      <div class="hud pad" id="tempoPad" role="slider" aria-label="Tempo: nach oben ziehen = schneller, nach unten = langsamer, tippen = Stopp/weiter"><i class="pF"></i><span class="pZ"></span></div>
       <div class="hud" id="dock" aria-label="Steuerung">
         <button data-a="dayPrev" aria-label="Tag zurück">«</button><button data-a="prev" aria-label="Station zurück">◀</button>
         <button data-a="play" class="primary" id="dPlay">▶ Fahren</button>
@@ -396,7 +398,20 @@
 
     map.on("rotatestart", (e) => { if (e && e.originalEvent && S.kamera !== "frei") setKamera("frei"); });
     const pinEls = [];
-    let van, fotoMarkers = [];
+    let van, reiser, fotoMarkers = [];
+    // Fortbewegung je Etappe: stations[].mit = "rad" | "fuss" | "boot" | "bahn"; ohne Angabe Auto, kurze Wege (< 1,5 km) ohne Fahrzeugbewegung
+    const MIT = { auto: { n: "Auto", i: "" }, rad: { n: "Fahrrad", i: "🚲" }, fuss: { n: "zu Fuß", i: "🚶" }, boot: { n: "Boot / Fähre", i: "⛴️" }, bahn: { n: "Seil-/Bahn", i: "🚡" }, kurz: { n: "kurzer Weg", i: "" } };
+    const km2 = (a, b) => Math.sqrt(d2([a.lon, a.lat], [b.lon, b.lat])) * 111.2;
+    const mitVon = (prev, s) => s.mit && MIT[s.mit] ? s.mit : (prev && km2(prev, s) < 1.5 ? "kurz" : "auto");
+    let park = null; // Station, an der das Auto gerade steht
+    function parkFuer(s) { const k = ST.indexOf(s); for (let j = k; j >= 0; j--) { const a = ST[j], b = ST[j - 1]; if (!b || mitVon(b, a) === "auto") return a; } return ST[0]; }
+    function fzInfo(mit) { const tr = track(), s = tr[S.idx]; if (!s) return; const d = dayOf(s.day), m = MIT[mit] || MIT.auto;
+      const kmVor = DAYS.filter((x) => x.tag < d.tag).reduce((a, x) => a + ((x.route && x.route.km) || 0), 0);
+      const p = park || s, pd = dayOf(p.day), heute = p.day === d.tag && d.line && d.route ? Math.round((p.ri || 0) / (d.line.length - 1) * d.route.km) : 0;
+      let h = `<b>${mit === "auto" || !mit ? esc(FAHRZEUGE[fzJetzt] ? FAHRZEUGE[fzJetzt].n : "Auto") : m.i + " " + m.n}</b>`;
+      if (mit === "auto" || !mit) h += `<span>${S.playing && anim ? "unterwegs" : "steht"} · ${esc(p.name)}</span><span>heute ${heute} von ${Math.round((d.route && d.route.km) || 0)} km</span><span>Reise bisher ≈ ${Math.round(kmVor + heute).toLocaleString("de-AT")} km</span>`;
+      else { const v = tr[S.idx - 1]; h += `<span>Etappe ${v ? esc(v.name) + " → " : ""}${esc(s.name)}</span>${v ? `<span>≈ ${km2(v, s).toFixed(1).replace(".", ",")} km Luftlinie</span>` : ""}<span>Auto steht bei ${esc((park || p).name)}</span>`; }
+      new maplibregl.Popup({ closeButton: true, className: "fzPop", offset: 18 }).setLngLat(mit === "auto" || !mit ? van.getLngLat() : reiser.getLngLat()).setHTML(h).addTo(map); }
     map.on("load", () => {
       map.addSource("dem", { type: "raster-dem", tiles: ["https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png"], encoding: "terrarium", tileSize: 256, maxzoom: 12 });
       map.setTerrain({ source: "dem", exaggeration: 1.6 });
@@ -408,8 +423,11 @@
       map.addLayer({ id: "done-casing", type: "line", source: "done", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": "#0a1b23", "line-width": 7 } });
       map.addLayer({ id: "done", type: "line", source: "done", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": ["get", "col"], "line-width": 4.5 } });
       map.addSource("spur", { type: "geojson", data: fc([]) });
-      map.addLayer({ id: "spur-casing", type: "line", source: "spur", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": "#0a1b23", "line-width": 7 } });
-      map.addLayer({ id: "spur", type: "line", source: "spur", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": ["get", "col"], "line-width": 4.5 } });
+      map.addSource("vorschau", { type: "geojson", data: fc([]) });
+      map.addLayer({ id: "vorschau", type: "line", source: "vorschau", layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": "#fff6d8", "line-width": 5, "line-opacity": 0.9, "line-dasharray": [1.2, 1.4] } });
+      map.addLayer({ id: "spur-casing", type: "line", source: "spur", filter: ["==", ["get", "mit"], "auto"], layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": "#0a1b23", "line-width": 7 } });
+      map.addLayer({ id: "spur", type: "line", source: "spur", filter: ["==", ["get", "mit"], "auto"], layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": ["get", "col"], "line-width": 4.5 } });
+      map.addLayer({ id: "spur-neben", type: "line", source: "spur", filter: ["!=", ["get", "mit"], "auto"], layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": "#fff6d8", "line-width": 3.5, "line-dasharray": [0.6, 1.6] } });
 
       ST.forEach((s, k) => { const e = document.createElement("div"); e.className = "pin" + (s.art === "uebernachtung" ? " night" : ""); e.title = "Tag " + s.day + " · " + s.name;
         e.onclick = () => { let t = track(); let i = t.indexOf(s); if (i < 0) { S.breite = 3; S.thema = null; t = track(); i = t.indexOf(s); } S.idx = Math.max(0, i); go(true); };
@@ -417,6 +435,9 @@
       const ve = document.createElement("div"); ve.className = "van";
       van = new maplibregl.Marker({ element: ve, rotationAlignment: "map", pitchAlignment: "map" }).setLngLat([ST[0].lon, ST[0].lat]).addTo(map);
       setzeFahrzeug(dayOf(ST[0].day));
+      const re = document.createElement("div"); re.className = "reiser"; re.hidden = true;
+      reiser = new maplibregl.Marker({ element: re }).setLngLat([ST[0].lon, ST[0].lat]).addTo(map);
+      ve.addEventListener("click", (e) => { e.stopPropagation(); fzInfo("auto"); }); re.addEventListener("click", (e) => { e.stopPropagation(); fzInfo(re.dataset.mit); });
       drawDone(); if (track()[S.idx]) go(true); else render();
     });
     function firstSymbol() { const l = (map.getStyle().layers || []).find((x) => x.type === "symbol"); return l && l.id; }
@@ -435,7 +456,7 @@
     }
 
     // ---------- Bewegung ----------
-    let anim = null, timer = null;
+    let anim = null, timer = null, vorTimer = null;
     // Zwei-Finger-Gesten: zoomen/drehen auch während der Fahrt. Gezoomter Maßstab bleibt; Drehen schaltet die Kamera auf „frei“.
     let hand = false, handZoom = null;
     // Fahrzeug aus der Mitte rücken, solange die Tageskarte bzw. Steuerung Platz belegt (Kartenrand-Polster)
@@ -496,7 +517,7 @@
     function tagFort(day, ri) { uhrSetzen(day, ri); const el = document.querySelector("#card .tagFort"); const d = dayOf(day); if (!el || !d || !d.line) return;
       const f = Math.max(0, Math.min(1, ri / (d.line.length - 1))); el.querySelector("i").style.width = (f * 100).toFixed(1) + "%";
       el.querySelector("span").textContent = `${Math.round(f * d.route.km)} / ${Math.round(d.route.km)} km`; }
-    function animateAlong(path, ms, done, ziel, farbe, fort) {
+    function animateAlong(path, ms, done, ziel, farbe, fort, fz, mit) { fz = fz || van; const dreht = fz === van;
       stopAnim();
       if (reduced || path.length < 2 || ms < 50) { done(); return; }
       const cum = [0]; for (let k = 1; k < path.length; k++) cum.push(cum[k - 1] + Math.sqrt(d2(path[k], path[k - 1])));
@@ -506,7 +527,7 @@
       const kurve = (f) => { const a = anfahren ? 0.18 : 0, b = bremsen ? 0.18 : 0, v = 1 / (1 - a / 2 - b / 2);
         if (f < a) return v * f * f / (2 * a); if (f > 1 - b) { const r = 1 - f; return 1 - v * r * r / (2 * b); } return v * (f - a / 2); };
       const punktBei = (t) => { let k = 1; while (k < cum.length - 1 && cum[k] < t) k++; const a = path[k - 1], b = path[k], sg = (cum[k] - cum[k - 1]) || 1, u = Math.max(0, Math.min(1, (t - cum[k - 1]) / sg)); return [a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u]; };
-      const z0 = map.getZoom(), p0 = map.getPitch(); let kopf = map.getBearing(); let fzKopf = van.getRotation();
+      const z0 = map.getZoom(), p0 = map.getPitch(); let kopf = map.getBearing(); let fzKopf = dreht ? van.getRotation() : 0;
       const fahrt = S.kamera === "fahrt", zt = fahrt ? 11.6 : ziel.zoom, pt = fahrt ? 72 : ziel.pitch;
       const vor = Math.max(0.004, Math.min(0.03, L * 0.12)); // Blick voraus (~0,4–3 km)
       const step = (now) => {
@@ -514,12 +535,12 @@
         const pos = punktBei(target); const g = Math.min(1, f / 0.2);
         const cam = { center: pos, zoom: z0 + (zt - z0) * g, pitch: p0 + (pt - p0) * g };
         const voraus = brg(pos, punktBei(Math.min(L, target + vor)));
-        fzKopf = mischWinkel(fzKopf, voraus, 0.25); van.setRotation(fzKopf);
+        fzKopf = mischWinkel(fzKopf, voraus, 0.25); if (dreht) van.setRotation(fzKopf);
         if (fahrt) { kopf = mischWinkel(kopf, voraus, 0.12); cam.bearing = kopf; }
         else if (S.kamera === "nord") cam.bearing = 0;
-        van.setLngLat(pos);
+        fz.setLngLat(pos);
         { let k = 1; while (k < cum.length - 1 && cum[k] < target) k++; const sp = map.getSource("spur"); // Straße entsteht direkt hinter dem Fahrzeug
-          if (sp) sp.setData(fc([line(path.slice(0, k).concat([pos]), { col: farbe || "#e0913a" })])); if (fort) fort(k - 1 + Math.max(0, Math.min(1, (target - cum[k - 1]) / ((cum[k] - cum[k - 1]) || 1)))); }
+          if (sp) sp.setData(fc([line(path.slice(0, k).concat([pos]), { col: farbe || "#e0913a", mit: mit || "auto" })])); if (fort) fort(k - 1 + Math.max(0, Math.min(1, (target - cum[k - 1]) / ((cum[k] - cum[k - 1]) || 1)))); }
         if (hand) { if (f < 1) anim = requestAnimationFrame(step); else { anim = null; done(); } return; } // Hand an der Karte: nur das Fahrzeug bewegen
         if (handZoom != null) { cam.zoom = handZoom; delete cam.pitch; }
         map.jumpTo(cam);
@@ -535,14 +556,30 @@
       if (S.tiefe >= 2) { (d.mythen || []).forEach((m, k) => S.mythen.add(d.tag + "-" + k)); (d.wien_faden || []).forEach((m, k) => S.wien.add(d.tag + "-" + k)); }
       if (!van) { render(); return; } // Karte lädt noch
       const zoom = handZoom != null ? handZoom : S.tiefe >= 2 ? 10.2 : 8.4, pitch = narrow ? 45 : (S.tiefe >= 2 ? 68 : 58);
-      const finish = () => { van.setLngLat([s.lon, s.lat]); setzeFahrzeug(d); { const r = richtungAn(d, s.ri); if (r != null) van.setRotation(r); } drawDone(); if (!(S.playing && halt(s) <= 400)) map.easeTo({ center: [s.lon, s.lat], zoom, pitch: S.kamera === "fahrt" && !narrow ? 70 : pitch, bearing: kameraZiel(s), duration: reduced ? 0 : 900 }); showFotos(d); render(); ton.ankunft(d); afterArrive(); };
-      // fahren entlang der Straße, wenn möglich
-      if (!jump && prev && d.line && prev.day === s.day && prev.ri != null && s.ri != null && s.ri > prev.ri) {
-        const path = d.line.slice(prev.ri, s.ri + 1);
-        animateAlong(path, fahrDauer(path), finish, { zoom: Math.min(zoom, 9.2), pitch }, colOf(d), (i) => tagFort(s.day, prev.ri + i));
-      } else if (!jump && prev && d.line && s.day === prev.day + 1 && s.ri != null && dayOf(prev.day).line && prev.ri != null) {
-        const pl = dayOf(prev.day).line.slice(prev.ri); const path = pl.concat(d.line.slice(0, s.ri + 1));
-        animateAlong(path, fahrDauer(path), finish, { zoom: 8.6, pitch }, colOf(dayOf(prev.day)), (i) => { const n = pl.length; if (i >= n) tagFort(s.day, i - n); });
+      const mit = jump || !prev ? (mitVon(ST[ST.indexOf(s) - 1], s)) : mitVon(prev, s);
+      if (jump || !prev) { park = parkFuer(s); }
+      const re = reiser.getElement(); const zeigReiser = (m) => { re.hidden = !(MIT[m] && MIT[m].i); if (!re.hidden) { re.textContent = MIT[m].i; re.dataset.mit = m; } };
+      const finish = () => { if (mit === "auto") { park = s; van.setLngLat([s.lon, s.lat]); { const r = richtungAn(d, s.ri); if (r != null) van.setRotation(r); } }
+        else if (park) van.setLngLat([park.lon, park.lat]);
+        zeigReiser(mit); if (!re.hidden) reiser.setLngLat([s.lon, s.lat]); setzeFahrzeug(d); drawDone(); if (!(S.playing && halt(s) <= 400)) map.easeTo({ center: [s.lon, s.lat], zoom, pitch: S.kamera === "fahrt" && !narrow ? 70 : pitch, bearing: kameraZiel(s), duration: reduced ? 0 : 900 }); showFotos(d); render(); ton.ankunft(d); afterArrive(); };
+      // Strecke erst einblenden, dann entlangfahren
+      const vorher = (path, los) => { const vs = map.getSource("vorschau"); if (!vs || reduced) { los(); return; } vs.setData(fc([line(path)])); stopAnim(); clearTimeout(timer); clearTimeout(vorTimer);
+        const fit = new maplibregl.LngLatBounds(path[0], path[0]); path.forEach((q) => fit.extend(q));
+        if (!rollt && handZoom == null) map.fitBounds(fit, { padding: 80, maxZoom: zoom, duration: Math.min(1200, tz(900, S.tempo)), bearing: map.getBearing(), pitch: map.getPitch() });
+        vorTimer = setTimeout(() => { vs.setData(fc([])); los(); }, Math.min(1400, tz(rollt ? 350 : 1100, S.tempo))); };
+      const von = mit === "auto" ? (park || prev) : prev;
+      if (!jump && von && mit === "auto" && d.line && von.day === s.day && von.ri != null && s.ri != null && s.ri > von.ri) {
+        const path = d.line.slice(von.ri, s.ri + 1); zeigReiser("auto");
+        vorher(path, () => animateAlong(path, fahrDauer(path), finish, { zoom: Math.min(zoom, 9.2), pitch }, colOf(d), (i) => tagFort(s.day, von.ri + i)));
+      } else if (!jump && von && mit === "auto" && d.line && s.day === von.day + 1 && s.ri != null && dayOf(von.day).line && von.ri != null) {
+        const pl = dayOf(von.day).line.slice(von.ri); const path = pl.concat(d.line.slice(0, s.ri + 1)); zeigReiser("auto");
+        vorher(path, () => animateAlong(path, fahrDauer(path), finish, { zoom: 8.6, pitch }, colOf(dayOf(von.day)), (i) => { const n = pl.length; if (i >= n) tagFort(s.day, i - n); }));
+      } else if (!jump && prev && MIT[mit] && MIT[mit].i) { // Rad, zu Fuß, Boot, Bahn: eigenes Symbol, Auto bleibt stehen
+        const strasse = mit === "rad" && d.line && prev.day === s.day && prev.ri != null && s.ri != null && s.ri > prev.ri;
+        const path = strasse ? d.line.slice(prev.ri, s.ri + 1) : [[prev.lon, prev.lat], [s.lon, s.lat]];
+        zeigReiser(mit); reiser.setLngLat(path[0]);
+        const kmh = { rad: 0.35, fuss: 0.12, boot: 0.6, bahn: 0.25 }[mit]; // relativ zum Auto
+        vorher(path, () => animateAlong(path, Math.max(900, fahrDauer(path) / kmh * 0.25), finish, { zoom: Math.max(zoom, 12), pitch }, colOf(d), null, reiser, mit));
       } else {
         stopAnim(); map.flyTo({ center: [s.lon, s.lat], zoom, pitch, bearing: kameraZiel(s), duration: reduced ? 0 : tz(1800, S.tempo), essential: true });
         finish();
@@ -563,7 +600,7 @@
       else { S.tempo = v; if (!S.playing) setPlay(true); else render(); } broadcast(); }
     function setPlay(p) { S.playing = p; clearTimeout(timer); rollt = false;
       if (p && !anim) { const tr = track(); if (S.idx < tr.length - 1) { S.idx++; go(false); } else setPlay(false); } render(); }
-    function step(n) { stopAnim(); clearTimeout(timer); const tr = track(); S.idx = Math.min(tr.length - 1, Math.max(0, S.idx + n)); go(n < 0); }
+    function step(n) { stopAnim(); clearTimeout(timer); clearTimeout(vorTimer); const tr = track(); S.idx = Math.min(tr.length - 1, Math.max(0, S.idx + n)); go(n < 0); }
     function gotoDay(t) { stopAnim(); let k = track().findIndex((s) => s.day >= t); if (k < 0) { S.thema = null; S.breite = 3; k = track().findIndex((s) => s.day >= t); } S.idx = Math.max(0, k); go(true); }
     function dayStep(n) { const tr = track(); const cur = (tr[S.idx] || {}).day || 1; let tgt = cur + n;
       while (tgt >= 1 && tgt <= DAYS.length && !tr.some((s) => s.day === tgt)) tgt += n;
@@ -624,6 +661,23 @@
       pb.addEventListener("pointerup", ende); pb.addEventListener("pointercancel", ende);
       pb.addEventListener("click", (e) => { if (gezogen) { e.stopImmediatePropagation(); e.preventDefault(); gezogen = false; } }, true); }
     { const r = document.getElementById("tempoR"); r.addEventListener("input", () => fahrstufe(+r.value)); }
+    // Daumenfelder (Touch): rechts Tempo, links Stationen/Tage – gleiche Form, gleiche Höhe
+    { const blase = document.getElementById("tempoBlase"); const zeig = (html, farbe) => { blase.innerHTML = html; blase.style.background = farbe || "var(--amber)"; blase.hidden = false; };
+      const weg = () => setTimeout(() => (blase.hidden = true), 600);
+      const tp = document.getElementById("tempoPad"); let y0 = null, st = 0, mem = 5, bewegt = false;
+      tp.addEventListener("pointerdown", (e) => { y0 = e.clientY; st = gang(); mem = S.tempo; bewegt = false; tp.setPointerCapture(e.pointerId); });
+      tp.addEventListener("pointermove", (e) => { if (y0 == null) return; const dy = y0 - e.clientY; if (!bewegt && Math.abs(dy) < 10) return; bewegt = true;
+        const t = Math.max(0, Math.min(TMAX, st + Math.round(dy / 16))); if (t !== gang()) { fahrstufe(t); if (t === 0) { S.tempo = st || mem; render(); } }
+        zeig(gang() ? `Tempo ${gang()} · ${TEMPO[gang()]}` : "Stopp", tempoFarbe(gang())); });
+      const tEnde = () => { if (y0 == null) return; y0 = null; if (!bewegt) { angehalten = false; setPlay(!S.playing); broadcast(); zeig(S.playing ? `▶ weiter · Tempo ${S.tempo}` : "❚❚ Stopp", tempoFarbe(gang())); } weg(); };
+      tp.addEventListener("pointerup", tEnde); tp.addEventListener("pointercancel", () => { y0 = null; weg(); });
+      const np = document.getElementById("navPad"); let ny = null, nb = false; const was = (dy) => Math.abs(dy) < 22 ? 0 : (Math.abs(dy) < 110 ? 1 : 2) * Math.sign(dy);
+      np.addEventListener("pointerdown", (e) => { ny = e.clientY; nb = false; np.setPointerCapture(e.pointerId); });
+      np.addEventListener("pointermove", (e) => { if (ny == null) return; const dy = ny - e.clientY; if (Math.abs(dy) >= 10) nb = true; if (!nb) return; const w = was(dy);
+        np.dataset.w = w; zeig(["◀◀ voriger Tag", "◀ vorige Station", "…", "nächste Station ▶", "nächster Tag ▶▶"][w + 2]); });
+      np.addEventListener("pointerup", (e) => { if (ny == null) return; const dy = ny - e.clientY; ny = null; np.dataset.w = 0;
+        if (!nb) { const r = np.getBoundingClientRect(); step(e.clientY < r.top + r.height / 2 ? 1 : -1); } else { const w = was(dy); if (Math.abs(w) === 1) step(w); else if (w) dayStep(w / 2); } weg(); });
+      np.addEventListener("pointercancel", () => { ny = null; np.dataset.w = 0; weg(); }); }
     document.getElementById("fernBtn").onclick = () => chooseMode();
     function setBreite(v) { S.breite = v; const cur = (go.last || ST[0]).day; S.idx = Math.max(0, track().findIndex((s) => s.day >= cur)); go(true); broadcast(); }
     function setRole(k) { const r = ROLLEN[k]; if (!r) return; S.rolle = k; Object.assign(S, { tempo: r.s.tempo, breite: r.s.breite, tiefe: r.s.tiefe, thema: r.s.thema });
@@ -649,6 +703,8 @@
       { const g = gang(), tt = document.getElementById("tempoTxt");
         if (tt) { tt.textContent = g ? `Stufe ${g}/10 · ${TEMPO[g]}` : `Stufe 0 · steht (zuletzt ${S.tempo})`; tachoSetzen(document.getElementById("tachoGross"), g, true);
           const r = document.getElementById("tempoR"); r.value = g; r.style.setProperty("--f", tempoFarbe(g)); }
+        { const tp = document.getElementById("tempoPad"); if (tp) { const lv = g || S.tempo; tp.querySelector(".pF").style.height = (lv / TMAX * 100) + "%"; tp.style.setProperty("--tf", g ? tempoFarbe(g) : "#f3ecdc");
+          tp.classList.toggle("steht", !g); tp.querySelector(".pZ").textContent = g ? g : "❚❚"; } }
         const dp = document.getElementById("dPlay");
         if (dp) { if (dp.querySelector(".lbl") || !dp.querySelector("svg")) dp.innerHTML = ""; tachoSetzen(dp, g);
           dp.setAttribute("aria-label", g ? `Fährt mit Stufe ${g} – tippen zum Anhalten` : `Steht – tippen zum Weiterfahren mit Stufe ${S.tempo}`);

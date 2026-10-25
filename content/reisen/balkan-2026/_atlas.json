@@ -30,28 +30,32 @@
      "lat": 44.242,
      "lon": 15.184,
      "art": "besuch",
-     "notiz": "Über Steinbrücke und Unteres Tor in die Inselstadt"
+     "notiz": "Über Steinbrücke und Unteres Tor in die Inselstadt",
+     "mit": "rad"
     },
     {
      "name": "Statue Grgur Ninski",
      "lat": 44.242,
      "lon": 15.185,
      "art": "besuch",
-     "notiz": "Großer Zeh golden gerieben"
+     "notiz": "Großer Zeh golden gerieben",
+     "mit": "fuss"
     },
     {
      "name": "Heilig-Kreuz-Kirche (Sv. Križ)",
      "lat": 44.242,
      "lon": 15.184,
      "art": "besuch",
-     "notiz": "Um 800 erbaut, Schwalben unter der Kuppel"
+     "notiz": "Um 800 erbaut, Schwalben unter der Kuppel",
+     "mit": "fuss"
     },
     {
      "name": "Römischer Tempel Nin",
      "lat": 44.242,
      "lon": 15.183,
      "art": "essen",
-     "notiz": "Abendessen neben der Tempelsäule"
+     "notiz": "Abendessen neben der Tempelsäule",
+     "mit": "fuss"
     }
    ],
    "uebernachtung": "Camping Nin, Put Venere Anzotike 41, Nin",
@@ -169,35 +173,40 @@
      "lat": 43.804,
      "lon": 15.963,
      "art": "besuch",
-     "notiz": "Rundweg zweimal, Mühlen, Kraftwerk von 1895"
+     "notiz": "Rundweg zweimal, Mühlen, Kraftwerk von 1895",
+     "mit": "boot"
     },
     {
      "name": "Klosterinsel Visovac",
      "lat": 43.861,
      "lon": 15.972,
      "art": "besuch",
-     "notiz": "Franziskanerkloster seit 1445"
+     "notiz": "Franziskanerkloster seit 1445",
+     "mit": "boot"
     },
     {
      "name": "Canyon Među gredama",
      "lat": 43.885,
      "lon": 15.975,
      "art": "aussicht",
-     "notiz": "Enge Canyon-Passage per Boot"
+     "notiz": "Enge Canyon-Passage per Boot",
+     "mit": "boot"
     },
     {
      "name": "Roški slap",
      "lat": 43.904,
      "lon": 15.976,
      "art": "besuch",
-     "notiz": "Längster Wasserfall des Parks, Ogrlice"
+     "notiz": "Längster Wasserfall des Parks, Ogrlice",
+     "mit": "boot"
     },
     {
      "name": "Konoba Dalmatino, Skradin",
      "lat": 43.818,
      "lon": 15.923,
      "art": "essen",
-     "notiz": "Fisch selbst ausgesucht, am Tisch filetiert"
+     "notiz": "Fisch selbst ausgesucht, am Tisch filetiert",
+     "mit": "boot"
     }
    ],
    "uebernachtung": "Skradin (Campingplatz, Name nicht genannt)",
@@ -295,7 +304,8 @@
      "lat": 43.517,
      "lon": 16.25,
      "art": "besuch",
-     "notiz": "Abendbummel, Aperol Spritz"
+     "notiz": "Abendbummel, Aperol Spritz",
+     "mit": "rad"
     }
    ],
    "uebernachtung": "Kamp Seget, Seget Donji",
@@ -335,21 +345,24 @@
      "lat": 43.516,
      "lon": 16.247,
      "art": "besuch",
-     "notiz": "Venezianische Festung des 15. Jahrhunderts"
+     "notiz": "Venezianische Festung des 15. Jahrhunderts",
+     "mit": "rad"
     },
     {
      "name": "Kathedrale sv. Lovro, Trogir",
      "lat": 43.517,
      "lon": 16.251,
      "art": "besuch",
-     "notiz": "Radovan-Portal, Adam und Eva, Monatszyklus"
+     "notiz": "Radovan-Portal, Adam und Eva, Monatszyklus",
+     "mit": "fuss"
     },
     {
      "name": "Restaurant Kamp Seget",
      "lat": 43.519,
      "lon": 16.229,
      "art": "essen",
-     "notiz": "Fischplatte für zwei, Wein aufs Haus"
+     "notiz": "Fischplatte für zwei, Wein aufs Haus",
+     "mit": "rad"
     }
    ],
    "uebernachtung": "Kamp Seget, Seget Donji",
@@ -553,7 +566,8 @@
      "lat": 43.17,
      "lon": 16.455,
      "art": "besuch",
-     "notiz": "Räder geparkt, 30 Min. bergauf zu Fuß"
+     "notiz": "Räder geparkt, 30 Min. bergauf zu Fuß",
+     "mit": "fuss"
     }
    ],
    "uebernachtung": "Camping Kopito, Hvar",
@@ -594,14 +608,16 @@
      "lat": 43.172,
      "lon": 16.442,
      "art": "faehre",
-     "notiz": "Taxiboot zu den Pakleni otoci"
+     "notiz": "Taxiboot zu den Pakleni otoci",
+     "mit": "rad"
     },
     {
      "name": "Bucht Ždrilca, Marinkovac",
      "lat": 43.159,
      "lon": 16.393,
      "art": "besuch",
-     "notiz": "Geschützter Ankerplatz, Restaurants"
+     "notiz": "Geschützter Ankerplatz, Restaurants",
+     "mit": "boot"
     },
     {
      "name": "Bucht Mlini, Marinkovac",
@@ -622,7 +638,8 @@
      "lat": 43.176,
      "lon": 16.452,
      "art": "uebernachtung",
-     "notiz": "Pool, Melone mit Prosciutto"
+     "notiz": "Pool, Melone mit Prosciutto",
+     "mit": "rad"
     }
    ],
    "uebernachtung": "Camping Kopito, Hvar",
@@ -673,7 +690,8 @@
      "lat": 43.175,
      "lon": 16.448,
      "art": "panne",
-     "notiz": "Luft abgelassen, neuer Schlauch 15 €"
+     "notiz": "Luft abgelassen, neuer Schlauch 15 €",
+     "mit": "rad"
     },
     {
      "name": "Fort Napoleon, Hvar",
@@ -1470,7 +1488,8 @@
      "lat": 39.722,
      "lon": 21.631,
      "art": "besuch",
-     "notiz": "Zu Fuß, Refektorium, Beinhaus, Sultansfirmane"
+     "notiz": "Zu Fuß, Refektorium, Beinhaus, Sultansfirmane",
+     "mit": "fuss"
     },
     {
      "name": "Kloster Roussanou",
@@ -1752,7 +1771,8 @@
      "lat": 39.326,
      "lon": 23.146,
      "art": "aussicht",
-     "notiz": "Zu Fuß auf dem Gleis"
+     "notiz": "Zu Fuß auf dem Gleis",
+     "mit": "fuss"
     },
     {
      "name": "Taverne To Salkimi, Milies",

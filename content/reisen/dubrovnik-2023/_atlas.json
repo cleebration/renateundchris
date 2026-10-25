@@ -221,14 +221,16 @@
      "lat": 42.649,
      "lon": 18.112,
      "art": "aussicht",
-     "notiz": "Mit der Seilbahn hinauf, zu Fuß hinunter"
+     "notiz": "Mit der Seilbahn hinauf, zu Fuß hinunter",
+     "mit": "bahn"
     },
     {
      "name": "Altstadt Dubrovnik",
      "lat": 42.641,
      "lon": 18.11,
      "art": "besuch",
-     "notiz": "Abends am Stradun"
+     "notiz": "Abends am Stradun",
+     "mit": "fuss"
     },
     {
      "name": "Buzz Bar",

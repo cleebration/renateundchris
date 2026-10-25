@@ -354,3 +354,32 @@ body.touch:has(#card:not(.zu)) #card{right:72px}
 .uhrBtn.on{border-color:var(--amber);color:var(--amber)}
 @media (max-width:520px){#uhr{top:auto;bottom:auto;left:auto;right:8px;transform:none;top:calc(64px + env(safe-area-inset-top,0px))}}
 @media (max-width:520px){#uhr{top:calc(88px + env(safe-area-inset-top,0px));right:8px;padding:4px 10px 4px 6px}#uhr svg{width:28px;height:28px}#uhr b{font-size:14px}}
+
+/* Daumenfelder links/rechts: gleiche Größe, gleiche Höhe; Reiter darunter gleich hoch */
+.pad{display:none}
+body.touch{--padB:calc(var(--u) + 132px)}
+body.touch #dock{display:none!important}
+body.touch .pad{display:flex;position:fixed;bottom:var(--padB);width:52px;height:clamp(150px,26vh,230px);border-radius:16px;background:var(--panel);border:1px solid var(--hair);touch-action:none;user-select:none;-webkit-user-select:none;z-index:12;overflow:hidden}
+body.touch #navPad{left:var(--rand);flex-direction:column;justify-content:space-between;align-items:center;padding:10px 0;color:var(--ink);font:11px var(--mono)}
+body.touch #navPad .pA{font-size:16px;opacity:.8}
+body.touch #navPad .pT{text-align:center;line-height:1.25;color:var(--muted);font-size:10px;letter-spacing:.06em;text-transform:uppercase}
+body.touch #navPad[data-w="1"],body.touch #navPad[data-w="-1"]{border-color:var(--amber)}
+body.touch #navPad[data-w="2"],body.touch #navPad[data-w="-2"]{border-color:var(--amber);box-shadow:0 0 0 3px rgba(224,145,58,.35)}
+body.touch #tempoPad{right:max(6px,env(safe-area-inset-right,0px));align-items:flex-end;justify-content:center}
+#tempoPad .pF{position:absolute;left:0;right:0;bottom:0;background:var(--tf);transition:height .2s,background .3s;opacity:.95}
+#tempoPad.steht .pF{opacity:.35}
+#tempoPad .pZ{position:relative;margin-bottom:8px;font:600 15px var(--mono);color:#10140f;text-shadow:0 0 6px rgba(255,255,255,.5)}
+#tempoPad.steht .pZ{color:var(--ink);text-shadow:none}
+body.touch #side.zu .sideKopf,body.touch #cardTab{height:118px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:34px;padding:0}
+body.touch #side.zu,body.touch #cardTab{bottom:var(--u)!important}
+body.touch #card{left:64px;right:64px}
+body.touch:has(#card:not(.zu)) #card{right:64px}
+#tempoBlase{bottom:auto;top:50%;transform:translate(-50%,-50%);font:15px var(--mono);padding:10px 16px}
+/* Reisender (Rad/Fuß/Boot) und Fahrzeug-Infos */
+.reiser{font-size:24px;line-height:1;filter:drop-shadow(0 2px 3px rgba(0,0,0,.6));cursor:pointer;z-index:7}
+.reiser[hidden]{display:none}
+.van{cursor:pointer}
+.fzPop .maplibregl-popup-content{background:var(--panel);color:var(--ink);border:1px solid var(--hair);border-radius:12px;padding:10px 26px 10px 12px;display:flex;flex-direction:column;gap:3px;font:12px var(--mono)}
+.fzPop .maplibregl-popup-content b{font:600 14px var(--mono);color:var(--amber)}
+.fzPop .maplibregl-popup-tip{border-top-color:var(--panel)!important;border-bottom-color:var(--panel)!important}
+.fzPop .maplibregl-popup-close-button{color:var(--muted);font-size:18px}
