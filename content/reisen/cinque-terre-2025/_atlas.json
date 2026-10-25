@@ -6,18 +6,40 @@
    "datum": "2025-10-24",
    "land": [
     "AT",
+    "DE",
     "IT"
    ],
-   "titel": "Ankommen in Lazise",
-   "satz": "Nach dem Gig mit Jazz Exclusive in Stadl-Paura Nachtfahrt nach Süden, in der Früh Fahrerwechsel zu Renate. Erster Abend am Gardasee: Abendessen im Pergolo, danach durch die beleuchtete Altstadt zur Scaligerburg.",
-   "teaser": "Nach Chris' Gig mit Jazz Exclusive in Stadl-Paura geht es in der Nacht los, Chris fährt, in der Früh übernimmt Renate das Steuer. Die Reise beginnt am Ostufer des Gardasees. Im Pergolo, Vino e Cucina gibt es Pasta, Tartar und zum Schluss Crème brûlée und Espresso. Danach ein Spaziergang durch die nächtlichen Gassen bis zu den angestrahlten Mauern der Scaligerburg.",
+   "titel": "Von Bad Leonfelden an den Gardasee",
+   "satz": "Am Nachmittag holt Chris Renate von der Schule in Bad Leonfelden ab, dann geht es über den Walserberg, das Inntal und den Brenner an den Gardasee. Erster Abend: Abendessen im Pergolo, danach durch die beleuchtete Altstadt zur Scaligerburg.",
+   "teaser": "Kurz vor drei holt Chris Renate von der Schule in Bad Leonfelden ab, dann geht es los: Stopp an der Tankstelle in Vorchdorf, über den Walserberg nach Deutschland, Pause an der Raststätte Inntal West bei Kiefersfelden und weiter über den Brenner nach Süden. Am Ostufer des Gardasees gibt es im Pergolo, Vino e Cucina Pasta, Tartar und zum Schluss Crème brûlée und Espresso. Danach ein Spaziergang durch die nächtlichen Gassen bis zu den angestrahlten Mauern der Scaligerburg.",
    "stationen": [
     {
-     "name": "Landesmusikschule Stadl-Paura",
-     "lat": 48.077,
-     "lon": 13.865,
+     "name": "BORG Bad Leonfelden",
+     "lat": 48.5207,
+     "lon": 14.2966,
      "art": "besuch",
-     "notiz": "Gig mit Jazz Exclusive, danach Nachtfahrt (Chris am Steuer)"
+     "notiz": "Renate von der Schule abgeholt (Check-in 14:49), Ort genähert"
+    },
+    {
+     "name": "Eni Vorchdorf",
+     "lat": 48.0051,
+     "lon": 13.923,
+     "art": "besuch",
+     "notiz": "Tankstelle (Check-in 16:17), Ort genähert"
+    },
+    {
+     "name": "Walserberg / Bad Reichenhall",
+     "lat": 47.7892,
+     "lon": 12.9624,
+     "art": "grenze",
+     "notiz": "Grenze Österreich – Deutschland (Check-in 17:18)"
+    },
+    {
+     "name": "Raststätte Inntal West",
+     "lat": 47.6238,
+     "lon": 12.1849,
+     "art": "besuch",
+     "notiz": "Rast bei Kiefersfelden (Check-in 18:26), Ort genähert"
     },
     {
      "name": "Pergolo, Vino e Cucina",
