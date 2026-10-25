@@ -123,6 +123,8 @@
           <span class="chip opt"><b class="mono" id="chipKm">0</b> km</span>
         </div>
       </div>
+      <div id="topbar" aria-label="Reise-Atlas Leiste"><a class="tbBtn" id="tbZurueck" href="/atlas/" aria-label="Zurück zu allen Reisen">‹</a><div id="insel" aria-label="Teaser, Uhr, Kompass"></div><button class="tbBtn" id="tbInfo" aria-label="Hilfe zur Bedienung ein/aus" aria-pressed="false">i</button><button class="tbBtn" id="tbZahnrad" aria-label="Steuerung ein/aus" aria-expanded="false">⚙︎</button></div>
+      <div id="tbTitel"></div>
       <button class="hud" id="kompass" aria-label="Karte nach Norden ausrichten"><span class="kn"><i></i><b></b></span></button>
       <div class="hud pad" id="navPad" role="slider" aria-label="Stationen und Tage: nach oben ziehen = weiter (weit = nächster Tag), nach unten = zurück; oben/unten tippen = Station vor/zurück"><span class="pA">▲</span><span class="pT">Stopp<br>·<br>Tag</span><span class="pA">▼</span></div>
       <div class="hud pad" id="tempoPad" role="slider" aria-label="Tempo: nach oben ziehen = schneller, nach unten = langsamer, tippen = Stopp/weiter"><i class="pF"></i><span class="pZ"></span></div>
@@ -527,7 +529,7 @@
       /* nach Zeit; nur Fotos, die auf der Route vorwärts liegen (Rundfahrten: Abendfoto am Start fällt weg) */ roh.sort((a, b) => a.min - b.min || a.i - b.i); const out = [];
       roh.forEach((a) => { if (!out.length || (a.min >= out[out.length - 1].min && a.i >= out[out.length - 1].i)) out.push(a); });
       return (uhrCache[d.tag] = out); }
-    function uhrSetzen(day, ri) { const el = document.getElementById("uhr"); if (!el || el.hidden) return; const d = dayOf(day); const A = d ? uhrAnker(d) : [];
+    function uhrSetzen(day, ri) { const el = document.getElementById("uhr"); if (!el || (el.hidden && !document.body.classList.contains("handy"))) return; const d = dayOf(day); const A = d ? uhrAnker(d) : [];
       const b = el.querySelector("b"), sm = el.querySelector("small");
       if (!A.length) { b.textContent = "–:–"; sm.textContent = "keine Fotozeit"; el.classList.add("leer"); return; } el.classList.remove("leer");
       let min, art; if (ri <= A[0].i) { min = A[0].min; art = ri < A[0].i ? "vor dem 1. Foto" : "Foto"; } else if (ri >= A[A.length - 1].i) { min = A[A.length - 1].min; art = ri > A[A.length - 1].i ? "nach dem letzten Foto" : "Foto"; }
@@ -672,7 +674,7 @@
       let h0 = 0, zieht = false, hJetzt = 0;
       const stufeFuer = (h) => (h < innerHeight * 0.34 ? 1 : h < innerHeight * 0.6 ? 2 : 3);
       card.addEventListener("touchstart", (e) => { const t = e.touches[0]; x0 = t.clientX; y0 = t.clientY; kopf = t.clientY - card.getBoundingClientRect().top < 90; h0 = card.getBoundingClientRect().height; zieht = false; }, { passive: true });
-      card.addEventListener("touchmove", (e) => { if (x0 == null || !kopf || !document.body.classList.contains("touch")) return; const t = e.touches[0], dy = t.clientY - y0, dx = t.clientX - x0;
+      card.addEventListener("touchmove", (e) => { if (x0 == null || !kopf || !document.body.classList.contains("touch") || document.body.classList.contains("handy")) return; const t = e.touches[0], dy = t.clientY - y0, dx = t.clientX - x0;
         if (!zieht && (Math.abs(dy) < 8 || Math.abs(dy) < Math.abs(dx))) return; zieht = true; e.preventDefault();
         hJetzt = Math.max(70, Math.min(innerHeight - 140, h0 - dy)); card.style.transition = "none"; card.style.height = hJetzt + "px"; card.style.maxHeight = "none";
         const st = stufeFuer(hJetzt); if (st > S.tiefe || (st < S.tiefe && dy > 0)) { S.tiefe = st; render(); } }, { passive: false });
@@ -687,7 +689,7 @@
     let tiefeRichtung = 1; // Tippen: 1→2→3→4→3→2→1 …
     function setTiefe(t) { handZoom = null; setTiefeOhne(t); }
     function setTiefeOhne(t) { S.tiefe = Math.max(document.body.classList.contains("touch") ? 1 : 0, Math.min(3, t)); autoHalt(); go(true); broadcast(); }
-    function setKarteZu(zu) { if (!zu) { const c = document.getElementById("card"); c.style.height = ""; c.style.maxHeight = ""; if (S.tiefe > 1) S.tiefe = 1; } document.getElementById("card").classList.toggle("zu", zu); document.getElementById("cardTab").hidden = !zu; merk.set("karteZu", zu); autoHalt(); }
+    function setKarteZu(zu) { if (!zu) { const c = document.getElementById("card"); c.style.height = ""; c.style.maxHeight = ""; c.scrollTop = 0; if (document.body.classList.contains("handy")) { S.tiefe = 3; render(); } else if (S.tiefe > 1) S.tiefe = 1; } document.getElementById("card").classList.toggle("zu", zu); document.getElementById("cardTab").hidden = !zu; merk.set("karteZu", zu); autoHalt(); }
     // Lesen hält an: Tageskarte offen und Tiefe 3 oder 4 → Auto steht; zugeklappt oder zurück auf Tiefe 1–2 → fährt weiter
     let angehalten = false;
     function autoHalt() { const lesen = !document.getElementById("card").classList.contains("zu") && S.tiefe >= 2;
@@ -722,6 +724,68 @@
       np.addEventListener("pointerup", (e) => { if (ny == null) return; const dy = ny - e.clientY; ny = null; np.dataset.w = 0;
         if (!nb) { const r = np.getBoundingClientRect(); step(e.clientY < r.top + r.height / 2 ? 1 : -1); } else { const w = was(dy); if (Math.abs(w) === 1) step(w); else if (w) dayStep(w / 2); } weg(); });
       np.addEventListener("pointercancel", () => { ny = null; np.dataset.w = 0; weg(); }); }
+    // ================= iPhone hochkant: Leiste oben, Insel, Info-Tour, Blatt unten, Tag-/Stations-Wähler =================
+    { const B = document.body, insel = document.getElementById("insel"), heim = new Map();
+      const handyNoetig = () => B.classList.contains("touch") && innerWidth <= 760 && innerHeight > innerWidth;
+      const umziehen = (an) => { ["kompass", "uhr"].forEach((id) => { const el = document.getElementById(id); if (!el) return; if (an) { if (!heim.has(id)) heim.set(id, [el.parentNode, el.nextSibling]); insel.appendChild(el); } else if (heim.has(id)) { const [p, n] = heim.get(id); p.insertBefore(el, n); } });
+        const tz = document.querySelector(".tzChip"); if (tz) { if (an) { if (!heim.has("tz")) heim.set("tz", [tz.parentNode, tz.nextSibling]); insel.prepend(tz); } else if (heim.has("tz")) { const [p, n] = heim.get("tz"); p.insertBefore(tz, n); } }
+        if (an) { document.getElementById("uhr").hidden = false; const s = track()[S.idx]; if (s) uhrSetzen(s.day, s.ri || 0); } };
+      const pruefe = () => { const an = handyNoetig(); if (an === B.classList.contains("handy")) return; B.classList.toggle("handy", an); umziehen(an); if (an && !document.getElementById("card").classList.contains("zu")) { S.tiefe = 3; render(); } };
+      addEventListener("resize", pruefe); setTimeout(pruefe, 0); setTimeout(pruefe, 600);
+      document.getElementById("tbTitel").textContent = TITLE;
+      // ⚙ = Steuerung ein/aus
+      const zr = document.getElementById("tbZahnrad");
+      zr.onclick = () => { const zu = !side.classList.contains("zu"); setZu(zu); zr.setAttribute("aria-expanded", !zu); };
+      // ---- Blatt unten: Zeile antippen/hochwischen = groß; Kopf antippen, nach unten wischen oder ganz oben weiter nach unten ziehen = klein ----
+      const card = document.getElementById("card"); let sy = null, sx = 0, kopfZone = false, obenStart = true;
+      card.addEventListener("touchstart", (e) => { if (!B.classList.contains("handy")) return; const t = e.touches[0]; sy = t.clientY; sx = t.clientX; const top = card.getBoundingClientRect().top; kopfZone = t.clientY - top < 110 + 0 && !!e.target.closest(".blatt,.day,h2"); obenStart = card.scrollTop <= 0; }, { passive: true });
+      card.addEventListener("touchend", (e) => { if (!B.classList.contains("handy") || sy == null) return; const t = e.changedTouches[0], dy = t.clientY - sy, dx = t.clientX - sx; sy = null;
+        if (e.target.closest("a,.gal button,.clip,.passend")) return;
+        const tap = Math.abs(dy) < 8 && Math.abs(dx) < 8;
+        if ((tap && kopfZone) || (dy > 50 && dy > Math.abs(dx) && (kopfZone || obenStart))) setKarteZu(true); }, { passive: true });
+      // ---- Info-Tour (i): hebt nacheinander die Bedienelemente hervor; nochmal i = weg ----
+      const SCHRITTE = [
+        ["#tbZurueck", "Zurück", "Zurück zur Weltkugel mit allen Reisen."],
+        ["#insel", "Insel", "▶ Teaser: die Reise in 35 Sekunden. Daneben die Uhrzeit (aus den Fotozeiten geschätzt) und der Kompass – antippen dreht die Karte nach Norden."],
+        ["#tbZahnrad", "Steuerung", "Kamera, Musik, Vorlesen, Suche, Uhr, Vollbild und Smartphone-Fernbedienung."],
+        ["#navPad", "Stopps & Tage", "Kurz nach oben/unten ziehen = nächste/vorige Station, weit ziehen = nächster/voriger Tag. Lange drücken = Tag oder Station direkt wählen (Finger gedrückt halten und schieben, loslassen = hinfahren)."],
+        ["#tempoPad", "Tempo", "Nach oben ziehen = schneller, nach unten = langsamer, ganz unten = Stopp. Antippen = Stopp / weiterfahren. Die Farbe zeigt das Tempo."],
+        ["#cardTab", "Tagesblatt", "Antippen oder hochwischen öffnet das Blatt mit Text, Videos und Fotos. Im Blatt einfach scrollen. Schließen: oben auf den Griff tippen oder nach unten wischen."],
+        ["#map", "Karte", "Mit zwei Fingern zoomen und drehen. Auf Auto oder Rad tippen zeigt Daten zur Fahrt. Fotopunkte antippen öffnet das Foto."],
+      ];
+      let tour = null;
+      const tourZu = () => { if (tour) { tour.remove(); tour = null; } document.getElementById("tbInfo").setAttribute("aria-pressed", "false"); };
+      const tourZeig = (i) => { tourZu(); const [sel, tit, txt] = SCHRITTE[i]; const el = document.querySelector(sel); const r = el && el.offsetParent !== null ? el.getBoundingClientRect() : null;
+        if (!r || !r.width) { if (i + 1 < SCHRITTE.length) return tourZeig(i + 1); return; }
+        document.getElementById("tbInfo").setAttribute("aria-pressed", "true");
+        tour = document.createElement("div"); tour.id = "tour"; const pad = 6, rr = sel === "#map" ? { left: 40, top: innerHeight * 0.3, width: innerWidth - 80, height: innerHeight * 0.3 } : r;
+        const loch = `left:${rr.left - pad}px;top:${rr.top - pad}px;width:${rr.width + pad * 2}px;height:${rr.height + pad * 2}px`;
+        const unten = rr.top + rr.height / 2 < innerHeight / 2;
+        tour.innerHTML = `<div class="tourLoch" style="${loch}"></div><div class="tourBox" style="${unten ? `top:${Math.min(innerHeight - 220, rr.top + rr.height + 16)}px` : `bottom:${Math.max(12, innerHeight - rr.top + 16)}px`}"><b>${tit}</b><p>${txt}</p><div class="tourNav"><span>${i + 1} / ${SCHRITTE.length}</span>${i > 0 ? '<button data-t="z">‹ Zurück</button>' : ""}<button data-t="w" class="primary">${i + 1 < SCHRITTE.length ? "Weiter ›" : "Fertig"}</button></div></div>`;
+        tour.addEventListener("click", (e) => { const b = e.target.closest("[data-t]"); if (b && b.dataset.t === "z") return tourZeig(i - 1); if ((b && b.dataset.t === "w") || !e.target.closest(".tourBox")) { if (i + 1 < SCHRITTE.length) tourZeig(i + 1); else tourZu(); } });
+        B.appendChild(tour); };
+      document.getElementById("tbInfo").onclick = () => { if (tour) tourZu(); else tourZeig(0); };
+      // ---- Lange drücken auf Stopp/Tag: Wähler mit Tagen (links) und Stationen (rechts); Finger halten und schieben, loslassen = hinfahren ----
+      const np = document.getElementById("navPad"); let lang = null, waehler = null, wTag = null, wSt = null, haltend = false;
+      const tagZeilen = () => DAYS.map((d) => `<button class="wT" data-tag="${d.tag}" style="--lc:${colOf(d)}"><b>${d.tag}</b><span>${flagge(ccOf(d))} ${esc(d.titel || "–")}</span></button>`).join("");
+      const stZeilen = (tag) => ST.filter((s) => s.day === tag).map((s) => `<button class="wS" data-k="${ST.indexOf(s)}">${MIT[s.mit] && MIT[s.mit].i ? MIT[s.mit].i + " " : ""}${esc(s.name)}</button>`).join("") || '<p class="note">keine Stationen</p>';
+      const markTag = (tag) => { if (!waehler || tag === wTag) return; wTag = tag; waehler.querySelectorAll(".wT").forEach((b) => b.classList.toggle("on", +b.dataset.tag === tag)); waehler.querySelector(".wSt").innerHTML = `<h4>Tag ${tag}</h4>` + stZeilen(tag); wSt = null; };
+      const zielFahren = () => { if (wSt != null) { const s = ST[wSt]; let t = track(); let i = t.indexOf(s); if (i < 0) { S.breite = 3; S.thema = null; t = track(); i = t.indexOf(s); } S.idx = Math.max(0, i); go(true); } else if (wTag != null) gotoDay(wTag); waehlerZu(); };
+      const waehlerZu = () => { if (waehler) { waehler.remove(); waehler = null; } wTag = null; wSt = null; haltend = false; };
+      const waehlerAuf = () => { const cur = (track()[S.idx] || {}).day || 1; waehler = document.createElement("div"); waehler.id = "waehler";
+        waehler.innerHTML = `<div class="wKopf"><b>Tag oder Station wählen</b><span>Finger halten und schieben · loslassen = hinfahren</span><button class="wX" aria-label="schließen">✕</button></div><div class="wSp"><div class="wTage">${tagZeilen()}</div><div class="wSt"></div></div>`;
+        B.appendChild(waehler); markTag(cur); const on = waehler.querySelector(".wT.on"); if (on) on.scrollIntoView({ block: "center" });
+        waehler.addEventListener("click", (e) => { if (haltend) return; if (e.target.closest(".wX")) return waehlerZu(); const t = e.target.closest(".wT"); if (t) { if (+t.dataset.tag === wTag) { wSt = null; return zielFahren(); } return markTag(+t.dataset.tag); } const s = e.target.closest(".wS"); if (s) { wSt = +s.dataset.k; zielFahren(); } }); };
+      const unterFinger = (x, y) => { if (!waehler) return; const el = document.elementFromPoint(x, y); if (!el) return; const t = el.closest(".wT"), s = el.closest(".wS");
+        if (t) { markTag(+t.dataset.tag); wSt = null; waehler.querySelectorAll(".wS").forEach((b) => b.classList.remove("on")); }
+        else if (s) { wSt = +s.dataset.k; waehler.querySelectorAll(".wS").forEach((b) => b.classList.toggle("on", b === s)); }
+        const box = waehler.querySelector(".wTage").getBoundingClientRect(); if (x < box.right) { if (y < box.top + 30) waehler.querySelector(".wTage").scrollTop -= 14; else if (y > box.bottom - 30) waehler.querySelector(".wTage").scrollTop += 14; } };
+      np.addEventListener("pointerdown", (e) => { clearTimeout(lang); const px = e.clientX, py = e.clientY; lang = setTimeout(() => { lang = null; haltend = true; np.dataset.lang = "1"; waehlerAuf(); if (navigator.vibrate) navigator.vibrate(15); }, 450);
+        np._start = [px, py]; });
+      np.addEventListener("pointermove", (e) => { if (lang && np._start && Math.hypot(e.clientX - np._start[0], e.clientY - np._start[1]) > 12) { clearTimeout(lang); lang = null; } if (haltend) { unterFinger(e.clientX, e.clientY); e.stopImmediatePropagation(); } }, true);
+      const npEnde = (e) => { clearTimeout(lang); lang = null; if (haltend) { haltend = false; np.dataset.lang = ""; if (wSt != null || (wTag != null && waehler && document.elementFromPoint(e.clientX, e.clientY)?.closest(".wT"))) zielFahren(); /* sonst bleibt der Wähler offen zum Tippen */ e.stopImmediatePropagation(); } };
+      np.addEventListener("pointerup", npEnde, true); np.addEventListener("pointercancel", () => { clearTimeout(lang); lang = null; haltend = false; }, true);
+    }
     document.getElementById("fernBtn").onclick = () => chooseMode();
     function setBreite(v) { S.breite = v; const cur = (go.last || ST[0]).day; S.idx = Math.max(0, track().findIndex((s) => s.day >= cur)); go(true); broadcast(); }
     function setRole(k) { const r = ROLLEN[k]; if (!r) return; S.rolle = k; Object.assign(S, { tempo: r.s.tempo, breite: r.s.breite, tiefe: r.s.tiefe, thema: r.s.thema });
@@ -773,7 +837,8 @@
       const fotos = d.fotos || [];
       if (S.tiefe >= 2) {
         if (d.teaser) h += `<p>${esc(d.teaser)}</p>`;
-        if (fotos.length) h += S.tiefe >= 3 ? `<div class="gal">${fotos.map((f, k) => `<button data-f="${k}" aria-label="${esc(f.text)}"><img src="${esc(f.url)}" alt="" loading="lazy"></button>`).join("")}</div>`
+        if (fotos.length) h += S.tiefe >= 3 ? (() => { const gr = new Map(); fotos.forEach((f, k) => { const x = ALLF.find((y) => y.f === f); const st = (x && x.st) || null; const key = st ? st.name : ""; if (!gr.has(key)) gr.set(key, []); gr.get(key).push(k); });
+            return `<div class="galGr">${[...gr].map(([n, ks]) => `<div class="galSt">${n ? `<h4>📍 ${esc(n)} <small>${ks.length}</small></h4>` : ""}<div class="gal">${ks.map((k) => `<button data-f="${k}" aria-label="${esc(fotos[k].text)}"><img src="${esc(fotos[k].url)}" alt="" loading="lazy"></button>`).join("")}</div></div>`).join("")}</div>`; })()
                                             : ((hi) => `<button class="hero" data-f="${hi}" aria-label="${esc(fotos[hi].text)}"><img src="${esc(fotos[hi].url)}" alt="${esc(fotos[hi].text)}"></button>`)(Math.max(0, fotos.findIndex((f) => !f.hoch)));
         else h += `<div class="photo-ph">Fotos folgen</div>`;
         h += `<div class="tags">${(d.themen || []).map((t) => `<span class="tag ${t === S.thema ? "hit" : ""}">${esc(themaName(t))}</span>`).join("")}</div>`;

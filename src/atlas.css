@@ -499,3 +499,70 @@ body.touch:has(#card:not(.zu)) #card{right:78px}
 }
 body.touch .pad{height:min(clamp(110px,30vh,230px),calc(100vh - var(--reihe3,200px) - 54px - var(--padB)));height:min(clamp(110px,30vh,230px),calc(100dvh - var(--reihe3,200px) - 54px - var(--padB)))}
 @media (max-height:500px){body.touch .pad{height:calc(100vh - var(--reihe3,200px) - 54px - var(--padB));height:calc(100dvh - var(--reihe3,200px) - 54px - var(--padB))}}
+
+/* ================= iPhone hochkant (body.handy) ================= */
+#topbar,#tbTitel{display:none}
+body.handy #topbar{display:flex;position:fixed;z-index:30;left:0;right:0;top:0;padding:calc(env(safe-area-inset-top,0px) + 8px) 10px 6px;align-items:center;gap:8px;background:linear-gradient(rgba(5,18,26,.85),rgba(5,18,26,0))}
+body.handy .tbBtn{all:unset;flex:0 0 40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--panel);border:1px solid var(--hair);color:var(--ink);font:600 18px var(--mono);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+body.handy #tbZurueck{font-size:24px}
+body.handy #tbInfo{font:italic 700 18px Georgia,serif}
+body.handy #tbInfo[aria-pressed="true"],body.handy #tbZahnrad[aria-expanded="true"]{background:var(--amber);color:#1b1206;border-color:var(--amber)}
+/* Insel (wie Dynamic Island): Teaser · Uhr · Kompass */
+body.handy #insel{flex:1;min-width:0;height:44px;display:flex;align-items:center;justify-content:center;gap:10px;background:#000;border-radius:24px;padding:0 6px 0 6px;box-shadow:0 4px 16px rgba(0,0,0,.45)}
+body.handy #insel .tzChip{all:unset;cursor:pointer;background:var(--amber);color:#1b1206;font:600 13px var(--mono);padding:8px 12px;border-radius:999px;white-space:nowrap}
+body.handy #insel #uhr{position:static!important;display:flex!important;transform:none;background:none;border:0;padding:0;gap:5px;box-shadow:none}
+body.handy #insel #uhr svg{width:22px;height:22px;color:#fff}
+body.handy #insel #uhr small{display:none}
+body.handy #insel #uhr b{font:500 13px var(--mono);color:#fff}
+body.handy #insel #uhr.leer{display:none!important}
+body.handy #insel #kompass{position:static!important;width:32px;height:32px;flex:0 0 32px;opacity:1!important;pointer-events:auto!important;transform:none!important}
+body.handy #insel #kompass .kn{width:8px;height:22px}
+body.handy #insel #kompass .kn i{border-left-width:4px;border-right-width:4px;border-bottom-width:11px}
+body.handy #insel #kompass .kn b{border-left-width:4px;border-right-width:4px;border-top-width:11px}
+body.handy #insel #kompass.still{opacity:.55!important}
+body.handy #tbTitel{display:block;position:fixed;z-index:29;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 58px);text-align:center;font:600 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink);text-shadow:0 1px 4px rgba(0,0,0,.8);pointer-events:none}
+/* alter Kopf, Zeitleiste, Steuerung-Reiter, Quellen-i am Handy aus */
+body.handy #hudTop,body.handy #rail,body.handy #side.zu,body.handy .maplibregl-ctrl-bottom-left,body.handy .startHint{display:none!important}
+body.handy #side:not(.zu){top:calc(env(safe-area-inset-top,0px) + 62px)!important;bottom:calc(env(safe-area-inset-bottom,0px) + 70px);left:8px;z-index:28}
+body.handy #side:not(.zu) .sideKopf{display:none}
+body.handy{--reihe3:calc(env(safe-area-inset-top,0px) + 84px)}
+body.handy .pad{bottom:calc(env(safe-area-inset-bottom,0px) + 80px);height:min(34vh,260px)}
+/* Blatt unten */
+body.handy #cardTab{left:8px;right:8px;bottom:calc(env(safe-area-inset-bottom,0px) + 8px)!important}
+body.handy #card{left:8px!important;right:8px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 8px);max-height:none;height:68vh;height:68dvh;z-index:26;overflow-y:auto;overscroll-behavior:contain;border-radius:18px;box-shadow:0 -8px 30px rgba(0,0,0,.45)}
+body.handy #card .blatt{cursor:pointer}
+body.handy #card .blatt::after{content:"antippen oder nach unten wischen = schließen";font:10px var(--mono);color:var(--muted);margin-top:6px}
+body.handy #card .blatt{flex-direction:column}
+/* Galerie je Station */
+.galSt h4{margin:10px 0 6px;font:600 12px var(--mono);color:var(--amber)}
+.galSt h4 small{color:var(--muted);font-weight:400}
+/* Großansicht: Schließen immer sichtbar */
+body.handy #lbClose{position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);right:10px;width:44px;height:44px;border-radius:50%;padding:0;font-size:0;z-index:5}
+body.handy #lbClose::before{content:"✕";font-size:20px}
+/* Info-Tour */
+#tour{position:fixed;inset:0;z-index:60}
+.tourLoch{position:fixed;border-radius:16px;box-shadow:0 0 0 9999px rgba(2,8,12,.72);outline:2px solid var(--amber);transition:all .25s;pointer-events:none}
+.tourBox{position:fixed;left:16px;right:16px;max-width:460px;margin:0 auto;background:var(--panel);border:1px solid var(--amber);border-radius:16px;padding:14px 16px;color:var(--ink)}
+.tourBox b{font:700 18px var(--display);text-transform:uppercase;color:var(--amber)}
+.tourBox p{margin:6px 0 10px;font-size:15px;line-height:1.45}
+.tourNav{display:flex;gap:8px;align-items:center}
+.tourNav span{flex:1;font:11px var(--mono);color:var(--muted)}
+.tourNav button{all:unset;cursor:pointer;padding:8px 14px;border-radius:999px;border:1px solid var(--hair);font:13px var(--mono)}
+.tourNav button.primary{background:var(--amber);color:#1b1206;border-color:var(--amber)}
+/* Wähler Tag/Station (lange drücken) */
+#waehler{position:fixed;z-index:55;left:8px;right:8px;top:calc(env(safe-area-inset-top,0px) + 62px);bottom:calc(env(safe-area-inset-bottom,0px) + 8px);background:var(--panel);border:1px solid var(--hair);border-radius:18px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.6);touch-action:none}
+.wKopf{display:flex;flex-wrap:wrap;align-items:center;gap:2px 10px;padding:10px 12px;border-bottom:1px solid var(--hair)}
+.wKopf b{font:700 16px var(--display);text-transform:uppercase}
+.wKopf span{flex:1 1 100%;order:3;font:10px var(--mono);color:var(--muted)}
+.wX{all:unset;margin-left:auto;cursor:pointer;width:32px;height:32px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--hair)}
+.wSp{flex:1;display:grid;grid-template-columns:1fr 1fr;min-height:0}
+.wTage,.wSt{overflow-y:auto;padding:6px;display:flex;flex-direction:column;gap:3px}
+.wSt{border-left:1px solid var(--hair)}
+.wSt h4{margin:2px 4px 4px;font:600 11px var(--mono);color:var(--amber)}
+.wT,.wS{all:unset;cursor:pointer;display:flex;gap:8px;align-items:center;padding:7px 8px;border-radius:10px;font:12px var(--mono);color:var(--ink);border-left:4px solid var(--lc,transparent);min-height:20px}
+.wT b{flex:0 0 22px;text-align:right;color:var(--muted)}
+.wT span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wT.on,.wS.on{background:var(--amber);color:#1b1206}.wT.on b{color:#1b1206}
+.wS{border-left:0;line-height:1.3}
+#waehler{background:#0b1d25}
+body.handy #cardTab span::after{content:"  ·  antippen für mehr"}
