@@ -123,7 +123,7 @@
           <span class="chip opt"><b class="mono" id="chipKm">0</b> km</span>
         </div>
       </div>
-      <div id="topbar" aria-label="Reise-Atlas Leiste"><a class="tbBtn" id="tbZurueck" href="/atlas/" aria-label="Zurück zu allen Reisen">‹</a><div id="insel" aria-label="Teaser, Uhr, Kompass"></div><button class="tbBtn" id="tbInfo" aria-label="Hilfe zur Bedienung ein/aus" aria-pressed="false">i</button><button class="tbBtn" id="tbZahnrad" aria-label="Steuerung ein/aus" aria-expanded="false">⚙︎</button></div>
+      <div id="topbar" aria-label="Reise-Atlas Leiste"><a class="tbBtn" id="tbZurueck" href="/atlas/" aria-label="Zurück zu allen Reisen">‹</a><div id="insel" aria-label="Teaser, Uhr, Kompass"></div><button class="tbBtn" id="tbLupe" aria-label="Suchen ein/aus" aria-pressed="false">🔎</button><button class="tbBtn" id="tbInfo" aria-label="Hilfe zur Bedienung ein/aus" aria-pressed="false">i</button><button class="tbBtn" id="tbZahnrad" aria-label="Steuerung ein/aus" aria-expanded="false">⚙︎</button></div>
       <div id="tbTitel"></div>
       <button class="hud" id="kompass" aria-label="Karte nach Norden ausrichten"><span class="kn"><i></i><b></b></span></button>
       <div class="hud pad" id="navPad" role="slider" aria-label="Stationen und Tage: nach oben ziehen = weiter (weit = nächster Tag), nach unten = zurück; oben/unten tippen = Station vor/zurück"><span class="pA">▲</span><span class="pT">Stopp<br>·<br>Tag</span><span class="pA">▼</span></div>
@@ -136,7 +136,12 @@
       <div class="hud" id="side"><button class="sideKopf" id="sideKopf" aria-expanded="true"><span>Steuerung</span><i>‹</i></button>
         <div class="panel"><h4>Smartphone als Controller</h4>
           <div id="qrBox"><div id="qr" aria-label="QR-Code zum Controller"></div><p>Mit der Handy-Kamera scannen<br>oder Code eingeben:<br><b id="codeTxt">······</b></p></div></div>
-        <div class="panel" id="tonPanel"><button class="sucheBtn" id="sucheBtn" title="Taste /">🔎 Suchen &amp; fragen</button><button class="uhrBtn" id="uhrBtn" aria-pressed="false">🕐 Uhr nach Fotozeiten</button><button class="uhrBtn" id="vollBtn">⛶ Vollbild</button><button class="fernBtn" id="fernBtn">📱 Dieses Gerät als Fernbedienung für einen anderen Bildschirm</button><h4>Tempo</h4>
+        <div class="panel" id="tonPanel"><div class="nurHandy einst">
+          <h4>Anzeige</h4>
+          <label class="schalter"><span>🕐 Uhr in der Insel</span><input type="checkbox" id="swUhr"><i></i></label>
+          <label class="schalter"><span>🔎 Lupe in der Leiste</span><input type="checkbox" id="swLupe"><i></i></label>
+          <h4>Dieses Gerät</h4>
+          <div class="seg" style="--n:2" id="segModus"><button class="on" data-m="ansehen">👀 Ansehen</button><button data-m="fern">📱 Fernbedienung</button></div></div><button class="sucheBtn" id="sucheBtn" title="Taste /">🔎 Suchen &amp; fragen</button><button class="uhrBtn" id="uhrBtn" aria-pressed="false">🕐 Uhr nach Fotozeiten</button><button class="uhrBtn" id="vollBtn">⛶ Vollbild</button><button class="fernBtn" id="fernBtn">📱 Dieses Gerät als Fernbedienung für einen anderen Bildschirm</button><h4 class="nurHandy">Standard beim Start <small>(wird gemerkt)</small></h4><h4>Tempo</h4>
           <div class="tachoBox"><span id="tachoGross"></span><div><b id="tempoTxt"></b><input type="range" id="tempoR" min="0" max="10" step="1" aria-label="Fahrstufe 0 (Stopp) bis 10 (Tasten − / +)"></div></div>
           <h4>Breite</h4>
           <div class="seg" style="--n:3" data-ks="breite"><button data-v="1">Highlights</button><button data-v="2">Stationen</button><button data-v="3">alles</button></div>
@@ -145,6 +150,7 @@
           <h4>Kamera</h4>
           <div class="seg" style="--n:3" data-ks="kamera">${KAMERA.map(([k, n]) => `<button data-v="${k}" title="${k === "nord" ? "Norden oben" : k === "fahrt" ? "Blick in Fahrtrichtung" : "selbst drehen"}">${n}</button>`).join("")}</div>
           <div id="musikBox" hidden><h4>Musik</h4><div class="seg" style="--n:2" data-ks="musik"><button data-v="aus">aus</button><button data-v="an">an</button></div><p class="note" id="musikInfo"></p></div>
+          <p class="note nurHandy quellen">Karte © OpenFreeMap · OpenMapTiles · OpenStreetMap-Mitwirkende · Höhen: Terrain Tiles (AWS Open Data) · Routen: OSRM (Näherung) · Wetter: Open-Meteo</p>
           <div id="vlBox" hidden><h4>Vorlesen</h4><div class="seg vl" data-ks="vorlesen">${VORLESEN.map(([k, n]) => `<button data-v="${k}">${n}</button>`).join("")}</div><p class="note" id="vlInfo"></p></div>
         </div>
         <div class="panel"><h4>Tastatur</h4><div class="kbd"><kbd>←</kbd> <kbd>→</kbd> Station · <kbd>⇧</kbd>+Pfeil Tag<br><kbd>Leer</kbd> Fahren / Anhalten · <kbd>−</kbd> <kbd>+</kbd> Tempo<br><kbd>↓</kbd> tiefer <kbd>↑</kbd> weniger · <kbd>B</kbd> Breite · <kbd>T</kbd> Tageskarte · <kbd>F</kbd> Vollbild<br><kbd>/</kbd> Suchen &amp; fragen<br><kbd>K</kbd> Kamera · <kbd>M</kbd> Musik · <kbd>V</kbd> Vorlesen</div></div>
@@ -197,7 +203,7 @@
     // Rollen ohne passende Inhalte ausblenden (z. B. keine Wien-Fäden)
     if (!DAYS.some((d) => (d.wien_faden || []).length)) delete ROLLEN.wien;
 
-    const S = { rolle:null, idx:0, playing:false, tempo:5, breite:2, tiefe:1, thema:null, seen:new Set(), mythen:new Set(), wien:new Set(),
+    const S = { rolle:null, idx:0, playing:false, tempo:[1,2,3,4,5,6,7,8,9,10].includes(merk.get("tempo")) ? merk.get("tempo") : 5, breite:[1,2,3].includes(merk.get("breite")) ? merk.get("breite") : 2, tiefe:1, thema:null, seen:new Set(), mythen:new Set(), wien:new Set(),
       kamera: KAMERA.some((k) => k[0] === merk.get("kamera")) ? merk.get("kamera") : "fahrt",
       musik: merk.get("musik", false) === true, vorlesen: VORLESEN.some((k) => k[0] === merk.get("vorlesen")) ? merk.get("vorlesen") : "aus" };
     const MUSIK = DATA.musik || {};
@@ -304,7 +310,7 @@
       if (!ALLF.length || k < 0 || k >= ALLF.length) return; const x = ALLF[k];
       if (lbIdx < 0 || !lbGruppe.includes(k)) lbGruppe = ALLF.map((y, j) => (y.day === x.day && y.st === x.st ? j : -1)).filter((j) => j >= 0);
       lbIdx = k; const pos = lbGruppe.indexOf(k);
-      document.getElementById("lbPrev").hidden = pos <= 0; document.getElementById("lbNext").hidden = pos >= lbGruppe.length - 1;
+      document.getElementById("lbPrev").classList.toggle("aus", pos <= 0); document.getElementById("lbNext").classList.toggle("aus", pos >= lbGruppe.length - 1);
       const img = document.getElementById("lbImg"); img.src = x.f.url; img.alt = x.f.text || "";
       document.getElementById("lbCap").innerHTML = `<span>Tag ${x.day} · ${x.st ? esc(x.st.name) + " · " : ""}${pos + 1}/${lbGruppe.length}${x.f.zeit ? " · " + esc(x.f.zeit) : ""}${pos === lbGruppe.length - 1 ? " · Ende dieser Station" : ""}</span>${esc(x.f.text)}`;
       lb.hidden = false; preload(k + 1); preload(k - 1); broadcast();
@@ -733,6 +739,16 @@
       const pruefe = () => { const an = handyNoetig(); if (an === B.classList.contains("handy")) return; B.classList.toggle("handy", an); umziehen(an); if (an && !document.getElementById("card").classList.contains("zu")) { S.tiefe = 3; render(); } };
       addEventListener("resize", pruefe); setTimeout(pruefe, 0); setTimeout(pruefe, 600);
       document.getElementById("tbTitel").textContent = TITLE;
+      // Anzeige-Schalter (werden gemerkt)
+      const swUhr = document.getElementById("swUhr"), swLupe = document.getElementById("swLupe");
+      const anzeige = () => { B.classList.toggle("ohneUhr", !swUhr.checked); B.classList.toggle("ohneLupe", !swLupe.checked); merk.set("inselUhr", swUhr.checked); merk.set("lupe", swLupe.checked); };
+      swUhr.checked = merk.get("inselUhr", true) !== false; swLupe.checked = merk.get("lupe", true) !== false; anzeige();
+      swUhr.onchange = anzeige; swLupe.onchange = anzeige;
+      document.getElementById("segModus").onclick = (e) => { const b = e.target.closest("[data-m]"); if (b && b.dataset.m === "fern") chooseMode(); };
+      // 🔎 = Suchfeld oben ein/aus
+      const lu = document.getElementById("tbLupe");
+      lu.onclick = () => { const offen = document.querySelector(".tzBox.suche"); if (offen) { offen.remove(); lu.setAttribute("aria-pressed", "false"); return; } suche(); lu.setAttribute("aria-pressed", "true");
+        const box = document.querySelector(".tzBox.suche"); if (box) { box.classList.add("oben"); new MutationObserver(() => { if (!box.isConnected) lu.setAttribute("aria-pressed", "false"); }).observe(document.body, { childList: true }); } };
       // ⚙ = Steuerung ein/aus
       const zr = document.getElementById("tbZahnrad");
       zr.onclick = () => { const zu = !side.classList.contains("zu"); setZu(zu); zr.setAttribute("aria-expanded", !zu); };
@@ -797,10 +813,12 @@
         fotoMarkers.push(new maplibregl.Marker({ element: e }).setLngLat([f.lon, f.lat]).addTo(map)); }); }
 
     // ---------- Anzeige ----------
+    let stdAlt = "";
     function render() {
+      { const k = S.tempo + "/" + S.breite; if (k !== stdAlt) { stdAlt = k; merk.set("tempo", S.tempo); merk.set("breite", S.breite); } } // Standard beim nächsten Start
       const tr = track(); const s = tr[S.idx]; const d = s ? dayOf(s.day) : DAYS[0];
 
-      document.querySelectorAll("#tonPanel .seg").forEach((g) => [...g.children].forEach((b) => b.classList.toggle("on", b.dataset.v === (g.dataset.ks === "musik" ? (S.musik ? "an" : "aus") : String(S[g.dataset.ks])))));
+      document.querySelectorAll("#tonPanel .seg[data-ks]").forEach((g) => [...g.children].forEach((b) => b.classList.toggle("on", b.dataset.v === (g.dataset.ks === "musik" ? (S.musik ? "an" : "aus") : String(S[g.dataset.ks])))));
       document.getElementById("chipMyth").textContent = S.mythen.size + "/" + DAYS.reduce((a, x) => a + (x.mythen || []).length, 0);
       document.getElementById("chipWien").textContent = S.wien.size + "/" + DAYS.reduce((a, x) => a + (x.wien_faden || []).length, 0);
       const kmSoFar = DAYS.filter((x) => x.tag < d.tag).reduce((a, x) => a + ((x.route && x.route.km) || 0), 0);

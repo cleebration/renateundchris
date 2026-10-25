@@ -566,3 +566,40 @@ body.handy #lbClose::before{content:"✕";font-size:20px}
 .wS{border-left:0;line-height:1.3}
 #waehler{background:#0b1d25}
 body.handy #cardTab span::after{content:"  ·  antippen für mehr"}
+
+/* Großansicht: ganze linke/rechte Hälfte tippen = zurück/weiter */
+body.touch .lbNav{all:unset;position:absolute;top:0;bottom:0;width:50%;z-index:2;display:flex;align-items:center;cursor:pointer;font-size:34px;color:rgba(255,255,255,.75);text-shadow:0 2px 8px rgba(0,0,0,.6);-webkit-tap-highlight-color:transparent}
+body.touch #lbPrev{left:0;justify-content:flex-start;padding-left:10px}
+body.touch #lbNext{right:0;justify-content:flex-end;padding-right:10px}
+body.touch .lbNav.aus{color:transparent;text-shadow:none}
+body.touch #lbClose,body.touch #lbCap{z-index:3}
+/* Einstellungen (⚙) am iPhone */
+.nurHandy{display:none}
+body.handy .nurHandy{display:block}
+body.handy #tonPanel #sucheBtn,body.handy #tonPanel #uhrBtn,body.handy #tonPanel .fernBtn{display:none!important}
+body.handy #tonPanel{gap:8px}
+body.handy #tonPanel h4 small{font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0}
+.einst h4{margin:10px 0 6px}
+.schalter{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 2px;font:13px var(--mono);cursor:pointer}
+.schalter input{position:absolute;opacity:0;pointer-events:none}
+.schalter i{position:relative;flex:0 0 46px;height:28px;border-radius:14px;background:rgba(255,255,255,.18);transition:background .2s}
+.schalter i::after{content:"";position:absolute;left:3px;top:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .2s}
+.schalter input:checked+i{background:#34c759}
+.schalter input:checked+i::after{transform:translateX(18px)}
+.quellen{font-size:10px!important;line-height:1.4;margin-top:10px!important}
+body.handy.ohneUhr #insel #uhr{display:none!important}
+body.handy.ohneLupe #tbLupe{display:none}
+body.handy #tbLupe{font-size:16px}
+body.handy #tbLupe[aria-pressed="true"]{background:var(--amber);border-color:var(--amber)}
+/* Suche oben unter der Leiste */
+body.handy .tzBox.suche.oben{inset:auto;left:8px;right:8px;top:calc(env(safe-area-inset-top,0px) + 62px);bottom:auto;background:none;padding:0;display:block;z-index:40}
+body.handy .tzBox.suche.oben .suIn{background:var(--panel);border:1px solid var(--amber);border-radius:16px;padding:10px;max-height:70vh;overflow:auto;width:auto;max-width:none}
+body.handy .tzBox.suche.oben [data-x]{display:none}
+body.handy #topbar{gap:6px}
+body.handy .tbBtn{flex-basis:38px;height:38px}
+body.handy #insel{gap:6px;padding:0 5px}body.handy #insel #uhr svg{display:none}body.handy #insel .tzChip{padding:8px 10px;font-size:12px}
+body.handy #side:not(.zu){right:8px;width:auto;z-index:31;background:#0b1d25;border:1px solid var(--hair);border-radius:18px;overflow-y:auto}
+body.handy #side:not(.zu) .panel{background:none;border:0}
+body.handy #tonPanel h4.nurHandy{margin-top:14px}
+body.handy #side:not(.zu){display:block!important}body.handy #side:not(.zu) #tonPanel{overflow:visible;max-height:none}body.handy #side:not(.zu) .panel:not(#tonPanel){display:none}
+body.handy .tzBox.suche.oben .suIn{background:#0b1d25}body.handy .tzBox.suche.oben [data-frage]{font-size:15px;padding:8px 14px}body.handy .tzBox.suche.oben .frRow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
