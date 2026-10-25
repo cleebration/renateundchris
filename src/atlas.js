@@ -203,7 +203,7 @@
     // Rollen ohne passende Inhalte ausblenden (z. B. keine Wien-Fäden)
     if (!DAYS.some((d) => (d.wien_faden || []).length)) delete ROLLEN.wien;
 
-    const S = { rolle:null, idx:0, playing:false, tempo:[1,2,3,4,5,6,7,8,9,10].includes(merk.get("tempo")) ? merk.get("tempo") : 5, breite:[1,2,3].includes(merk.get("breite")) ? merk.get("breite") : 2, tiefe:1, thema:null, seen:new Set(), mythen:new Set(), wien:new Set(),
+    const S = { rolle:null, idx:0, playing:false, tempo:[1,2,3,4,5,6,7,8,9,10].includes(merk.get("tempo")) ? merk.get("tempo") : 5, breite:[1,2,3].includes(merk.get("breite3")) ? merk.get("breite3") : 3, tiefe:1, thema:null, seen:new Set(), mythen:new Set(), wien:new Set(),
       kamera: KAMERA.some((k) => k[0] === merk.get("kamera")) ? merk.get("kamera") : "fahrt",
       musik: merk.get("musik", false) === true, vorlesen: VORLESEN.some((k) => k[0] === merk.get("vorlesen")) ? merk.get("vorlesen") : "aus" };
     const MUSIK = DATA.musik || {};
@@ -693,7 +693,7 @@
         if (e.target.closest(".gal")) return; // Fotostreifen wischt selbst
         if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) { if (document.body.classList.contains("handy")) step(dx < 0 ? 1 : -1); else if (dx > 0) setKarteZu(true); return; } }); }
     // Tageskarte ein-/ausblenden; ausgeblendet bleibt rechts ein schmaler Reiter sichtbar
-    document.getElementById("card").addEventListener("click", (e) => { const b = e.target.closest(".blatt [data-st]"); if (!b) return; e.stopPropagation(); const v = +b.dataset.st; if (v === 0) setKarteZu(true); else setTiefe(v); });
+    document.getElementById("card").addEventListener("click", (e) => { const pf = e.target.closest(".bPf"); if (pf) { e.stopPropagation(); if (!document.body.classList.contains("handy")) step(+pf.dataset.n); return; } const b = e.target.closest(".blatt [data-st]"); if (!b) return; e.stopPropagation(); const v = +b.dataset.st; if (v === 0) setKarteZu(true); else setTiefe(v); });
     let tiefeRichtung = 1; // Tippen: 1→2→3→4→3→2→1 …
     function setTiefe(t) { handZoom = null; setTiefeOhne(t); }
     function setTiefeOhne(t) { S.tiefe = Math.max(document.body.classList.contains("touch") ? 1 : 0, Math.min(3, t)); autoHalt(); go(true); broadcast(); }
@@ -730,7 +730,8 @@
       np.addEventListener("pointermove", (e) => { if (ny == null) return; const dy = ny - e.clientY; if (Math.abs(dy) >= 10) nb = true; if (!nb) return; const w = was(dy);
         np.dataset.w = w; zeig(["◀◀ voriger Tag", "◀ vorige Station", "…", "nächste Station ▶", "nächster Tag ▶▶"][w + 2]); });
       np.addEventListener("pointerup", (e) => { if (ny == null) return; const dy = ny - e.clientY; ny = null; np.dataset.w = 0;
-        if (!nb) { const r = np.getBoundingClientRect(); step(e.clientY < r.top + r.height / 2 ? 1 : -1); } else { const w = was(dy); if (Math.abs(w) === 1) step(w); else if (w) dayStep(w / 2); } weg(); });
+        const w = nb ? was(dy) : 0;
+        if (!w) { const r = np.getBoundingClientRect(); step(e.clientY < r.top + r.height / 2 ? 1 : -1); } else if (Math.abs(w) === 1) step(w); else dayStep(w / 2); weg(); });
       np.addEventListener("pointercancel", () => { ny = null; np.dataset.w = 0; weg(); }); }
     // ================= iPhone hochkant: Leiste oben, Insel, Info-Tour, Blatt unten, Tag-/Stations-Wähler =================
     { const B = document.body, insel = document.getElementById("insel"), heim = new Map();
@@ -738,7 +739,10 @@
       const umziehen = (an) => { ["kompass", "uhr"].forEach((id) => { const el = document.getElementById(id); if (!el) return; if (an) { if (!heim.has(id)) heim.set(id, [el.parentNode, el.nextSibling]); insel.appendChild(el); } else if (heim.has(id)) { const [p, n] = heim.get(id); p.insertBefore(el, n); } });
         const tz = document.querySelector(".tzChip"); if (tz) { if (an) { if (!heim.has("tz")) heim.set("tz", [tz.parentNode, tz.nextSibling]); insel.prepend(tz); } else if (heim.has("tz")) { const [p, n] = heim.get("tz"); p.insertBefore(tz, n); } }
         if (an) { document.getElementById("uhr").hidden = false; const s = track()[S.idx]; if (s) uhrSetzen(s.day, s.ri || 0); } };
-      const pruefe = () => { const an = handyNoetig(); if (an === B.classList.contains("handy")) return; B.classList.toggle("handy", an); umziehen(an); if (an && !document.getElementById("card").classList.contains("zu")) { S.tiefe = 3; render(); } };
+      let ersterStart = true;
+      const pruefe = () => { const an = handyNoetig(); if (an === B.classList.contains("handy")) return; B.classList.toggle("handy", an); umziehen(an);
+        if (an && ersterStart) { ersterStart = false; setKarteZu(true); } // am iPhone startet die Karte frei, das Blatt zugeklappt
+        else if (an && !document.getElementById("card").classList.contains("zu")) { S.tiefe = 3; render(); } };
       addEventListener("resize", pruefe); setTimeout(pruefe, 0); setTimeout(pruefe, 600);
       document.getElementById("tbTitel").textContent = TITLE;
       // Anzeige-Schalter (werden gemerkt)
@@ -760,6 +764,7 @@
       card.addEventListener("touchend", (e) => { if (!B.classList.contains("handy") || sy == null) return; const t = e.changedTouches[0], dy = t.clientY - sy, dx = t.clientX - sx; sy = null;
         if (e.target.closest("a,.gal button,.clip,.passend")) return;
         const tap = Math.abs(dy) < 8 && Math.abs(dx) < 8;
+        const pf = e.target.closest(".bPf"); if (pf) { if (tap) { e.preventDefault(); step(+pf.dataset.n); } return; }
         if ((tap && kopfZone) || (dy > 50 && dy > Math.abs(dx) && (kopfZone || obenStart))) setKarteZu(true); }, { passive: true });
       // ---- Info-Tour (i): hebt nacheinander die Bedienelemente hervor; nochmal i = weg ----
       const SCHRITTE = [
@@ -817,7 +822,7 @@
     // ---------- Anzeige ----------
     let stdAlt = "";
     function render() {
-      { const k = S.tempo + "/" + S.breite; if (k !== stdAlt) { stdAlt = k; merk.set("tempo", S.tempo); merk.set("breite", S.breite); } } // Standard beim nächsten Start
+      { const k = S.tempo + "/" + S.breite; if (k !== stdAlt) { stdAlt = k; merk.set("tempo", S.tempo); merk.set("breite3", S.breite); } } // Standard beim nächsten Start
       const tr = track(); const s = tr[S.idx]; const d = s ? dayOf(s.day) : DAYS[0];
 
       document.querySelectorAll("#tonPanel .seg[data-ks]").forEach((g) => [...g.children].forEach((b) => b.classList.toggle("on", b.dataset.v === (g.dataset.ks === "musik" ? (S.musik ? "an" : "aus") : String(S[g.dataset.ks])))));
@@ -870,7 +875,7 @@
         if (d.seite) h += `<a class="more" href="${esc(d.seite)}">Ganzes Tagebuch von Tag ${d.tag} lesen →</a>`;
       }
       if (d.status === "fehlt") h += `<p class="note">Für diesen Tag gibt es noch keinen Eintrag.</p>`;
-      const card = document.getElementById("card"); card.innerHTML = `<div class="blatt" aria-label="Griff: nach oben ziehen = mehr, nach unten = weniger"><i class="griff" aria-hidden="true"></i></div><button class="cardX" aria-label="Tagesübersicht ausblenden (T)" title="ausblenden (T)">›</button>` + h; card.dataset.tiefe = S.tiefe; if (!anim) tagFort(d.tag, (s && s.ri) || 0); setTimeout(() => { try { polster(); } catch (e) {} }, 0);
+      const card = document.getElementById("card"); card.innerHTML = `<div class="blatt" aria-label="Griff: antippen oder nach unten wischen = schließen"><span class="bReihe"><button class="bPf" data-n="-1" aria-label="vorige Station">‹</button><i class="griff" aria-hidden="true"></i><button class="bPf" data-n="1" aria-label="nächste Station">›</button></span></div><button class="cardX" aria-label="Tagesübersicht ausblenden (T)" title="ausblenden (T)">›</button>` + h; card.dataset.tiefe = S.tiefe; if (!anim) tagFort(d.tag, (s && s.ri) || 0); setTimeout(() => { try { polster(); } catch (e) {} }, 0);
       card.querySelector(".cardX").onclick = () => setKarteZu(true);
       { const ct = document.getElementById("cardTab"), tagSt = s ? ST.filter((x) => x.day === s.day) : [], nr = s ? tagSt.indexOf(s) + 1 : 0;
         ct.innerHTML = `<i class="griff" aria-hidden="true"></i><span class="ctReihe"><span class="ctPfeil" data-n="-1" role="button" aria-label="vorige Station">‹</span><span class="ctMitte"><b>${esc((s && s.name) || d.titel || "Tag " + d.tag)}</b><small>Tag ${d.tag} · Station ${nr}/${tagSt.length} · ${esc(d.titel || "")}</small></span><span class="ctPfeil" data-n="1" role="button" aria-label="nächste Station">›</span></span>`;

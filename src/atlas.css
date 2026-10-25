@@ -620,3 +620,9 @@ body.touch #cardTab .ctMitte{flex:1;min-width:0;display:flex;flex-direction:colu
 body.touch #cardTab .ctMitte b{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:600 14px var(--mono)}
 body.touch #cardTab .ctMitte small{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:10px var(--mono);color:var(--muted)}
 body.touch #cardTab span::after,body.handy #cardTab span::after{content:none}
+
+/* Blattkopf: ‹ Griff › – vor/zurück in jeder Ansicht */
+body.touch .blatt .bReihe{display:flex;align-items:center;justify-content:space-between;width:100%}
+body.touch .bPf{all:unset;cursor:pointer;width:40px;height:34px;display:grid;place-items:center;font-size:24px;border-radius:12px;background:rgba(255,255,255,.07);color:var(--ink)}
+/* Blatt offen: Felder ausblenden, das Blatt hat eigene ‹ › */
+body.handy:has(#card:not(.zu)) .pad{display:none}
