@@ -470,3 +470,32 @@ body.touch #cardTab{writing-mode:horizontal-tb!important;transform:none!importan
 body.touch #cardTab[hidden]{display:none!important}
 body.touch #cardTab span{max-width:100%;overflow:hidden;text-overflow:ellipsis}
 body.touch #cardTab .griff{display:block;width:44px;height:5px;border-radius:3px;background:rgba(255,255,255,.6)}
+
+/* ===== Touch-Layout neu (25.10.): oben alles Info/Navigation, links Stopp/Tag, rechts Tempo, unten nur die Zeile zum Hochziehen ===== */
+body.touch{--u:calc(10px + env(safe-area-inset-bottom,0px));--padB:calc(var(--u) + 72px)}
+body.touch #rail{top:calc(var(--kopf,120px) + 6px);bottom:auto!important;left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px));padding:6px 8px}
+/* Steuerung als Knopf oben links, unter der Zeitleiste */
+body.touch #side.zu{top:var(--reihe3,200px)!important;bottom:auto!important;left:max(8px,env(safe-area-inset-left,0px));padding:0}
+body.touch #side.zu .sideKopf{writing-mode:horizontal-tb!important;transform:none;height:auto!important;width:auto!important;padding:8px 12px!important;border-radius:999px!important;border:1px solid var(--hair)!important;gap:8px;font-size:11px}
+body.touch #side.zu .sideKopf i{transform:rotate(180deg)}
+body.touch #side:not(.zu){bottom:var(--u)}
+body.touch #uhr{top:var(--reihe3,200px);left:calc(max(8px,env(safe-area-inset-left,0px)) + 132px)}
+body.touch #kompass{top:var(--reihe3,200px)}
+body.touch .maplibregl-ctrl-bottom-left{top:var(--reihe3,200px)!important}
+/* Daumenfelder: über der unteren Zeile, gleiche Höhe links/rechts */
+body.touch .pad{bottom:var(--padB);height:clamp(110px,30vh,230px)}
+/* Unten: Zeile zum Hochziehen (Karte zu) bzw. das Blatt (Karte offen) */
+body.touch #cardTab{left:max(8px,env(safe-area-inset-left,0px));right:max(8px,env(safe-area-inset-right,0px));bottom:var(--u)!important;border-bottom:1px solid var(--hair);border-radius:16px;padding:6px 14px 10px}
+body.touch #cardTab span::after{content:"  ·  nach oben ziehen für mehr";color:var(--muted);font-size:11px}
+body.touch #card{bottom:var(--u);left:78px;right:78px;max-height:calc(100vh - var(--reihe3,200px) - 60px)}
+body.touch:has(#card:not(.zu)) #card{right:78px}
+/* Querformat (Handy): kompakter Kopf */
+@media (max-height:500px){
+  body.touch .brand h1{font-size:18px}
+  body.touch #hudTop{gap:4px}
+  body.touch .pad{height:clamp(90px,36vh,160px)}
+  body.touch .landName{display:none}
+  body.touch #cardTab span::after{content:""}
+}
+body.touch .pad{height:min(clamp(110px,30vh,230px),calc(100vh - var(--reihe3,200px) - 54px - var(--padB)));height:min(clamp(110px,30vh,230px),calc(100dvh - var(--reihe3,200px) - 54px - var(--padB)))}
+@media (max-height:500px){body.touch .pad{height:calc(100vh - var(--reihe3,200px) - 54px - var(--padB));height:calc(100dvh - var(--reihe3,200px) - 54px - var(--padB))}}

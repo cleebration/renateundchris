@@ -292,17 +292,24 @@
     const lb = document.getElementById("lightbox");
     // alle Fotos der Reise in Reihenfolge – Blättern läuft über Tagesgrenzen weiter
     const ALLF = []; DAYS.forEach((d) => (d.fotos || []).forEach((f, i) => ALLF.push({ day: d.tag, i, n: d.fotos.length, f })));
-    let lbIdx = -1, lbStartDay = null;
+    // jedes Foto gehört zur nächstgelegenen Station seines Tages (GPS, sonst Name im Fototext, sonst erste Station)
+    ALLF.forEach((x) => { const sts = ST.filter((s) => s.day === x.day); if (!sts.length) { x.st = null; return; }
+      if (typeof x.f.lat === "number") { let b = sts[0], bd = Infinity; sts.forEach((s) => { const v = d2([s.lon, s.lat], [x.f.lon, x.f.lat]); if (v < bd) { bd = v; b = s; } }); x.st = b; }
+      else x.st = sts.find((s) => x.f.text && s.name.toLowerCase().includes(String(x.f.text).toLowerCase().split(/[ ,]/)[0])) || sts[0]; });
+    let lbIdx = -1, lbStartDay = null, lbGruppe = [];
     const preload = (k) => { const x = ALLF[k]; if (x) { const im = new Image(); im.src = x.f.url; } };
     function showLb(k) {
-      if (!ALLF.length) return; k = (k + ALLF.length) % ALLF.length; lbIdx = k; const x = ALLF[k];
+      if (!ALLF.length || k < 0 || k >= ALLF.length) return; const x = ALLF[k];
+      if (lbIdx < 0 || !lbGruppe.includes(k)) lbGruppe = ALLF.map((y, j) => (y.day === x.day && y.st === x.st ? j : -1)).filter((j) => j >= 0);
+      lbIdx = k; const pos = lbGruppe.indexOf(k);
+      document.getElementById("lbPrev").hidden = pos <= 0; document.getElementById("lbNext").hidden = pos >= lbGruppe.length - 1;
       const img = document.getElementById("lbImg"); img.src = x.f.url; img.alt = x.f.text || "";
-      document.getElementById("lbCap").innerHTML = `<span>Tag ${x.day} · ${x.i + 1}/${x.n}${x.f.zeit ? " · " + esc(x.f.zeit) : ""}</span>${esc(x.f.text)}`;
+      document.getElementById("lbCap").innerHTML = `<span>Tag ${x.day} · ${x.st ? esc(x.st.name) + " · " : ""}${pos + 1}/${lbGruppe.length}${x.f.zeit ? " · " + esc(x.f.zeit) : ""}${pos === lbGruppe.length - 1 ? " · Ende dieser Station" : ""}</span>${esc(x.f.text)}`;
       lb.hidden = false; preload(k + 1); preload(k - 1); broadcast();
     }
     const openPhoto = (f) => { lbStartDay = (go.last || {}).day; const k = ALLF.findIndex((x) => x.f.url === f.url); showLb(k < 0 ? 0 : k); };
-    const lbStep = (n) => showLb(lbIdx + n);
-    function closeLb() { if (lb.hidden) return; lb.hidden = true; const x = ALLF[lbIdx]; lbIdx = -1;
+    const lbStep = (n) => { const pos = lbGruppe.indexOf(lbIdx) + n; if (pos < 0 || pos >= lbGruppe.length) return; showLb(lbGruppe[pos]); };
+    function closeLb() { if (lb.hidden) return; lb.hidden = true; const x = ALLF[lbIdx]; lbIdx = -1; lbGruppe = [];
       if (x && x.day !== lbStartDay) gotoDay(x.day); else broadcast(); }
     document.getElementById("lbClose").onclick = closeLb;
     document.getElementById("lbPrev").onclick = (e) => { e.stopPropagation(); lbStep(-1); };
@@ -485,7 +492,8 @@
     new MutationObserver(() => requestAnimationFrame(polster)).observe(document.getElementById("side"), { attributes: true, attributeFilter: ["class"] });
     map.once("load", () => setTimeout(polster, 300));
     // Quellenangabe nur als „i“ (aufgeklappt deckt sie am Handy die Karte zu)
-    map.once("idle", () => { const a = document.querySelector(".maplibregl-ctrl-attrib"); if (a) { a.classList.remove("maplibregl-compact-show"); a.removeAttribute("open"); } });
+    { const zu = () => { const a = document.querySelector(".maplibregl-ctrl-attrib"); if (a) { a.classList.remove("maplibregl-compact-show"); a.removeAttribute("open"); } };
+      map.once("load", () => { zu(); setTimeout(zu, 400); setTimeout(zu, 2000); }); map.once("idle", zu); }
     map.on("touchstart", (e) => { if (e.originalEvent && e.originalEvent.touches && e.originalEvent.touches.length >= 2) hand = true; });
     map.on("touchend", (e) => { if (!hand || (e.originalEvent && e.originalEvent.touches && e.originalEvent.touches.length)) return; hand = false; handZoom = map.getZoom(); });
     map.on("wheel", () => { clearTimeout(map._hz); map._hz = setTimeout(() => (handZoom = map.getZoom()), 300); });
@@ -635,7 +643,8 @@
     // Seitenleiste zusammenklappen (gemerkt), Touch-Dock, Karte als ausklappbares Blatt
     const side = document.getElementById("side");
     // Leiste beginnt unter dem Kopf; Tagesnummern bei schmalen Quadraten nur jeden 5. Tag
-    const lage = () => { document.body.style.setProperty("--kopf", Math.round(document.getElementById("hudTop").getBoundingClientRect().bottom) + "px"); if (document.body.classList.contains("touch") && !side.classList.contains("zu")) side.style.top = Math.round(document.getElementById("hudTop").getBoundingClientRect().bottom + 10) + "px"; else side.style.top = "";
+    const lage = () => { const kb = Math.round(document.getElementById("hudTop").getBoundingClientRect().bottom); document.body.style.setProperty("--kopf", kb + "px");
+      if (document.body.classList.contains("touch")) { const rb = Math.round(document.getElementById("rail").getBoundingClientRect().bottom); document.body.style.setProperty("--reihe3", (rb + 6) + "px"); } if (document.body.classList.contains("touch") && !side.classList.contains("zu")) side.style.top = Math.round(document.getElementById("rail").getBoundingClientRect().bottom + 52) + "px"; else side.style.top = "";
       const rr = document.getElementById("railRow"); rr.classList.remove("eng"); };
     addEventListener("resize", lage); setTimeout(lage, 50); setTimeout(lage, 800);
     const setZu = (zu) => { side.classList.toggle("zu", zu); document.getElementById("sideKopf").setAttribute("aria-expanded", !zu); merk.set("sideZu", zu); if (typeof lage === "function") lage(); };
