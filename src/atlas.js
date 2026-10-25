@@ -126,7 +126,7 @@
       <div id="topbar" aria-label="Reise-Atlas Leiste"><a class="tbBtn" id="tbZurueck" href="/atlas/" aria-label="Zurück zu allen Reisen">‹</a><div id="insel" aria-label="Teaser, Uhr, Kompass"></div><button class="tbBtn" id="tbLupe" aria-label="Suchen ein/aus" aria-pressed="false">🔎</button><button class="tbBtn" id="tbInfo" aria-label="Hilfe zur Bedienung ein/aus" aria-pressed="false">i</button><a class="tbBtn" id="tbStat" href="/atlas/statistik/#${esc(REISE)}" aria-label="Statistik dieser Reise">📊</a><button class="tbBtn" id="tbZahnrad" aria-label="Steuerung ein/aus" aria-expanded="false">⚙︎</button></div>
       <div id="tbTitel"></div>
       <button class="hud" id="kompass" aria-label="Karte nach Norden ausrichten"><span class="kn"><i></i><b></b></span></button>
-      <div class="hud pad" id="navPad" role="slider" aria-label="Stationen und Tage: nach oben ziehen = weiter (weit = nächster Tag), nach unten = zurück; oben/unten tippen = Station vor/zurück"><span class="pZ pTag" data-z="t1">⏶<small>Tag</small></span><span class="pZ" data-z="s1">▲<small>Stopp</small></span><span class="pT" data-z="w">Tag</span><span class="pZ" data-z="s-1">▼<small>Stopp</small></span><span class="pZ pTag" data-z="t-1">⏷<small>Tag</small></span></div>
+      <div class="hud pad" id="navPad" role="slider" aria-label="Stationen und Tage: nach oben ziehen = weiter (weit = nächster Tag), nach unten = zurück; oben/unten tippen = Station vor/zurück"><span class="pZ pTag" data-z="t1">⏶<small>Tag</small></span><span class="pZ" data-z="s1">▲<small>Station</small></span><span class="pT" data-z="w">Tag</span><span class="pZ" data-z="s-1">▼<small>Station</small></span><span class="pZ pTag" data-z="t-1">⏷<small>Tag</small></span></div>
       <div class="hud pad" id="tempoPad" role="slider" aria-label="Tempo: nach oben ziehen = schneller, nach unten = langsamer, tippen = Stopp/weiter"><i class="pF"></i><span class="pZ"></span></div>
       <div class="hud" id="dock" aria-label="Steuerung">
         <button data-a="dayPrev" aria-label="Tag zurück">«</button><button data-a="prev" aria-label="Station zurück">◀</button>
@@ -234,7 +234,7 @@
     Object.entries(ROLLEN).forEach(([k, r]) => { const b = document.createElement("button"); b.className = "role"; b.innerHTML = `<span class="k">${r.k}</span><span class="n">${r.n}</span><span class="d">${r.d}</span>`; b.onclick = () => setRole(k); rg.appendChild(b); });
 
     // Kurzer Hinweis beim Start (statt Rollen-Fenster)
-    { const t = document.createElement("div"); t.className = "startHint"; t.innerHTML = (matchMedia("(pointer: coarse)").matches || innerWidth <= 900) ? "Tageskarte: Griff ziehen = mehr · links Stopp/Tag · rechts Tempo, tippen = Stopp" : "<kbd>Leertaste</kbd> fahren · <kbd>←</kbd><kbd>→</kbd> Station · <kbd>↓</kbd><kbd>↑</kbd> Tiefe · <kbd>−</kbd><kbd>+</kbd> Tempo · <kbd>/</kbd> suchen &amp; fragen";
+    { const t = document.createElement("div"); t.className = "startHint"; t.innerHTML = (matchMedia("(pointer: coarse)").matches || innerWidth <= 900) ? "Tageskarte: Griff ziehen = mehr · links Station/Tag · rechts Tempo, tippen = Stopp" : "<kbd>Leertaste</kbd> fahren · <kbd>←</kbd><kbd>→</kbd> Station · <kbd>↓</kbd><kbd>↑</kbd> Tiefe · <kbd>−</kbd><kbd>+</kbd> Tempo · <kbd>/</kbd> suchen &amp; fragen";
       document.getElementById("screen").appendChild(t); setTimeout(() => t.classList.add("weg"), 7000); setTimeout(() => t.remove(), 8200); addEventListener("keydown", () => t.classList.add("weg"), { once: true }); }
     // Direkt zu einem Tag springen: /atlas/<reise>/?tag=7 (z. B. aus der Reise-Statistik)
     { const t0 = +new URLSearchParams(location.search).get("tag");
@@ -773,7 +773,7 @@
         ["#tbZurueck", "Zurück", "Zurück zur Weltkugel mit allen Reisen."],
         ["#insel", "Insel", "▶ Teaser: die Reise in 35 Sekunden. Daneben die Uhrzeit (aus den Fotozeiten geschätzt) und der Kompass – antippen dreht die Karte nach Norden."],
         ["#tbZahnrad", "Steuerung", "Kamera, Musik, Vorlesen, Suche, Uhr, Vollbild und Smartphone-Fernbedienung."],
-        ["#navPad", "Stopps & Tage", "Kurz nach oben/unten ziehen = nächste/vorige Station, weit ziehen = nächster/voriger Tag. Lange drücken = Tag oder Station direkt wählen (Finger gedrückt halten und schieben, loslassen = hinfahren)."],
+        ["#navPad", "Stationen & Tage", "Kurz nach oben/unten ziehen = nächste/vorige Station, weit ziehen = nächster/voriger Tag. Lange drücken = Tag oder Station direkt wählen (Finger gedrückt halten und schieben, loslassen = hinfahren)."],
         ["#tempoPad", "Tempo", "Nach oben ziehen = schneller, nach unten = langsamer, ganz unten = Stopp. Antippen = Stopp / weiterfahren. Die Farbe zeigt das Tempo."],
         ["#cardTab", "Tagesblatt", "Antippen oder hochwischen öffnet das Blatt mit Text, Videos und Fotos. Im Blatt einfach scrollen. Schließen: oben auf den Griff tippen oder nach unten wischen."],
         ["#map", "Karte", "Mit zwei Fingern zoomen und drehen. Auf Auto oder Rad tippen zeigt Daten zur Fahrt. Fotopunkte antippen öffnet das Foto."],
