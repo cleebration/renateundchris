@@ -626,3 +626,31 @@ body.touch .blatt .bReihe{display:flex;align-items:center;justify-content:space-
 body.touch .bPf{all:unset;cursor:pointer;width:40px;height:34px;display:grid;place-items:center;font-size:24px;border-radius:12px;background:rgba(255,255,255,.07);color:var(--ink)}
 /* Blatt offen: Felder ausblenden, das Blatt hat eigene ‹ › */
 body.handy:has(#card:not(.zu)) .pad{display:none}
+
+/* Leiste immer ganz oben (über Blatt, Wähler, Suche, Video, Foto) */
+body.handy #topbar{z-index:70}
+body.handy #tbTitel{z-index:69}
+body.handy #lightbox{padding-top:calc(env(safe-area-inset-top,0px) + 64px)}
+body.handy #lbClose{top:calc(env(safe-area-inset-top,0px) + 66px)}
+body.handy .tzBox{padding-top:calc(env(safe-area-inset-top,0px) + 64px)}
+body.handy #tour .tourLoch,body.handy #tour .tourBox{z-index:71}
+/* Leiste: 7 Elemente, Zahnrad größer ganz rechts */
+body.handy #topbar{gap:5px;padding-left:8px;padding-right:8px}
+body.handy .tbBtn{flex:0 0 34px;height:34px;font-size:16px}
+body.handy #tbZurueck{font-size:22px}
+body.handy #tbZahnrad{flex:0 0 44px;height:44px;font-size:26px;order:9}
+body.handy #tbStat{font-size:15px}
+body.handy #insel{height:42px;gap:5px}
+body.handy #insel .tzChip{padding:7px 9px;font-size:12px}
+body.handy #insel #kompass{width:28px;height:28px;flex-basis:28px}
+body.handy #insel #uhr b{font-size:12px}
+@media (max-width:370px){body.handy #insel .tzChip{font-size:0;padding:7px 10px}body.handy #insel .tzChip::before{content:"▶";font-size:13px}}
+/* Feld links: Zonen ⏶ Tag · ▲ Stopp · Standort · ▼ Stopp · ⏷ Tag */
+body.touch #navPad{justify-content:space-between;padding:4px 0}
+body.touch #navPad .pZ{display:flex;flex-direction:column;align-items:center;line-height:1;font-size:16px;padding:4px 0;width:100%}
+body.touch #navPad .pZ small{font:8px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+body.touch #navPad .pTag{font-size:20px;color:var(--amber);background:rgba(224,145,58,.1)}
+body.touch #navPad .pTag:first-child{border-radius:14px 14px 0 0}
+body.touch #navPad .pTag:last-child{border-radius:0 0 14px 14px}
+body.touch #navPad .pT{cursor:pointer}
+body.handy .pad{bottom:calc(env(safe-area-inset-bottom,0px) + 104px);height:min(36vh,270px)}

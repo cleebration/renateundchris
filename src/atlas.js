@@ -123,10 +123,10 @@
           <span class="chip opt"><b class="mono" id="chipKm">0</b> km</span>
         </div>
       </div>
-      <div id="topbar" aria-label="Reise-Atlas Leiste"><a class="tbBtn" id="tbZurueck" href="/atlas/" aria-label="Zurück zu allen Reisen">‹</a><div id="insel" aria-label="Teaser, Uhr, Kompass"></div><button class="tbBtn" id="tbLupe" aria-label="Suchen ein/aus" aria-pressed="false">🔎</button><button class="tbBtn" id="tbInfo" aria-label="Hilfe zur Bedienung ein/aus" aria-pressed="false">i</button><button class="tbBtn" id="tbZahnrad" aria-label="Steuerung ein/aus" aria-expanded="false">⚙︎</button></div>
+      <div id="topbar" aria-label="Reise-Atlas Leiste"><a class="tbBtn" id="tbZurueck" href="/atlas/" aria-label="Zurück zu allen Reisen">‹</a><div id="insel" aria-label="Teaser, Uhr, Kompass"></div><button class="tbBtn" id="tbLupe" aria-label="Suchen ein/aus" aria-pressed="false">🔎</button><button class="tbBtn" id="tbInfo" aria-label="Hilfe zur Bedienung ein/aus" aria-pressed="false">i</button><a class="tbBtn" id="tbStat" href="/atlas/statistik/#${esc(REISE)}" aria-label="Statistik dieser Reise">📊</a><button class="tbBtn" id="tbZahnrad" aria-label="Steuerung ein/aus" aria-expanded="false">⚙︎</button></div>
       <div id="tbTitel"></div>
       <button class="hud" id="kompass" aria-label="Karte nach Norden ausrichten"><span class="kn"><i></i><b></b></span></button>
-      <div class="hud pad" id="navPad" role="slider" aria-label="Stationen und Tage: nach oben ziehen = weiter (weit = nächster Tag), nach unten = zurück; oben/unten tippen = Station vor/zurück"><span class="pA">▲</span><span class="pT">Stopp<br>·<br>Tag</span><span class="pA">▼</span></div>
+      <div class="hud pad" id="navPad" role="slider" aria-label="Stationen und Tage: nach oben ziehen = weiter (weit = nächster Tag), nach unten = zurück; oben/unten tippen = Station vor/zurück"><span class="pZ pTag" data-z="t1">⏶<small>Tag</small></span><span class="pZ" data-z="s1">▲<small>Stopp</small></span><span class="pT" data-z="w">Tag</span><span class="pZ" data-z="s-1">▼<small>Stopp</small></span><span class="pZ pTag" data-z="t-1">⏷<small>Tag</small></span></div>
       <div class="hud pad" id="tempoPad" role="slider" aria-label="Tempo: nach oben ziehen = schneller, nach unten = langsamer, tippen = Stopp/weiter"><i class="pF"></i><span class="pZ"></span></div>
       <div class="hud" id="dock" aria-label="Steuerung">
         <button data-a="dayPrev" aria-label="Tag zurück">«</button><button data-a="prev" aria-label="Station zurück">◀</button>
@@ -521,7 +521,7 @@
     function setzeFahrzeug(d) { const k = (d && FAHRZEUGE[d.fahrzeug] ? d.fahrzeug : null) || (FAHRZEUGE[DATA.fahrzeugTyp] ? DATA.fahrzeugTyp : "l3");
       if (k === fzJetzt || !van) return; fzJetzt = k; const el = van.getElement(); el.innerHTML = fahrzeugSvg(k); el.title = FAHRZEUGE[k].n; }
     // Geschwindigkeit in km pro Sekunde je Stufe (Stufe 5 ≈ 30 km/s); Dauer folgt der Streckenlänge
-    const kmProSek = (t) => (t <= 5 ? 1.5 * Math.pow(25 / 1.5, (t - 1) / 4) : 25 * Math.pow(1.45, t - 5)); // Stufe 1 ≈ 1,5 km/s · 5 ≈ 25 · 10 ≈ 160
+    const kmProSek = (t) => (t <= 5 ? 0.5 * Math.pow(15 / 0.5, (t - 1) / 4) : 15 * Math.pow(4, (t - 5) / 5)); // Stufe 1 ≈ 0,5 km/s · 5 ≈ 15 · 10 ≈ 60
     const fahrDauer = (path) => { let km = 0; for (let k = 1; k < path.length; k++) km += Math.sqrt(d2(path[k], path[k - 1])) * 111.2;
       return Math.max(500, Math.min(240000, km / kmProSek(S.tempo) * 1000)); };
     let rollt = false; // fährt gerade durch (kein Anfahren/Abbremsen an Zwischenstationen)
@@ -731,7 +731,9 @@
         np.dataset.w = w; zeig(["◀◀ voriger Tag", "◀ vorige Station", "…", "nächste Station ▶", "nächster Tag ▶▶"][w + 2]); });
       np.addEventListener("pointerup", (e) => { if (ny == null) return; const dy = ny - e.clientY; ny = null; np.dataset.w = 0;
         const w = nb ? was(dy) : 0;
-        if (!w) { const r = np.getBoundingClientRect(); step(e.clientY < r.top + r.height / 2 ? 1 : -1); } else if (Math.abs(w) === 1) step(w); else dayStep(w / 2); weg(); });
+        if (!w) { const z = (document.elementFromPoint(e.clientX, e.clientY) || np).closest("[data-z]"); const k = z ? z.dataset.z : "";
+          if (k === "t1") dayStep(1); else if (k === "t-1") dayStep(-1); else if (k === "s1") step(1); else if (k === "s-1") step(-1); else if (k === "w") np.dispatchEvent(new CustomEvent("waehler"));
+          else { const r = np.getBoundingClientRect(); step(e.clientY < r.top + r.height / 2 ? 1 : -1); } } else if (Math.abs(w) === 1) step(w); else dayStep(w / 2); weg(); });
       np.addEventListener("pointercancel", () => { ny = null; np.dataset.w = 0; weg(); }); }
     // ================= iPhone hochkant: Leiste oben, Insel, Info-Tour, Blatt unten, Tag-/Stations-Wähler =================
     { const B = document.body, insel = document.getElementById("insel"), heim = new Map();
@@ -798,11 +800,13 @@
       const waehlerAuf = () => { const cur = (track()[S.idx] || {}).day || 1; waehler = document.createElement("div"); waehler.id = "waehler";
         waehler.innerHTML = `<div class="wKopf"><b>Tag oder Station wählen</b><span>Finger halten und schieben · loslassen = hinfahren</span><button class="wX" aria-label="schließen">✕</button></div><div class="wSp"><div class="wTage">${tagZeilen()}</div><div class="wSt"></div></div>`;
         B.appendChild(waehler); markTag(cur); const on = waehler.querySelector(".wT.on"); if (on) on.scrollIntoView({ block: "center" });
-        waehler.addEventListener("click", (e) => { if (haltend) return; if (e.target.closest(".wX")) return waehlerZu(); const t = e.target.closest(".wT"); if (t) { if (+t.dataset.tag === wTag) { wSt = null; return zielFahren(); } return markTag(+t.dataset.tag); } const s = e.target.closest(".wS"); if (s) { wSt = +s.dataset.k; zielFahren(); } }); };
+        const geoeffnet = Date.now();
+        waehler.addEventListener("click", (e) => { if (haltend || Date.now() - geoeffnet < 450) return; /* Klick vom Öffnen-Tipp ignorieren */ if (e.target.closest(".wX")) return waehlerZu(); const t = e.target.closest(".wT"); if (t) { if (+t.dataset.tag === wTag) { wSt = null; return zielFahren(); } return markTag(+t.dataset.tag); } const s = e.target.closest(".wS"); if (s) { wSt = +s.dataset.k; zielFahren(); } }); };
       const unterFinger = (x, y) => { if (!waehler) return; const el = document.elementFromPoint(x, y); if (!el) return; const t = el.closest(".wT"), s = el.closest(".wS");
         if (t) { markTag(+t.dataset.tag); wSt = null; waehler.querySelectorAll(".wS").forEach((b) => b.classList.remove("on")); }
         else if (s) { wSt = +s.dataset.k; waehler.querySelectorAll(".wS").forEach((b) => b.classList.toggle("on", b === s)); }
         const box = waehler.querySelector(".wTage").getBoundingClientRect(); if (x < box.right) { if (y < box.top + 30) waehler.querySelector(".wTage").scrollTop -= 14; else if (y > box.bottom - 30) waehler.querySelector(".wTage").scrollTop += 14; } };
+      np.addEventListener("waehler", () => { if (!waehler) waehlerAuf(); });
       np.addEventListener("pointerdown", (e) => { clearTimeout(lang); const px = e.clientX, py = e.clientY; lang = setTimeout(() => { lang = null; haltend = true; np.dataset.lang = "1"; waehlerAuf(); if (navigator.vibrate) navigator.vibrate(15); }, 450);
         np._start = [px, py]; });
       np.addEventListener("pointermove", (e) => { if (lang && np._start && Math.hypot(e.clientX - np._start[0], e.clientY - np._start[1]) > 12) { clearTimeout(lang); lang = null; } if (haltend) { unterFinger(e.clientX, e.clientY); e.stopImmediatePropagation(); } }, true);
