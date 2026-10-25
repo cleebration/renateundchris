@@ -401,7 +401,9 @@
     const pinEls = [];
     let van, reiser, fotoMarkers = [];
     // Fortbewegung je Etappe: stations[].mit = "rad" | "fuss" | "boot" | "bahn"; ohne Angabe Auto, kurze Wege (< 1,5 km) ohne Fahrzeugbewegung
-    const MIT = { auto: { n: "Auto", i: "" }, rad: { n: "Fahrrad", i: "🚲" }, fuss: { n: "zu Fuß", i: "🚶" }, boot: { n: "Boot / Fähre", i: "⛴️" }, bahn: { n: "Seil-/Bahn", i: "🚡" }, kurz: { n: "kurzer Weg", i: "" } };
+    // gleiche Liste wie Redaktion → Werkzeug „Etappen“ (src/etappen.js im Repo redaktion); v = Tempo relativ zum Auto, strasse = folgt der Route
+    const MIT = { auto: { n: "Auto", i: "" }, rad: { n: "Fahrrad", i: "🚲", v: 0.35, strasse: true }, fuss: { n: "zu Fuß", i: "🚶", v: 0.12 }, zug: { n: "Zug", i: "🚆", v: 0.8 }, taxi: { n: "Taxi", i: "🚕", v: 0.9, strasse: true },
+      taxiboot: { n: "Taxiboot", i: "🚤", v: 0.6 }, boot: { n: "Boot", i: "⛵", v: 0.45 }, schiff: { n: "Schiff", i: "🚢", v: 0.5 }, faehre: { n: "Fähre", i: "⛴️", v: 0.5 }, seilbahn: { n: "Seilbahn", i: "🚡", v: 0.25 }, bahn: { n: "Seilbahn", i: "🚡", v: 0.25 }, kurz: { n: "kurzer Weg", i: "" } };
     const km2 = (a, b) => Math.sqrt(d2([a.lon, a.lat], [b.lon, b.lat])) * 111.2;
     const mitVon = (prev, s) => s.mit && MIT[s.mit] ? s.mit : (prev && km2(prev, s) < 1.5 ? "kurz" : "auto");
     let park = null; // Station, an der das Auto gerade steht
@@ -581,10 +583,10 @@
         const pl = dayOf(von.day).line.slice(von.ri); const path = pl.concat(d.line.slice(0, s.ri + 1)); zeigReiser("auto");
         vorher(path, () => animateAlong(path, fahrDauer(path), finish, { zoom: 8.6, pitch }, colOf(dayOf(von.day)), (i) => { const n = pl.length; if (i >= n) tagFort(s.day, i - n); }));
       } else if (!jump && prev && MIT[mit] && MIT[mit].i) { // Rad, zu Fuß, Boot, Bahn: eigenes Symbol, Auto bleibt stehen
-        const strasse = mit === "rad" && d.line && prev.day === s.day && prev.ri != null && s.ri != null && s.ri > prev.ri;
+        const strasse = MIT[mit].strasse && d.line && prev.day === s.day && prev.ri != null && s.ri != null && s.ri > prev.ri;
         const path = strasse ? d.line.slice(prev.ri, s.ri + 1) : [[prev.lon, prev.lat], [s.lon, s.lat]];
         zeigReiser(mit); reiser.setLngLat(path[0]);
-        const kmh = { rad: 0.35, fuss: 0.12, boot: 0.6, bahn: 0.25 }[mit]; // relativ zum Auto
+        const kmh = MIT[mit].v || 0.4; // relativ zum Auto
         vorher(path, () => animateAlong(path, Math.max(900, fahrDauer(path) / kmh * 0.25), finish, { zoom: Math.max(zoom, 12), pitch }, colOf(d), null, reiser, mit));
       } else {
         stopAnim(); map.flyTo({ center: [s.lon, s.lat], zoom, pitch, bearing: kameraZiel(s), duration: reduced ? 0 : tz(1800, S.tempo), essential: true });
