@@ -7,7 +7,11 @@
   const esc = (t) => String(t ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const n0 = (x) => Math.round(x).toLocaleString("de-AT");
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const narrow = () => innerWidth < 760;
+  // Handy hochkant: Globus oben, Liste darunter scrollt · Handy quer: Globus links, Liste rechts · sonst Panel links über dem Globus
+  const modus = () => (innerHeight <= 500 && innerWidth > innerHeight ? "quer" : innerWidth < 760 ? "hoch" : "gross");
+  const narrow = () => modus() !== "gross";
+  const setzeModus = () => { document.body.dataset.modus = modus(); };
+  setzeModus();
 
   ROOT.innerHTML = `<div id="map" aria-label="Weltkugel mit allen Reisen"></div>
     <aside id="panel">
@@ -78,7 +82,8 @@
 
     let sel = -1, spin = !reduced, idleT = null, tourOn = false;
     const all = () => { const b = R.filter((r) => r.bbox).map((r) => r.bbox); return [[Math.min(...b.map((x) => x[0]), D.zuhause.lon), Math.min(...b.map((x) => x[1]), D.zuhause.lat)], [Math.max(...b.map((x) => x[2]), D.zuhause.lon), Math.max(...b.map((x) => x[3]), D.zuhause.lat)]]; };
-    const pad = () => (narrow() ? { top: 60, bottom: Math.round(innerHeight * 0.48), left: 70, right: 70 } : { top: 80, bottom: 80, left: 440, right: 80 });
+    const pad = () => (modus() === "gross" ? { top: 80, bottom: 80, left: 440, right: 80 } : { top: 30, bottom: 30, left: 30, right: 30 });
+    addEventListener("resize", () => { const alt = document.body.dataset.modus; setzeModus(); if (alt !== document.body.dataset.modus) setTimeout(() => map.resize(), 50); });
 
     map.on("style.load", () => {
       try { map.setProjection({ type: "globe" }); } catch (e) {}
@@ -129,6 +134,14 @@
       const r = R[i]; if (!r) return;
       const a = list.querySelector(`.trip[data-i="${i}"]`); if (a && fliegen) a.scrollIntoView({ block: "nearest", behavior: reduced ? "auto" : "smooth" });
       if (fliegen && r.bbox && map.loaded()) map.fitBounds([[r.bbox[0], r.bbox[1]], [r.bbox[2], r.bbox[3]]], { padding: pad(), duration: reduced ? 0 : 2200, maxZoom: 7.5, pitch: 30 });
+    }
+    // Handy: beim Scrollen dreht sich der Globus zur Reise in der Mitte der Liste
+    if ("IntersectionObserver" in window) {
+      let zielT = null;
+      const io = new IntersectionObserver((eintr) => { if (!narrow() || tourOn) return; const sicht = eintr.filter((x) => x.isIntersecting); if (!sicht.length) return;
+        const i = +sicht[0].target.dataset.i; clearTimeout(zielT); zielT = setTimeout(() => { if (i !== sel) { stopSpin(); waehle(i); } }, 350); },
+        { root: document.getElementById("panel"), rootMargin: "-45% 0px -45% 0px" });
+      list.querySelectorAll(".trip").forEach((a) => io.observe(a));
     }
     list.addEventListener("mouseover", (e) => { const a = e.target.closest(".trip"); if (a && +a.dataset.i !== sel) waehle(+a.dataset.i); });
     list.addEventListener("focusin", (e) => { const a = e.target.closest(".trip"); if (a) waehle(+a.dataset.i); });
