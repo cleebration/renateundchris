@@ -123,6 +123,7 @@
           <span class="chip opt"><b class="mono" id="chipKm">0</b> km</span>
         </div>
       </div>
+      <button class="hud" id="kompass" aria-label="Karte nach Norden ausrichten"><span class="kn"><i></i><b></b></span></button>
       <div class="hud pad" id="navPad" role="slider" aria-label="Stationen und Tage: nach oben ziehen = weiter (weit = nächster Tag), nach unten = zurück; oben/unten tippen = Station vor/zurück"><span class="pA">▲</span><span class="pT">Stopp<br>·<br>Tag</span><span class="pA">▼</span></div>
       <div class="hud pad" id="tempoPad" role="slider" aria-label="Tempo: nach oben ziehen = schneller, nach unten = langsamer, tippen = Stopp/weiter"><i class="pF"></i><span class="pZ"></span></div>
       <div class="hud" id="dock" aria-label="Steuerung">
@@ -220,7 +221,7 @@
     Object.entries(ROLLEN).forEach(([k, r]) => { const b = document.createElement("button"); b.className = "role"; b.innerHTML = `<span class="k">${r.k}</span><span class="n">${r.n}</span><span class="d">${r.d}</span>`; b.onclick = () => setRole(k); rg.appendChild(b); });
 
     // Kurzer Hinweis beim Start (statt Rollen-Fenster)
-    { const t = document.createElement("div"); t.className = "startHint"; t.innerHTML = (matchMedia("(pointer: coarse)").matches || innerWidth <= 900) ? "Karte: tippen = Tiefe · ↑ = mehr · → oder ↓ = ausblenden · „Fahren“ seitlich ziehen = Tempo 1–10 · links „Steuerung“" : "<kbd>Leertaste</kbd> fahren · <kbd>←</kbd><kbd>→</kbd> Station · <kbd>↓</kbd><kbd>↑</kbd> Tiefe · <kbd>−</kbd><kbd>+</kbd> Tempo · <kbd>/</kbd> suchen &amp; fragen";
+    { const t = document.createElement("div"); t.className = "startHint"; t.innerHTML = (matchMedia("(pointer: coarse)").matches || innerWidth <= 900) ? "Tageskarte am Griff ziehen = mehr/weniger · nach rechts wischen = ausblenden · links: Stopp/Tag (hoch/runter) · rechts: Tempo (hoch/runter, tippen = Stopp)" : "<kbd>Leertaste</kbd> fahren · <kbd>←</kbd><kbd>→</kbd> Station · <kbd>↓</kbd><kbd>↑</kbd> Tiefe · <kbd>−</kbd><kbd>+</kbd> Tempo · <kbd>/</kbd> suchen &amp; fragen";
       document.getElementById("screen").appendChild(t); setTimeout(() => t.classList.add("weg"), 7000); setTimeout(() => t.remove(), 8200); addEventListener("keydown", () => t.classList.add("weg"), { once: true }); }
     // Direkt zu einem Tag springen: /atlas/<reise>/?tag=7 (z. B. aus der Reise-Statistik)
     { const t0 = +new URLSearchParams(location.search).get("tag");
@@ -435,6 +436,11 @@
       const ve = document.createElement("div"); ve.className = "van";
       van = new maplibregl.Marker({ element: ve, rotationAlignment: "map", pitchAlignment: "map" }).setLngLat([ST[0].lon, ST[0].lat]).addTo(map);
       setzeFahrzeug(dayOf(ST[0].day));
+      { // Kompass wie in Google Maps: zeigt nach Norden, erscheint wenn gedreht/geneigt; Tippen = Norden oben, flach
+        const k = document.getElementById("kompass"), nadel = k.querySelector(".kn");
+        const upd = () => { const b = map.getBearing(), pt = map.getPitch(); nadel.style.transform = `rotateX(${pt * 0.6}deg) rotate(${-b}deg)`; k.classList.toggle("still", Math.abs(b) < 0.5 && pt < 1); };
+        map.on("rotate", upd); map.on("pitch", upd); upd();
+        k.onclick = () => { if (S.kamera !== "nord") setKamera("nord"); map.easeTo({ bearing: 0, pitch: 0, duration: reduced ? 0 : 600 }); }; }
       const re = document.createElement("div"); re.className = "reiser"; re.hidden = true;
       reiser = new maplibregl.Marker({ element: re }).setLngLat([ST[0].lon, ST[0].lat]).addTo(map);
       ve.addEventListener("click", (e) => { e.stopPropagation(); fzInfo("auto"); }); re.addEventListener("click", (e) => { e.stopPropagation(); fzInfo(re.dataset.mit); });
@@ -609,7 +615,7 @@
     const side = document.getElementById("side");
     // Leiste beginnt unter dem Kopf; Tagesnummern bei schmalen Quadraten nur jeden 5. Tag
     const lage = () => { if (document.body.classList.contains("touch") && !side.classList.contains("zu")) side.style.top = Math.round(document.getElementById("hudTop").getBoundingClientRect().bottom + 10) + "px"; else side.style.top = "";
-      const rr = document.getElementById("railRow"); rr.classList.toggle("eng", rr.clientWidth / Math.max(1, DAYS.length) < 22); };
+      const rr = document.getElementById("railRow"); rr.classList.remove("eng"); };
     addEventListener("resize", lage); setTimeout(lage, 50); setTimeout(lage, 800);
     const setZu = (zu) => { side.classList.toggle("zu", zu); document.getElementById("sideKopf").setAttribute("aria-expanded", !zu); merk.set("sideZu", zu); if (typeof lage === "function") lage(); };
     setZu(merk.get("sideZu", matchMedia("(pointer: coarse)").matches || innerWidth <= 900) === true);
@@ -632,17 +638,28 @@
     { const card = document.getElementById("card"); let x0 = null, y0 = 0;
       // Touch-Ereignisse statt Pointer: beim Wischen über scrollbaren Inhalt bricht der Browser Pointer-Gesten ab
       let kopf = false; // senkrechtes Wischen nur im Kopf der Karte (Griff, Tag, Ort) – darunter scrollt der Inhalt
-      card.addEventListener("touchstart", (e) => { const t = e.touches[0]; x0 = t.clientX; y0 = t.clientY; kopf = t.clientY - card.getBoundingClientRect().top < 100; }, { passive: true });
+      // Ziehblatt: Kopf der Karte ziehen – klein (Ort + Satz) · halb (Teaser, Fotos) · ganz (alles); unter „klein“ = ausblenden
+      let h0 = 0, zieht = false;
+      const stufenH = () => { const H = innerHeight; return [0, H * 0.30, H * 0.55, H - 150]; };
+      card.addEventListener("touchstart", (e) => { const t = e.touches[0]; x0 = t.clientX; y0 = t.clientY; kopf = t.clientY - card.getBoundingClientRect().top < 100; h0 = card.getBoundingClientRect().height; zieht = false; }, { passive: true });
+      card.addEventListener("touchmove", (e) => { if (x0 == null || !kopf || !document.body.classList.contains("touch")) return; const t = e.touches[0], dy = t.clientY - y0, dx = t.clientX - x0;
+        if (!zieht && (Math.abs(dy) < 10 || Math.abs(dy) < Math.abs(dx))) return; zieht = true; e.preventDefault();
+        card.style.transition = "none"; card.style.maxHeight = Math.max(60, Math.min(innerHeight - 140, h0 - dy)) + "px"; }, { passive: false });
       card.addEventListener("touchend", (e) => { if (x0 == null) return; const t = e.changedTouches[0]; const dx = t.clientX - x0, dy = t.clientY - y0; x0 = null;
+        if (zieht) { zieht = false; const h = card.getBoundingClientRect().height, Hs = stufenH(); card.style.transition = ""; card.style.maxHeight = "";
+          if (h < innerHeight * 0.17) { setKarteZu(true); return; }
+          let best = 1; for (let k = 1; k <= 3; k++) if (Math.abs(Hs[k] - h) < Math.abs(Hs[best] - h)) best = k;
+          if (dy < -30 && best <= S.tiefe && S.tiefe < 3 && h > h0) best = S.tiefe + 1; // auch kurzer Zug nach oben wirkt
+          if (dy > 30 && best >= S.tiefe && h < h0) { if (S.tiefe <= 1) { setKarteZu(true); return; } best = S.tiefe - 1; }
+          setTiefe(best); return; }
         if (e.target.closest(".gal")) return; // Fotostreifen wischt selbst
         if (dx > 60 && dx > Math.abs(dy) * 1.5) { setKarteZu(true); return; }
-        if (dy > 60 && dy > Math.abs(dx) * 1.5 && (kopf || card.scrollTop <= 0)) { setKarteZu(true); return; }
-        if (kopf && dy < -40 && -dy > Math.abs(dx) * 1.5) { setTiefe(S.tiefe + 1); return; }
-        if (Math.abs(dx) < 8 && Math.abs(dy) < 8 && !e.target.closest("a,button,.gal,.hero")) { if (S.tiefe + tiefeRichtung > 3 || S.tiefe + tiefeRichtung < 0) tiefeRichtung = -tiefeRichtung; setTiefe(S.tiefe + tiefeRichtung); } }); }
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8 && kopf && t.clientY - card.getBoundingClientRect().top < 28) setTiefe(S.tiefe >= 3 ? 1 : S.tiefe + 1); // Griff antippen: nächste Stufe
+      }); }
     // Tageskarte ein-/ausblenden; ausgeblendet bleibt rechts ein schmaler Reiter sichtbar
     let tiefeRichtung = 1; // Tippen: 1→2→3→4→3→2→1 …
     function setTiefe(t) { handZoom = null; setTiefeOhne(t); }
-    function setTiefeOhne(t) { S.tiefe = Math.max(0, Math.min(3, t)); autoHalt(); go(true); broadcast(); }
+    function setTiefeOhne(t) { S.tiefe = Math.max(document.body.classList.contains("touch") ? 1 : 0, Math.min(3, t)); autoHalt(); go(true); broadcast(); }
     function setKarteZu(zu) { document.getElementById("card").classList.toggle("zu", zu); document.getElementById("cardTab").hidden = !zu; merk.set("karteZu", zu); autoHalt(); }
     // Lesen hält an: Tageskarte offen und Tiefe 3 oder 4 → Auto steht; zugeklappt oder zurück auf Tiefe 1–2 → fährt weiter
     let angehalten = false;
@@ -698,6 +715,7 @@
       const kmSoFar = DAYS.filter((x) => x.tag < d.tag).reduce((a, x) => a + ((x.route && x.route.km) || 0), 0);
       document.getElementById("chipKm").textContent = Math.round(kmSoFar).toLocaleString("de-AT") + " / " + Math.round(kmTotal).toLocaleString("de-AT");
       [...row.children].forEach((b, k) => { const dd = DAYS[k]; b.classList.toggle("cur", dd.tag === d.tag); b.classList.toggle("seen", S.seen.has(dd.tag)); b.classList.toggle("dim", !dayMatches(dd)); });
+      { const c = row.querySelector(".tick.cur"); if (c && row.scrollWidth > row.clientWidth + 2) { const z = c.offsetLeft - row.clientWidth / 2 + c.offsetWidth / 2; if (Math.abs(row.scrollLeft - z) > c.offsetWidth) row.scrollTo({ left: z, behavior: reduced ? "auto" : "smooth" }); } }
       ST.forEach((x, k) => pinEls[k] && pinEls[k].classList.toggle("cur", x === s));
       document.getElementById("metaDay").textContent = "Tag " + d.tag;
       { const g = gang(), tt = document.getElementById("tempoTxt");

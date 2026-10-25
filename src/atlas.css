@@ -383,3 +383,25 @@ body.touch:has(#card:not(.zu)) #card{right:64px}
 .fzPop .maplibregl-popup-content b{font:600 14px var(--mono);color:var(--amber)}
 .fzPop .maplibregl-popup-tip{border-top-color:var(--panel)!important;border-bottom-color:var(--panel)!important}
 .fzPop .maplibregl-popup-close-button{color:var(--muted);font-size:18px}
+
+/* Ziehblatt statt Tiefe-Regler (Touch) */
+body.touch #card{max-height:30vh;transition:max-height .28s cubic-bezier(.2,.8,.2,1)}
+body.touch #card[data-tiefe="2"]{max-height:55vh}
+body.touch #card[data-tiefe="3"]{max-height:calc(100vh - 150px);max-height:calc(100dvh - 150px)}
+body.touch #card::before{width:54px;height:5px;margin:-2px auto 6px;background:rgba(255,255,255,.35);cursor:grab}
+body.touch #card .depth{display:none}
+body.touch #tonPanel .seg[data-ks=tiefe],body.touch #tonPanel h4:has(+ .seg[data-ks=tiefe]){display:none}
+
+/* Tagesquadrate immer gleich groß, bei Platzmangel waagrecht scrollen */
+#railRow{display:flex!important;gap:4px;overflow-x:auto;overflow-y:visible;scrollbar-width:none;padding:6px 2px 2px;scroll-snap-type:x proximity}
+#railRow::-webkit-scrollbar{display:none}
+#railRow .tick{flex:0 0 28px;width:28px;height:28px;scroll-snap-align:center;font-size:10px;overflow:visible}
+body.touch #railRow{min-height:36px}
+/* Kompass wie Google Maps */
+#kompass{all:unset;position:absolute;z-index:13;right:max(12px,env(safe-area-inset-right,0px));top:calc(96px + env(safe-area-inset-top,0px));width:44px;height:44px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.35);display:grid;place-items:center;cursor:pointer;transition:opacity .3s,transform .3s;perspective:120px}
+#kompass.still{opacity:0;pointer-events:none;transform:scale(.6)}
+#kompass .kn{position:relative;width:12px;height:30px;display:block}
+#kompass .kn i,#kompass .kn b{position:absolute;left:0;width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent}
+#kompass .kn i{top:0;border-bottom:15px solid #e53935}
+#kompass .kn b{bottom:0;border-top:15px solid #9e9e9e}
+@media (max-width:520px){#kompass{top:calc(140px + env(safe-area-inset-top,0px))}}
