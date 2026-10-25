@@ -666,7 +666,9 @@
     { let tx = null, ty = 0; const tab = document.getElementById("cardTab");
       tab.addEventListener("touchstart", (e) => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
       tab.addEventListener("touchend", (e) => { if (tx == null) return; const t = e.changedTouches[0], dx = t.clientX - tx, dy = t.clientY - ty; tx = null;
-        if (dx < -40 || dy < -40 || (Math.abs(dx) < 12 && Math.abs(dy) < 12)) { e.preventDefault(); setKarteZu(false); } }); }
+        if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3) { e.preventDefault(); step(dx < 0 ? 1 : -1); return; } // waagrecht = Station
+        const pf = e.target.closest(".ctPfeil"); if (pf && Math.abs(dx) < 12 && Math.abs(dy) < 12) { e.preventDefault(); step(+pf.dataset.n); return; }
+        if (dy < -40 || (Math.abs(dx) < 12 && Math.abs(dy) < 12)) { e.preventDefault(); setKarteZu(false); } }); }
     const touchModus = () => document.body.classList.toggle("touch", matchMedia("(pointer: coarse)").matches || innerWidth <= 900);
     touchModus(); addEventListener("resize", touchModus);
     document.getElementById("dock").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; const a = b.dataset.a;
@@ -689,7 +691,7 @@
         S.tiefe = stufeFuer(hJetzt); autoHalt(); render(); broadcast(); merk.set("blattH", Math.round(hJetzt / innerHeight * 100)); x0 = null; }, { passive: true });
       card.addEventListener("touchend", (e) => { if (x0 == null) return; const t = e.changedTouches[0]; const dx = t.clientX - x0, dy = t.clientY - y0; x0 = null;
         if (e.target.closest(".gal")) return; // Fotostreifen wischt selbst
-        if (dx > 60 && dx > Math.abs(dy) * 1.5) { setKarteZu(true); return; } }); }
+        if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) { if (document.body.classList.contains("handy")) step(dx < 0 ? 1 : -1); else if (dx > 0) setKarteZu(true); return; } }); }
     // Tageskarte ein-/ausblenden; ausgeblendet bleibt rechts ein schmaler Reiter sichtbar
     document.getElementById("card").addEventListener("click", (e) => { const b = e.target.closest(".blatt [data-st]"); if (!b) return; e.stopPropagation(); const v = +b.dataset.st; if (v === 0) setKarteZu(true); else setTiefe(v); });
     let tiefeRichtung = 1; // Tippen: 1→2→3→4→3→2→1 …
@@ -701,7 +703,7 @@
     function autoHalt() { const lesen = !document.getElementById("card").classList.contains("zu") && S.tiefe >= 2;
       if (lesen && S.playing) { angehalten = true; setPlay(false); broadcast(); }
       else if (!lesen && angehalten) { angehalten = false; setPlay(true); broadcast(); } }
-    document.getElementById("cardTab").onclick = () => setKarteZu(false);
+    document.getElementById("cardTab").onclick = (e) => { const pf = e.target.closest(".ctPfeil"); if (pf) { step(+pf.dataset.n); return; } setKarteZu(false); };
     if (merk.get("karteZu", false) === true) setKarteZu(true);
     // Tempo mit dem Daumen: auf „Fahren“ nach links/rechts ziehen
     { const pb = document.getElementById("dPlay"); let px = null, start = 0, gezogen = false; const blase = document.getElementById("tempoBlase");
@@ -870,7 +872,11 @@
       if (d.status === "fehlt") h += `<p class="note">Für diesen Tag gibt es noch keinen Eintrag.</p>`;
       const card = document.getElementById("card"); card.innerHTML = `<div class="blatt" aria-label="Griff: nach oben ziehen = mehr, nach unten = weniger"><i class="griff" aria-hidden="true"></i></div><button class="cardX" aria-label="Tagesübersicht ausblenden (T)" title="ausblenden (T)">›</button>` + h; card.dataset.tiefe = S.tiefe; if (!anim) tagFort(d.tag, (s && s.ri) || 0); setTimeout(() => { try { polster(); } catch (e) {} }, 0);
       card.querySelector(".cardX").onclick = () => setKarteZu(true);
-      { const ct = document.getElementById("cardTab"); ct.innerHTML = `<i class="griff" aria-hidden="true"></i><span>${esc(d.titel || (s && s.name) || "Tag " + d.tag)}</span>`; ct.title = `Tag ${d.tag} · ${d.titel || ""} – Tagesübersicht einblenden`; }
+      { const ct = document.getElementById("cardTab"), tagSt = s ? ST.filter((x) => x.day === s.day) : [], nr = s ? tagSt.indexOf(s) + 1 : 0;
+        ct.innerHTML = `<i class="griff" aria-hidden="true"></i><span class="ctReihe"><span class="ctPfeil" data-n="-1" role="button" aria-label="vorige Station">‹</span><span class="ctMitte"><b>${esc((s && s.name) || d.titel || "Tag " + d.tag)}</b><small>Tag ${d.tag} · Station ${nr}/${tagSt.length} · ${esc(d.titel || "")}</small></span><span class="ctPfeil" data-n="1" role="button" aria-label="nächste Station">›</span></span>`;
+        ct.title = `Tag ${d.tag} · ${d.titel || ""} – antippen = Tagesblatt, wischen = Station`;
+        const np = document.getElementById("navPad"); if (np) { np.querySelector(".pT").innerHTML = `<b>Tag ${d.tag}</b><small>von ${DAYS.length}</small><em>${nr}/${tagSt.length}</em><small>Station</small>`;
+          np.style.setProperty("--fort", ((d.tag - 1 + (tagSt.length ? (nr - 1) / tagSt.length : 0)) / DAYS.length * 100).toFixed(1) + "%"); np.style.setProperty("--lc", colOf(d)); } }
       card.querySelectorAll("[data-f]").forEach((b) => b.onclick = () => openPhoto(fotos[+b.dataset.f]));
       card.querySelectorAll("[data-c]").forEach((b) => b.onclick = () => { const c = d.clips[+b.dataset.c]; const box = document.createElement("div"); box.className = "tzBox";
         box.innerHTML = `<div class="tzIn"><video src="${esc(c.url)}" ${c.poster ? `poster="${esc(c.poster)}"` : ""} controls autoplay muted playsinline></video><p class="note">Tag ${d.tag} · Ton per Klick auf 🔈 im Video</p><button class="big" data-x>Schließen</button></div>`;

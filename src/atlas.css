@@ -603,3 +603,20 @@ body.handy #side:not(.zu) .panel{background:none;border:0}
 body.handy #tonPanel h4.nurHandy{margin-top:14px}
 body.handy #side:not(.zu){display:block!important}body.handy #side:not(.zu) #tonPanel{overflow:visible;max-height:none}body.handy #side:not(.zu) .panel:not(#tonPanel){display:none}
 body.handy .tzBox.suche.oben .suIn{background:#0b1d25}body.handy .tzBox.suche.oben [data-frage]{font-size:15px;padding:8px 14px}body.handy .tzBox.suche.oben .frRow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+/* Linkes Feld zeigt, wo man ist: Tag, Station, Fortschritt der Reise */
+body.touch #navPad{position:fixed}
+body.touch #navPad::before{content:"";position:absolute;left:4px;top:10px;bottom:10px;width:4px;border-radius:2px;background:rgba(255,255,255,.12)}
+body.touch #navPad::after{content:"";position:absolute;left:4px;top:10px;width:4px;height:calc((100% - 20px) * var(--fort,0) / 100%);border-radius:2px;background:var(--lc,var(--amber))}
+body.touch #navPad::after{height:var(--fort,0%);max-height:calc(100% - 20px)}
+body.touch #navPad .pT{display:flex;flex-direction:column;align-items:center;gap:1px;text-transform:none;letter-spacing:0;color:var(--ink);line-height:1.15}
+body.touch #navPad .pT b{font:600 14px var(--mono)}
+body.touch #navPad .pT em{font:600 15px var(--mono);font-style:normal;color:var(--amber);margin-top:6px}
+body.touch #navPad .pT small{font:9px var(--mono);color:var(--muted)}
+/* Zeile unten: ‹ Station › */
+body.touch #cardTab .ctReihe{display:flex;align-items:center;gap:8px;width:100%}
+body.touch #cardTab .ctPfeil{flex:0 0 40px;height:40px;display:grid;place-items:center;font-size:26px;border-radius:50%;background:rgba(255,255,255,.06);cursor:pointer}
+body.touch #cardTab .ctMitte{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px}
+body.touch #cardTab .ctMitte b{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:600 14px var(--mono)}
+body.touch #cardTab .ctMitte small{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:10px var(--mono);color:var(--muted)}
+body.touch #cardTab span::after,body.handy #cardTab span::after{content:none}
