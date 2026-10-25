@@ -405,3 +405,16 @@ body.touch #railRow{min-height:36px}
 #kompass .kn i{top:0;border-bottom:15px solid #e53935}
 #kompass .kn b{bottom:0;border-top:15px solid #9e9e9e}
 @media (max-width:520px){#kompass{top:calc(140px + env(safe-area-inset-top,0px))}}
+
+/* Aufgeräumt (Touch): rechte Spalte unter „Teaser“ = Kompass, Quellen-i; Uhr klein unter dem Titel; Felder kompakter */
+body.touch .pad{width:46px;height:clamp(120px,19vh,170px);border-radius:14px}
+body.touch{--padB:calc(var(--u) + 128px)}
+body.touch #kompass{top:calc(var(--kopf,120px) + 8px);right:max(10px,env(safe-area-inset-right,0px));width:40px;height:40px}
+body.touch .maplibregl-ctrl-bottom-left{top:calc(var(--kopf,120px) + 8px)!important;right:max(56px,calc(env(safe-area-inset-right,0px) + 56px))!important}
+body.touch #uhr{left:max(10px,env(safe-area-inset-left,0px));right:auto;transform:none;top:calc(var(--kopf,120px) + 6px);padding:3px 10px 3px 4px;gap:6px}
+body.touch #uhr svg{width:24px;height:24px}
+body.touch #uhr b{font-size:13px}
+body.touch #uhr small{font-size:9px}
+body.touch #navPad .pT{font-size:9px}
+body.touch #navPad .pA{font-size:14px}
+body.touch .brand h1{font-size:22px;text-shadow:0 1px 6px rgba(0,0,0,.6)}

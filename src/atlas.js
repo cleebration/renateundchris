@@ -444,7 +444,7 @@
         map.on("rotate", upd); map.on("pitch", upd); upd();
         k.onclick = () => { if (S.kamera !== "nord") setKamera("nord"); map.easeTo({ bearing: 0, pitch: 0, duration: reduced ? 0 : 600 }); }; }
       const re = document.createElement("div"); re.className = "reiser"; re.hidden = true;
-      reiser = new maplibregl.Marker({ element: re }).setLngLat([ST[0].lon, ST[0].lat]).addTo(map);
+      reiser = new maplibregl.Marker({ element: re, offset: [18, -16] }).setLngLat([ST[0].lon, ST[0].lat]).addTo(map);
       ve.addEventListener("click", (e) => { e.stopPropagation(); fzInfo("auto"); }); re.addEventListener("click", (e) => { e.stopPropagation(); fzInfo(re.dataset.mit); });
       drawDone(); if (track()[S.idx]) go(true); else render();
     });
@@ -464,7 +464,7 @@
     }
 
     // ---------- Bewegung ----------
-    let anim = null, timer = null, vorTimer = null;
+    let anim = null, timer = null, vorTimer = null, wartet = null, animAuto = false;
     // Zwei-Finger-Gesten: zoomen/drehen auch während der Fahrt. Gezoomter Maßstab bleibt; Drehen schaltet die Kamera auf „frei“.
     let hand = false, handZoom = null;
     // Fahrzeug aus der Mitte rücken, solange die Tageskarte bzw. Steuerung Platz belegt (Kartenrand-Polster)
@@ -479,6 +479,8 @@
     new MutationObserver(() => requestAnimationFrame(polster)).observe(document.getElementById("card"), { attributes: true, attributeFilter: ["class", "data-tiefe"] });
     new MutationObserver(() => requestAnimationFrame(polster)).observe(document.getElementById("side"), { attributes: true, attributeFilter: ["class"] });
     map.once("load", () => setTimeout(polster, 300));
+    // Quellenangabe nur als „i“ (aufgeklappt deckt sie am Handy die Karte zu)
+    map.once("idle", () => { const a = document.querySelector(".maplibregl-ctrl-attrib"); if (a) { a.classList.remove("maplibregl-compact-show"); a.removeAttribute("open"); } });
     map.on("touchstart", (e) => { if (e.originalEvent && e.originalEvent.touches && e.originalEvent.touches.length >= 2) hand = true; });
     map.on("touchend", (e) => { if (!hand || (e.originalEvent && e.originalEvent.touches && e.originalEvent.touches.length)) return; hand = false; handZoom = map.getZoom(); });
     map.on("wheel", () => { clearTimeout(map._hz); map._hz = setTimeout(() => (handZoom = map.getZoom()), 300); });
@@ -529,7 +531,7 @@
       stopAnim();
       if (reduced || path.length < 2 || ms < 50) { done(); return; }
       const cum = [0]; for (let k = 1; k < path.length; k++) cum.push(cum[k - 1] + Math.sqrt(d2(path[k], path[k - 1])));
-      const L = cum[cum.length - 1] || 1; const t0 = performance.now();
+      const L = cum[cum.length - 1] || 1; let tLetzt = performance.now(), fort0 = 0; const t0Tempo = S.tempo; animAuto = !!go.autoLauf;
       // weich anfahren nur aus dem Stand, weich bremsen nur vor dem Ende bzw. einem längeren Halt; dazwischen gleichmäßig
       const anfahren = !rollt, bremsen = !S.playing || S.idx >= track().length - 1 || halt(track()[S.idx]) > 400; rollt = true;
       const kurve = (f) => { const a = anfahren ? 0.18 : 0, b = bremsen ? 0.18 : 0, v = 1 / (1 - a / 2 - b / 2);
@@ -539,7 +541,7 @@
       const fahrt = S.kamera === "fahrt", zt = fahrt ? 11.6 : ziel.zoom, pt = fahrt ? 72 : ziel.pitch;
       const vor = Math.max(0.004, Math.min(0.03, L * 0.12)); // Blick voraus (~0,4–3 km)
       const step = (now) => {
-        const f = Math.min(1, (now - t0) / ms); const e = kurve(f); const target = e * L;
+        const dt = Math.min(100, now - tLetzt); tLetzt = now; if (!(animAuto && !S.playing)) fort0 += dt / ms * (kmProSek(S.tempo) / kmProSek(t0Tempo)); const f = Math.min(1, fort0); const e = kurve(f); const target = e * L;
         const pos = punktBei(target); const g = Math.min(1, f / 0.2);
         const cam = { center: pos, zoom: z0 + (zt - z0) * g, pitch: p0 + (pt - p0) * g };
         const voraus = brg(pos, punktBei(Math.min(L, target + vor)));
@@ -557,6 +559,7 @@
       anim = requestAnimationFrame(step);
     }
     function go(jump) {
+      const auto = !!go.auto; go.auto = false; wartet = null; go.autoLauf = auto; // auto: vom Abspielen ausgelöst → hält bei Stopp an
       const tr = track(); const s = tr[S.idx]; if (!s) { render(); return; }
       const prev = go.last; go.last = s;
       S.seen.add(s.day);
@@ -574,7 +577,7 @@
       const vorher = (path, los) => { const vs = map.getSource("vorschau"); if (!vs || reduced) { los(); return; } vs.setData(fc([line(path)])); stopAnim(); clearTimeout(timer); clearTimeout(vorTimer);
         const fit = new maplibregl.LngLatBounds(path[0], path[0]); path.forEach((q) => fit.extend(q));
         if (!rollt && handZoom == null) map.fitBounds(fit, { padding: 80, maxZoom: zoom, duration: Math.min(1200, tz(900, S.tempo)), bearing: map.getBearing(), pitch: map.getPitch() });
-        vorTimer = setTimeout(() => { vs.setData(fc([])); los(); }, Math.min(1400, tz(rollt ? 350 : 1100, S.tempo))); };
+        vorTimer = setTimeout(() => { vs.setData(fc([])); go.autoLauf = auto; if (auto && !S.playing) { wartet = () => { go.autoLauf = auto; los(); }; return; } los(); }, Math.min(1400, tz(rollt ? 350 : 1100, S.tempo))); };
       const von = mit === "auto" ? (park || prev) : prev;
       if (!jump && von && mit === "auto" && d.line && von.day === s.day && von.ri != null && s.ri != null && s.ri > von.ri) {
         const path = d.line.slice(von.ri, s.ri + 1); zeigReiser("auto");
@@ -597,7 +600,7 @@
     function afterArrive() { if (!S.playing) return; clearTimeout(timer); if (ton.liest()) { ton.danach(afterArrive); return; } const tr = track();
       if (S.idx >= tr.length - 1) { setPlay(false); return; }
       const h = halt(tr[S.idx]); if (h > 400) rollt = false;
-      timer = setTimeout(() => { S.idx++; go(false); }, h); }
+      timer = setTimeout(() => { S.idx++; go.auto = true; go(false); }, h); }
     // Verweildauer an einer Station: kurz beim Durchfahren, länger bei Tagesziel/Highlights und großer Tiefe; schneller = kürzer
     function halt(s) { if (!s) return 0; const a = s.art || "besuch";
       let ms = 150 + (a === "uebernachtung" ? 900 : a === "besuch" ? 400 : 0) + (S.tiefe >= 2 ? 1200 : 0) + (S.tiefe >= 3 ? 1000 : 0);
@@ -607,7 +610,8 @@
     function fahrstufe(v) { v = Math.max(0, Math.min(TMAX, Math.round(v))); if (v === 0) { if (S.playing) setPlay(false); }
       else { S.tempo = v; if (!S.playing) setPlay(true); else render(); } broadcast(); }
     function setPlay(p) { S.playing = p; clearTimeout(timer); rollt = false;
-      if (p && !anim) { const tr = track(); if (S.idx < tr.length - 1) { S.idx++; go(false); } else setPlay(false); } render(); }
+      if (p && wartet) { const w = wartet; wartet = null; w(); render(); return; }
+      if (p && !anim) { const tr = track(); if (S.idx < tr.length - 1) { S.idx++; go.auto = true; go(false); } else setPlay(false); } render(); }
     function step(n) { stopAnim(); clearTimeout(timer); clearTimeout(vorTimer); const tr = track(); S.idx = Math.min(tr.length - 1, Math.max(0, S.idx + n)); go(n < 0); }
     function gotoDay(t) { stopAnim(); let k = track().findIndex((s) => s.day >= t); if (k < 0) { S.thema = null; S.breite = 3; k = track().findIndex((s) => s.day >= t); } S.idx = Math.max(0, k); go(true); }
     function dayStep(n) { const tr = track(); const cur = (tr[S.idx] || {}).day || 1; let tgt = cur + n;
@@ -616,7 +620,7 @@
     // Seitenleiste zusammenklappen (gemerkt), Touch-Dock, Karte als ausklappbares Blatt
     const side = document.getElementById("side");
     // Leiste beginnt unter dem Kopf; Tagesnummern bei schmalen Quadraten nur jeden 5. Tag
-    const lage = () => { if (document.body.classList.contains("touch") && !side.classList.contains("zu")) side.style.top = Math.round(document.getElementById("hudTop").getBoundingClientRect().bottom + 10) + "px"; else side.style.top = "";
+    const lage = () => { document.body.style.setProperty("--kopf", Math.round(document.getElementById("hudTop").getBoundingClientRect().bottom) + "px"); if (document.body.classList.contains("touch") && !side.classList.contains("zu")) side.style.top = Math.round(document.getElementById("hudTop").getBoundingClientRect().bottom + 10) + "px"; else side.style.top = "";
       const rr = document.getElementById("railRow"); rr.classList.remove("eng"); };
     addEventListener("resize", lage); setTimeout(lage, 50); setTimeout(lage, 800);
     const setZu = (zu) => { side.classList.toggle("zu", zu); document.getElementById("sideKopf").setAttribute("aria-expanded", !zu); merk.set("sideZu", zu); if (typeof lage === "function") lage(); };
