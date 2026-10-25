@@ -13,7 +13,9 @@
   const setzeModus = () => { document.body.dataset.modus = modus(); };
   setzeModus();
 
-  ROOT.innerHTML = `<div id="map" aria-label="Weltkugel mit allen Reisen"></div>
+  ROOT.innerHTML = `<div id="topbar"><a class="tbBtn" href="/" aria-label="Startseite renateundchris.com">‹</a><div id="insel"><button class="tzChip" id="tbRund">▶ Rundflug</button><button id="tbKompass" aria-label="Globus nach Norden ausrichten"><span class="kn"><i></i><b></b></span></button></div><button class="tbBtn" id="tbLupe" aria-label="Suchen ein/aus" aria-pressed="false">🔎</button><button class="tbBtn" id="tbInfo" aria-label="Hilfe ein/aus" aria-pressed="false">i</button><a class="tbBtn" href="/atlas/statistik/" aria-label="Statistik">📊</a></div>
+    <div id="tbSuche" hidden></div>
+    <div id="map" aria-label="Weltkugel mit allen Reisen"></div>
     <aside id="panel">
       <header><a class="home" href="/">← Startseite renateundchris.com</a><span class="eyebrow">Renate &amp; Chris · Reise-Atlas</span><h1>Unsere Reisen</h1><p class="sum mono" id="sum"></p>
         <div class="acts"><button class="btn primary" id="tour">▶ Rundflug</button><a class="btn" href="/atlas/statistik/">📊 Statistik</a></div></header>
@@ -163,5 +165,26 @@
       if (tourOn) { sel = -1; hervorheben(-1); map.fitBounds(all(), { padding: pad(), duration: reduced ? 0 : 2500, maxZoom: 5 }); }
       tourOn = false; tourBtn.textContent = "▶ Rundflug";
     };
+    // ---- Leiste oben (Handy hochkant): Rundflug + Kompass in der Insel, Lupe, Hilfe, Statistik ----
+    const rund = document.getElementById("tbRund");
+    rund.onclick = () => tourBtn.click(); new MutationObserver(() => (rund.textContent = tourBtn.textContent)).observe(tourBtn, { childList: true, characterData: true, subtree: true });
+    const kn = document.querySelector("#tbKompass .kn"); const kUpd = () => { kn.style.transform = `rotate(${-map.getBearing()}deg)`; }; map.on("rotate", kUpd); kUpd();
+    document.getElementById("tbKompass").onclick = () => map.easeTo({ bearing: 0, pitch: 0, duration: reduced ? 0 : 700 });
+    const lu = document.getElementById("tbLupe"), box = document.getElementById("tbSuche"), heim = document.getElementById("panel");
+    const teile = ["frageForm", "antwort", "treffer"].map((id) => document.getElementById(id)); const anker = document.getElementById("list");
+    lu.onclick = () => { const auf = box.hidden; box.hidden = !auf; lu.setAttribute("aria-pressed", auf);
+      if (auf) { teile.forEach((t) => box.appendChild(t)); such.focus(); } else { teile.forEach((t) => heim.insertBefore(t, anker)); } };
+    const SCHRITTE = [["#topbar .tbBtn[href='/']", "Zurück", "Zur Startseite von renateundchris.com."], ["#insel", "Rundflug & Kompass", "▶ Rundflug fliegt von Linz aus alle Reisen ab. Kompass antippen richtet den Globus nach Norden."],
+      ["#tbLupe", "Suchen & fragen", "Öffnet oben ein Suchfeld: Orte, Tage, Erlebnisse – oder eine Frage an die Reise."], ["#topbar a[href*='statistik']", "Statistik", "Kilometer, Wetter, Rekorde und Abzeichen aller Reisen."],
+      ["#map", "Globus", "Mit zwei Fingern drehen und zoomen. Routen antippen wählt die Reise."], ["#list", "Reisen", "Beim Scrollen dreht sich der Globus zur Reise in der Mitte. Antippen = eintauchen, ▶ Teaser = 35-Sekunden-Film."]];
+    let hilfe = null; const ib = document.getElementById("tbInfo");
+    const hilfeZu = () => { if (hilfe) hilfe.remove(); hilfe = null; ib.setAttribute("aria-pressed", "false"); };
+    const hilfeZeig = (i) => { hilfeZu(); const [sel, tit, txt] = SCHRITTE[i]; const el = document.querySelector(sel); if (!el) return; let r = el.getBoundingClientRect(); if (sel === "#map") r = { left: 20, top: 120, width: innerWidth - 40, height: innerHeight * 0.25 };
+      if (sel === "#list") r = { left: r.left, top: Math.max(r.top, innerHeight * 0.45), width: r.width, height: Math.min(200, innerHeight * 0.3) };
+      ib.setAttribute("aria-pressed", "true"); hilfe = document.createElement("div"); hilfe.id = "hilfe"; const unten = r.top + r.height / 2 < innerHeight / 2;
+      hilfe.innerHTML = `<div class="hLoch" style="left:${r.left - 6}px;top:${r.top - 6}px;width:${r.width + 12}px;height:${r.height + 12}px"></div><div class="hBox" style="${unten ? `top:${Math.min(innerHeight - 220, r.top + r.height + 16)}px` : `bottom:${innerHeight - r.top + 16}px`}"><b>${tit}</b><p>${txt}</p><div class="hNav"><span>${i + 1} / ${SCHRITTE.length}</span>${i ? '<button data-h="z">‹ Zurück</button>' : ""}<button data-h="w" class="pri">${i + 1 < SCHRITTE.length ? "Weiter ›" : "Fertig"}</button></div></div>`;
+      hilfe.onclick = (e) => { const b = e.target.closest("[data-h]"); if (b && b.dataset.h === "z") return hilfeZeig(i - 1); if (b || !e.target.closest(".hBox")) { if (i + 1 < SCHRITTE.length) hilfeZeig(i + 1); else hilfeZu(); } };
+      document.body.appendChild(hilfe); };
+    ib.onclick = () => (hilfe ? hilfeZu() : hilfeZeig(0));
   }
 })();
