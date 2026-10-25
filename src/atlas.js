@@ -134,7 +134,7 @@
       <div class="hud" id="side"><button class="sideKopf" id="sideKopf" aria-expanded="true"><span>Steuerung</span><i>‹</i></button>
         <div class="panel"><h4>Smartphone als Controller</h4>
           <div id="qrBox"><div id="qr" aria-label="QR-Code zum Controller"></div><p>Mit der Handy-Kamera scannen<br>oder Code eingeben:<br><b id="codeTxt">······</b></p></div></div>
-        <div class="panel" id="tonPanel"><button class="sucheBtn" id="sucheBtn" title="Taste /">🔎 Suchen &amp; fragen</button><button class="uhrBtn" id="uhrBtn" aria-pressed="false">🕐 Uhr nach Fotozeiten</button><button class="fernBtn" id="fernBtn">📱 Dieses Gerät als Fernbedienung für einen anderen Bildschirm</button><h4>Tempo</h4>
+        <div class="panel" id="tonPanel"><button class="sucheBtn" id="sucheBtn" title="Taste /">🔎 Suchen &amp; fragen</button><button class="uhrBtn" id="uhrBtn" aria-pressed="false">🕐 Uhr nach Fotozeiten</button><button class="uhrBtn" id="vollBtn">⛶ Vollbild</button><button class="fernBtn" id="fernBtn">📱 Dieses Gerät als Fernbedienung für einen anderen Bildschirm</button><h4>Tempo</h4>
           <div class="tachoBox"><span id="tachoGross"></span><div><b id="tempoTxt"></b><input type="range" id="tempoR" min="0" max="10" step="1" aria-label="Fahrstufe 0 (Stopp) bis 10 (Tasten − / +)"></div></div>
           <h4>Breite</h4>
           <div class="seg" style="--n:3" data-ks="breite"><button data-v="1">Highlights</button><button data-v="2">Stationen</button><button data-v="3">alles</button></div>
@@ -221,7 +221,7 @@
     Object.entries(ROLLEN).forEach(([k, r]) => { const b = document.createElement("button"); b.className = "role"; b.innerHTML = `<span class="k">${r.k}</span><span class="n">${r.n}</span><span class="d">${r.d}</span>`; b.onclick = () => setRole(k); rg.appendChild(b); });
 
     // Kurzer Hinweis beim Start (statt Rollen-Fenster)
-    { const t = document.createElement("div"); t.className = "startHint"; t.innerHTML = (matchMedia("(pointer: coarse)").matches || innerWidth <= 900) ? "Tageskarte am Griff ziehen = mehr/weniger · nach rechts wischen = ausblenden · links: Stopp/Tag (hoch/runter) · rechts: Tempo (hoch/runter, tippen = Stopp)" : "<kbd>Leertaste</kbd> fahren · <kbd>←</kbd><kbd>→</kbd> Station · <kbd>↓</kbd><kbd>↑</kbd> Tiefe · <kbd>−</kbd><kbd>+</kbd> Tempo · <kbd>/</kbd> suchen &amp; fragen";
+    { const t = document.createElement("div"); t.className = "startHint"; t.innerHTML = (matchMedia("(pointer: coarse)").matches || innerWidth <= 900) ? "Tageskarte: Griff ziehen = mehr · links Stopp/Tag · rechts Tempo, tippen = Stopp" : "<kbd>Leertaste</kbd> fahren · <kbd>←</kbd><kbd>→</kbd> Station · <kbd>↓</kbd><kbd>↑</kbd> Tiefe · <kbd>−</kbd><kbd>+</kbd> Tempo · <kbd>/</kbd> suchen &amp; fragen";
       document.getElementById("screen").appendChild(t); setTimeout(() => t.classList.add("weg"), 7000); setTimeout(() => t.remove(), 8200); addEventListener("keydown", () => t.classList.add("weg"), { once: true }); }
     // Direkt zu einem Tag springen: /atlas/<reise>/?tag=7 (z. B. aus der Reise-Statistik)
     { const t0 = +new URLSearchParams(location.search).get("tag");
@@ -500,9 +500,9 @@
     function setzeFahrzeug(d) { const k = (d && FAHRZEUGE[d.fahrzeug] ? d.fahrzeug : null) || (FAHRZEUGE[DATA.fahrzeugTyp] ? DATA.fahrzeugTyp : "l3");
       if (k === fzJetzt || !van) return; fzJetzt = k; const el = van.getElement(); el.innerHTML = fahrzeugSvg(k); el.title = FAHRZEUGE[k].n; }
     // Geschwindigkeit in km pro Sekunde je Stufe (Stufe 5 ≈ 30 km/s); Dauer folgt der Streckenlänge
-    const kmProSek = (t) => 30 / Math.pow(0.7, t - 5);
+    const kmProSek = (t) => (t <= 5 ? 1.5 * Math.pow(25 / 1.5, (t - 1) / 4) : 25 * Math.pow(1.45, t - 5)); // Stufe 1 ≈ 1,5 km/s · 5 ≈ 25 · 10 ≈ 160
     const fahrDauer = (path) => { let km = 0; for (let k = 1; k < path.length; k++) km += Math.sqrt(d2(path[k], path[k - 1])) * 111.2;
-      return Math.max(500, Math.min(30000, km / kmProSek(S.tempo) * 1000)); };
+      return Math.max(500, Math.min(240000, km / kmProSek(S.tempo) * 1000)); };
     let rollt = false; // fährt gerade durch (kein Anfahren/Abbremsen an Zwischenstationen)
     // Fortschritt des Tages (Balken + km) – aus dem Punkt-Index auf der Tageslinie
     // Uhr nach Fotos: Aufnahmezeiten auf die Tagesroute legen und zwischen zwei Fotos linear schätzen
@@ -524,6 +524,16 @@
     { const ub = document.getElementById("uhrBtn"), u = document.getElementById("uhr");
       const setUhr = (an) => { u.hidden = !an; ub.setAttribute("aria-pressed", an); ub.classList.toggle("on", an); merk.set("uhr", an); if (an) { const s = track()[S.idx]; if (s) uhrSetzen(s.day, s.ri || 0); } };
       ub.onclick = () => setUhr(u.hidden); setTimeout(() => setUhr(merk.get("uhr", false) === true), 0); }
+    // Vollbild: iPad/Mac/Android über die Fullscreen-API; iPhone kann das im Browser nicht → als App auf den Home-Bildschirm
+    { const vb = document.getElementById("vollBtn"), de = document.documentElement;
+      const standalone = matchMedia("(display-mode: fullscreen), (display-mode: standalone)").matches || navigator.standalone;
+      const kann = (document.fullscreenEnabled || document.webkitFullscreenEnabled) && (de.requestFullscreen || de.webkitRequestFullscreen); const ist = () => document.fullscreenElement || document.webkitFullscreenElement;
+      if (standalone) vb.hidden = true;
+      vb.onclick = () => {
+        if (kann) { if (ist()) (document.exitFullscreen || document.webkitExitFullscreen).call(document); else (de.requestFullscreen || de.webkitRequestFullscreen).call(de); return; }
+        const box = document.createElement("div"); box.className = "tzBox"; box.innerHTML = `<div class="tzIn vollHilfe"><h3>Vollbild am iPhone</h3><p>Safari erlaubt am iPhone kein Vollbild für Webseiten. So geht es trotzdem:</p><ol><li>Unten auf <b>Teilen</b> <span aria-hidden="true">⬆︎</span> tippen</li><li><b>„Zum Home-Bildschirm“</b> wählen</li><li>Den Reise-Atlas dann über das neue Symbol öffnen – ohne Browserleisten.</li></ol><button class="btn primary" data-x>OK</button></div>`;
+        box.addEventListener("click", (e) => { if (e.target === box || e.target.hasAttribute("data-x")) box.remove(); }); document.body.appendChild(box); };
+      const upd = () => { vb.textContent = ist() ? "⛶ Vollbild beenden" : "⛶ Vollbild"; }; document.addEventListener("fullscreenchange", upd); document.addEventListener("webkitfullscreenchange", upd); }
     function tagFort(day, ri) { uhrSetzen(day, ri); const el = document.querySelector("#card .tagFort"); const d = dayOf(day); if (!el || !d || !d.line) return;
       const f = Math.max(0, Math.min(1, ri / (d.line.length - 1))); el.querySelector("i").style.width = (f * 100).toFixed(1) + "%";
       el.querySelector("span").textContent = `${Math.round(f * d.route.km)} / ${Math.round(d.route.km)} km`; }
@@ -663,6 +673,7 @@
         if (Math.abs(dx) < 8 && Math.abs(dy) < 8 && kopf && t.clientY - card.getBoundingClientRect().top < 28) setTiefe(S.tiefe >= 3 ? 1 : S.tiefe + 1); // Griff antippen: nächste Stufe
       }); }
     // Tageskarte ein-/ausblenden; ausgeblendet bleibt rechts ein schmaler Reiter sichtbar
+    document.getElementById("card").addEventListener("click", (e) => { const b = e.target.closest(".blatt [data-st]"); if (!b) return; e.stopPropagation(); const v = +b.dataset.st; if (v === 0) setKarteZu(true); else setTiefe(v); });
     let tiefeRichtung = 1; // Tippen: 1→2→3→4→3→2→1 …
     function setTiefe(t) { handZoom = null; setTiefeOhne(t); }
     function setTiefeOhne(t) { S.tiefe = Math.max(document.body.classList.contains("touch") ? 1 : 0, Math.min(3, t)); autoHalt(); go(true); broadcast(); }
@@ -764,7 +775,7 @@
         if (d.seite) h += `<a class="more" href="${esc(d.seite)}">Ganzes Tagebuch von Tag ${d.tag} lesen →</a>`;
       }
       if (d.status === "fehlt") h += `<p class="note">Für diesen Tag gibt es noch keinen Eintrag.</p>`;
-      const card = document.getElementById("card"); card.innerHTML = `<button class="cardX" aria-label="Tagesübersicht ausblenden (T)" title="ausblenden (T)">›</button>` + h; card.dataset.tiefe = S.tiefe; if (!anim) tagFort(d.tag, (s && s.ri) || 0); setTimeout(() => { try { polster(); } catch (e) {} }, 0);
+      const card = document.getElementById("card"); card.innerHTML = `<div class="blatt"><i class="griff" aria-hidden="true"></i><div class="stufen" role="group" aria-label="Wie viel zeigen">${[[1, "Kurz"], [2, "Mehr"], [3, "Alles 📷"]].map(([v, n]) => `<button data-st="${v}" class="${S.tiefe === v || (v === 1 && S.tiefe < 1) ? "on" : ""}">${n}</button>`).join("")}<button data-st="0" aria-label="Tagesübersicht ausblenden">✕</button></div></div><button class="cardX" aria-label="Tagesübersicht ausblenden (T)" title="ausblenden (T)">›</button>` + h; card.dataset.tiefe = S.tiefe; if (!anim) tagFort(d.tag, (s && s.ri) || 0); setTimeout(() => { try { polster(); } catch (e) {} }, 0);
       card.querySelector(".cardX").onclick = () => setKarteZu(true);
       document.getElementById("cardTab").textContent = `‹ Tag ${d.tag}`;
       card.querySelectorAll("[data-f]").forEach((b) => b.onclick = () => openPhoto(fotos[+b.dataset.f]));

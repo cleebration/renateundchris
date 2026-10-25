@@ -418,3 +418,18 @@ body.touch #uhr small{font-size:9px}
 body.touch #navPad .pT{font-size:9px}
 body.touch #navPad .pA{font-size:14px}
 body.touch .brand h1{font-size:22px;text-shadow:0 1px 6px rgba(0,0,0,.6)}
+
+/* Ziehblatt-Kopf: Griff wie Google Maps, darunter Stufen-Knöpfe; bleibt oben stehen */
+.blatt{display:none}
+body.touch #card::before{display:none}
+body.touch .blatt{display:flex;flex-direction:column;align-items:center;gap:8px;position:sticky;top:-12px;z-index:3;margin:-12px -14px 4px;padding:8px 14px 8px;background:inherit;background:var(--panel);border-bottom:1px solid var(--hair);cursor:grab;touch-action:none}
+body.touch .griff{display:block;width:44px;height:5px;border-radius:3px;background:rgba(255,255,255,.55)}
+body.touch .stufen{display:flex;gap:6px;width:100%}
+body.touch .stufen button{all:unset;flex:1;text-align:center;font:11px var(--mono);padding:6px 4px;border-radius:999px;border:1px solid var(--hair);color:var(--muted)}
+body.touch .stufen button.on{background:var(--amber);border-color:var(--amber);color:#1b1206}
+body.touch .stufen button[data-st="0"]{flex:0 0 32px}
+.vollHilfe{background:var(--panel);border:1px solid var(--hair);border-radius:16px;padding:18px 20px;max-width:420px;color:var(--ink);align-items:flex-start!important}
+.vollHilfe h3{margin:0;font-family:var(--display);font-size:24px;text-transform:uppercase}
+.vollHilfe p,.vollHilfe ol{margin:0;font-size:15px;line-height:1.5}
+body.touch #card{z-index:15}
+body.touch .stufen button{white-space:nowrap}

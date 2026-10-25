@@ -106,6 +106,8 @@ function shell(site, trips) {
 <meta property="og:title" content="Reise-Atlas · ${t.title}">
 <meta property="og:description" content="Die ganze Reise als spielbare Karte – mit dem Smartphone als Controller.">
 <meta name="theme-color" content="#0a1b23">
+<link rel="manifest" href="/atlas/manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Reise-Atlas"><link rel="apple-touch-icon" href="/assets/atlas/icon-180.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
