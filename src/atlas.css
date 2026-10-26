@@ -686,3 +686,10 @@ body.handy.quer #lbClose{top:60px}
 body.handy.quer #lightbox img{max-height:calc(100vh - 110px)}
 body.handy.quer #card{max-height:none!important}
 body.handy.quer #card .blatt::after{content:none}body.handy.quer #card .blatt{padding:6px 14px}
+/* Quer: gemeinsame Mittelspalte – Leiste oben und Zeile unten gleich breit; Felder links/rechts über die volle Höhe */
+body.handy.quer{--mL:max(84px,calc(env(safe-area-inset-left,0px) + 76px));--mR:max(84px,calc(env(safe-area-inset-right,0px) + 76px))}
+body.handy.quer #topbar{left:var(--mL);right:var(--mR);padding:6px 0 4px;justify-content:space-between;background:none}
+body.handy.quer #insel{flex:1 1 auto;max-width:none}
+body.handy.quer #cardTab,body.handy.quer #card,body.handy.quer .tzBox.suche.oben{left:var(--mL)!important;right:var(--mR)!important}
+body.handy.quer .pad{top:calc(env(safe-area-inset-top,0px) + 8px);bottom:calc(env(safe-area-inset-bottom,0px) + 8px);height:auto!important}
+body.handy.quer #navPad .pZ small{display:block}
