@@ -78,7 +78,7 @@
     list.addEventListener("click", (e) => { const b = e.target.closest(".tz"); if (!b) return; e.preventDefault(); teaser(R[+b.dataset.t]); });
 
     if (typeof maplibregl === "undefined") { document.getElementById("map").innerHTML = '<p class="nomap">Die Karte konnte nicht geladen werden.</p>'; return; }
-    const map = new maplibregl.Map({ container: "map", style: "https://tiles.openfreemap.org/styles/liberty", center: [14, 30], zoom: narrow() ? 0.9 : 1.4,
+    const map = new maplibregl.Map({ container: "map", style: "https://tiles.openfreemap.org/styles/liberty", center: reduced ? [14, 30] : [-150, 22], zoom: narrow() ? 0.9 : 1.4,
       attributionControl: false, maxPitch: 60 });
     map.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: "Routen: OSRM (Näherung)" }), "bottom-right");
     map.addControl(new maplibregl.NavigationControl({ showCompass: true, visualizePitch: true }), "bottom-right");
@@ -107,7 +107,9 @@
       });
       const home = document.createElement("div"); home.className = "home"; home.title = "Zuhause: " + D.zuhause.name; home.innerHTML = `<i></i><span>${esc(D.zuhause.name)}</span>`;
       new maplibregl.Marker({ element: home }).setLngLat([D.zuhause.lon, D.zuhause.lat]).addTo(map);
-      if (!reduced) setTimeout(() => { if (sel < 0 && !tourOn) map.fitBounds(all(), { padding: pad(), duration: 3500, maxZoom: 5 }); }, 1600);
+      // beim Laden: die Erde dreht sich einmal herein (von Amerika nach Europa), dann Flug zu den Reisen
+      if (!reduced) { map.easeTo({ center: [14, 38], duration: 3600, easing: (t) => 1 - Math.pow(1 - t, 3) });
+        setTimeout(() => { if (sel < 0 && !tourOn) map.fitBounds(all(), { padding: pad(), duration: 2800, maxZoom: 5 }); }, 3700); }
       else map.fitBounds(all(), { padding: pad(), duration: 0, maxZoom: 5 });
       dreh();
     });
@@ -141,7 +143,8 @@
     // Handy: beim Scrollen dreht sich der Globus zur Reise in der Mitte der Liste
     if ("IntersectionObserver" in window) {
       let zielT = null;
-      const io = new IntersectionObserver((eintr) => { if (!narrow() || tourOn) return; const sicht = eintr.filter((x) => x.isIntersecting); if (!sicht.length) return;
+      let ioBereit = reduced; setTimeout(() => (ioBereit = true), 7000); document.getElementById("panel").addEventListener("scroll", () => (ioBereit = true), { passive: true, once: true });
+      const io = new IntersectionObserver((eintr) => { if (!narrow() || tourOn || !ioBereit) return; const sicht = eintr.filter((x) => x.isIntersecting); if (!sicht.length) return;
         const i = +sicht[0].target.dataset.i; clearTimeout(zielT); zielT = setTimeout(() => { if (i !== sel) { stopSpin(); waehle(i); } }, 350); },
         { root: document.getElementById("panel"), rootMargin: "-45% 0px -45% 0px" });
       list.querySelectorAll(".trip").forEach((a) => io.observe(a));

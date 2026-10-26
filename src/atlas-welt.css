@@ -144,3 +144,6 @@ body[data-modus="quer"] #tbSuche:not([hidden]){display:flex;flex-direction:colum
 body[data-modus="quer"] #tbSuche #treffer{flex:none}
 body[data-modus="quer"] #panel{top:52px}
 body[data-modus="quer"] #panel .home,body[data-modus="quer"] #panel .acts,body[data-modus="quer"] #panel>.frage,body[data-modus="quer"] .maplibregl-ctrl-group{display:none!important}
+/* Quer (iPhone/iPad): Liste links, Erde rechts */
+body[data-modus="quer"] #map{left:auto;right:0;width:52vw}
+body[data-modus="quer"] #panel{right:auto;left:0;border-width:0 1px 0 0;padding-left:max(14px,env(safe-area-inset-left))}
