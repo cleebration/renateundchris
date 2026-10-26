@@ -1,6 +1,21 @@
 {
   "trips": [
     {
+      "slug": "bayern-2026",
+      "title": "Bayern 2026",
+      "zeitraum": "September 2026",
+      "laender": [
+        "Deutschland"
+      ],
+      "blurb": "Eine Woche mit dem Wohnwagen und der Crew im Niederbayerischen Bäderdreieck: Passau mit Dreiflüsse-Rundfahrt und Veste Oberhaus, Kloster und Brauerei Aldersbach, Geburtstag am Holmernhof und Eberhofer im Kino.",
+      "cover": "/assets/reisen/bayern-2026/atlas/tag-05/IMG_4781.jpg",
+      "accent": "#2f6fa8",
+      "accentInk": "#1d4a73",
+      "wash": "#dfe9f3",
+      "fahrzeug": "unser Wohnwagen",
+      "fahrzeugTyp": "l3"
+    },
+    {
       "slug": "balkan-2026",
       "title": "Adria & Balkan 2026",
       "zeitraum": "Juli – August 2026",

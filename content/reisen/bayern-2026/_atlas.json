@@ -1,0 +1,322 @@
+{
+ "reise": "bayern-2026",
+ "tage": [
+  {
+   "tag": 1,
+   "datum": "2026-09-03",
+   "land": [
+    "AT",
+    "DE"
+   ],
+   "titel": "Von Linz ins Bäderdreieck",
+   "satz": "Gegen 14 Uhr los in Linz, am Nachmittag Ankunft am Holmernhof bei Bad Griesbach: Wohnwagen abstellen, Vorzelt aufbauen, erster langer Abend mit der Crew.",
+   "teaser": "Kurz nach Mittag geht es in Linz los, über den Inn nach Niederbayern ins Bäderdreieck. Am Holmernhof Dreiquellenbad wartet Platz 080. Der Wohnwagen wird abgestellt, das Vorzelt gemeinsam aufgezogen, und die ersten Kisten Störtebeker kommen aus dem Auto. Am Abend sitzt die ganze Crew bei Windlichtern im Vorzelt – der Urlaub hat begonnen.",
+   "stationen": [
+    {
+     "name": "Linz",
+     "lat": 48.3069,
+     "lon": 14.2858,
+     "art": "besuch",
+     "notiz": "Abfahrt ca. 14:00"
+    },
+    {
+     "name": "Holmernhof Dreiquellenbad",
+     "lat": 48.42022,
+     "lon": 13.19224,
+     "art": "uebernachtung",
+     "notiz": "Platz 080, erste Fotos 16:00"
+    }
+   ],
+   "themen": [
+    "grenze"
+   ],
+   "status": "teilweise"
+  },
+  {
+   "tag": 2,
+   "datum": "2026-09-04",
+   "land": [
+    "DE"
+   ],
+   "titel": "Passau: Ratskeller, drei Flüsse, Dom",
+   "satz": "Mittag im Ratskeller, Dreiflüsse-Rundfahrt mit Blick auf die Veste Niederhaus, dann der Dom St. Stephan. Abends wird am Platz gegrillt.",
+   "teaser": "Der erste Ausflug führt nach Passau. Mittagessen im Ratskeller unter dem Rathaus, dann an Bord für die Dreiflüsse-Rundfahrt: Donau, Inn und Ilz, die bunte Häuserfront am Inn und die Veste Niederhaus genau am Zusammenfluss. Am Nachmittag hinauf zum Dom St. Stephan mit seinen grünen Zwiebeltürmen und der barocken Stuckdecke. Zurück am Holmernhof wird der Grill angeworfen.",
+   "stationen": [
+    {
+     "name": "Ratskeller Passau",
+     "lat": 48.5747,
+     "lon": 13.4656,
+     "art": "essen",
+     "notiz": "Mittagessen, Ort genähert"
+    },
+    {
+     "name": "Dreiflüsse-Rundfahrt",
+     "lat": 48.57525,
+     "lon": 13.46893,
+     "art": "faehre",
+     "notiz": "Anleger, Foto-GPS 13:40"
+    },
+    {
+     "name": "Veste Niederhaus",
+     "lat": 48.5767,
+     "lon": 13.4789,
+     "art": "aussicht",
+     "notiz": "vom Schiff aus, Ort genähert"
+    },
+    {
+     "name": "Dom St. Stephan",
+     "lat": 48.5741,
+     "lon": 13.4637,
+     "art": "besuch",
+     "notiz": "Ort genähert"
+    },
+    {
+     "name": "Holmernhof Dreiquellenbad",
+     "lat": 48.42022,
+     "lon": 13.19224,
+     "art": "uebernachtung",
+     "notiz": "Grillabend"
+    }
+   ],
+   "themen": [
+    "kloster",
+    "kulinarik",
+    "faehre"
+   ],
+   "status": "teilweise"
+  },
+  {
+   "tag": 3,
+   "datum": "2026-09-05",
+   "land": [
+    "DE"
+   ],
+   "titel": "Geburtstagsessen für Klaus",
+   "satz": "Ein Tag am Platz: Torte aus roten Schokokugeln für Klaus, abends festliche Tafel im Wirtshaus am Holmernhof.",
+   "teaser": "Heute bleibt der Wohnwagen stehen. Für Klaus entsteht eine Geburtstagstorte aus unzähligen roten Schokokugeln. Am Abend deckt das Wirtshaus am Campingplatz eine lange Tafel mit Tulpen und Kerzen – Essen, Geschenke, Gelächter, und zum Schluss noch eine Torte.",
+   "stationen": [
+    {
+     "name": "Wirtshaus am Holmernhof",
+     "lat": 48.4204,
+     "lon": 13.192,
+     "art": "essen",
+     "notiz": "Geburtstagsessen ab ca. 19 Uhr, Foto-GPS"
+    },
+    {
+     "name": "Holmernhof Dreiquellenbad",
+     "lat": 48.42022,
+     "lon": 13.19224,
+     "art": "uebernachtung"
+    }
+   ],
+   "themen": [
+    "kulinarik"
+   ],
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 4,
+   "datum": "2026-09-06",
+   "land": [
+    "DE"
+   ],
+   "titel": "Kloster und Brauerei Aldersbach",
+   "satz": "Biergarten im Klosterhof, Rokoko in der Klosterkirche, Brauereibesuch und Gruppenfoto der Crew.",
+   "teaser": "Sonntagsausflug nach Aldersbach im Vilstal. Im Klosterhof gibt es zuerst eine Maß im Biergarten. Dann die Klosterkirche: Gold, Stuck und Deckenfresken, Rokoko vom Boden bis zur Kuppel. Danach geht es zur Brauerei – vom Gerstenkorn zum Bier – und zum Gruppenfoto der ganzen Crew. Abends wieder gemeinsam im Vorzelt.",
+   "stationen": [
+    {
+     "name": "Klosterhof Aldersbach",
+     "lat": 48.58747,
+     "lon": 13.08452,
+     "art": "essen",
+     "notiz": "Biergarten, Foto-GPS 13:41"
+    },
+    {
+     "name": "Klosterkirche Aldersbach",
+     "lat": 48.5881,
+     "lon": 13.086,
+     "art": "besuch",
+     "notiz": "Foto-GPS 15:19"
+    },
+    {
+     "name": "Brauerei Aldersbach",
+     "lat": 48.5875,
+     "lon": 13.0857,
+     "art": "besuch",
+     "notiz": "Ort genähert"
+    },
+    {
+     "name": "Holmernhof Dreiquellenbad",
+     "lat": 48.42022,
+     "lon": 13.19224,
+     "art": "uebernachtung"
+    }
+   ],
+   "themen": [
+    "kloster",
+    "kulinarik"
+   ],
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 5,
+   "datum": "2026-09-07",
+   "land": [
+    "DE"
+   ],
+   "titel": "Veste Oberhaus und Eberhofer im Kino",
+   "satz": "Noch einmal Passau: über die Donau hinauf zur Veste Oberhaus mit dem großen Blick über die Dreiflüssestadt. Abends Kino in Bad Füssing: „Steckerlfischfiasko“.",
+   "teaser": "Zweiter Tag in Passau. Nach dem Dom geht es über die Donau und den steilen Weg hinauf zur Veste Oberhaus: dicke Mauern, Wehrgänge, Efeu – und oben der Blick über die Altstadt zwischen Donau und Inn. Mittag im Biergarten. Am Abend fährt die Crew nach Bad Füssing ins Kino: „Steckerlfischfiasko“, der zehnte Eberhofer-Krimi nach Rita Falk. Das Fiasko im Albumtitel ist also kein Grillunfall, sondern Kino.",
+   "stationen": [
+    {
+     "name": "Donaukai Passau",
+     "lat": 48.57548,
+     "lon": 13.46883,
+     "art": "besuch",
+     "notiz": "Foto-GPS 12:58"
+    },
+    {
+     "name": "Veste Oberhaus",
+     "lat": 48.57789,
+     "lon": 13.47035,
+     "art": "aussicht",
+     "notiz": "Aussicht über Passau, Foto-GPS 13:31"
+    },
+    {
+     "name": "Biergarten Oberhaus",
+     "lat": 48.57789,
+     "lon": 13.46844,
+     "art": "essen",
+     "notiz": "Name nicht bestätigt, Foto-GPS 14:33"
+    },
+    {
+     "name": "Holmernhof Dreiquellenbad",
+     "lat": 48.42022,
+     "lon": 13.19224,
+     "art": "uebernachtung"
+    },
+    {
+     "name": "Kino Bad Füssing",
+     "lat": 48.354753,
+     "lon": 13.309669,
+     "art": "besuch",
+     "notiz": "„Steckerlfischfiasko“, Foto-GPS 19:27"
+    },
+    {
+     "name": "Holmernhof Dreiquellenbad",
+     "lat": 48.42022,
+     "lon": 13.19224,
+     "art": "uebernachtung"
+    }
+   ],
+   "themen": [
+    "burg",
+    "geschichte"
+   ],
+   "status": "teilweise"
+  },
+  {
+   "tag": 6,
+   "datum": "2026-09-08",
+   "land": [
+    "DE"
+   ],
+   "titel": "Stadtplatz Bad Griesbach",
+   "satz": "Bummel über den Stadtplatz von Bad Griesbach mit dem großen Baum und dem blauen Glasbrunnen, Kaffee im Freien, dann die Stadtpfarrkirche.",
+   "teaser": "Ein ruhiger Tag gleich nebenan: Bad Griesbach im Rottal. Auf dem Stadtplatz steht ein mächtiger alter Baum, daneben plätschert ein Brunnen mit blauen Glaswellen, rundherum bunte Häuserzeilen. Kaffee im Freien mit der Crew, danach in die Stadtpfarrkirche mit weißem Stuck und großer Orgel.",
+   "stationen": [
+    {
+     "name": "Stadtplatz Bad Griesbach",
+     "lat": 48.45166,
+     "lon": 13.19308,
+     "art": "besuch",
+     "notiz": "Foto-GPS 13:40"
+    },
+    {
+     "name": "Stadtpfarrkirche Bad Griesbach",
+     "lat": 48.45213,
+     "lon": 13.19384,
+     "art": "besuch",
+     "notiz": "Name nicht bestätigt, Foto-GPS 15:07"
+    },
+    {
+     "name": "Holmernhof Dreiquellenbad",
+     "lat": 48.42022,
+     "lon": 13.19224,
+     "art": "uebernachtung"
+    }
+   ],
+   "themen": [
+    "kloster"
+   ],
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 7,
+   "datum": "2026-09-09",
+   "land": [
+    "DE"
+   ],
+   "titel": "Letzter Abend",
+   "satz": "Therme und Abschiedsabend im Wirtshaus am Platz, mit Kässpatzen und Röstzwiebeln.",
+   "teaser": "Der letzte volle Tag. Noch einmal ins warme Thermalwasser, dann trifft sich die Crew ein letztes Mal im Wirtshaus am Holmernhof. Auf den Tisch kommen Kässpatzen mit Röstzwiebeln, und es wird lange erzählt.",
+   "stationen": [
+    {
+     "name": "Wirtshaus am Holmernhof",
+     "lat": 48.42048,
+     "lon": 13.19203,
+     "art": "essen",
+     "notiz": "Abschiedsabend, Foto-GPS"
+    },
+    {
+     "name": "Holmernhof Dreiquellenbad",
+     "lat": 48.42022,
+     "lon": 13.19224,
+     "art": "uebernachtung"
+    }
+   ],
+   "themen": [
+    "kulinarik"
+   ],
+   "status": "nur-fotos"
+  },
+  {
+   "tag": 8,
+   "datum": "2026-09-10",
+   "land": [
+    "DE",
+    "AT"
+   ],
+   "titel": "Heimfahrt nach Linz",
+   "satz": "Platz bis 11 Uhr räumen, gegen 13 Uhr über den Inn bei Neuhaus am Inn, um 15 Uhr zu Hause.",
+   "teaser": "Am Vormittag wird zusammengepackt, um elf muss Platz 080 frei sein. Gegen eins rollt das Gespann bei Neuhaus am Inn über die Grenze nach Österreich, um drei ist es wieder zu Hause in Linz.",
+   "stationen": [
+    {
+     "name": "Holmernhof Dreiquellenbad",
+     "lat": 48.42022,
+     "lon": 13.19224,
+     "art": "uebernachtung",
+     "notiz": "Abreise bis 11:00"
+    },
+    {
+     "name": "Grenze Neuhaus am Inn",
+     "lat": 48.4561,
+     "lon": 13.4285,
+     "art": "grenze",
+     "notiz": "ca. 13:00, Ort genähert"
+    },
+    {
+     "name": "Linz",
+     "lat": 48.3069,
+     "lon": 14.2858,
+     "art": "besuch",
+     "notiz": "ca. 15:00 zu Hause"
+    }
+   ],
+   "themen": [
+    "grenze"
+   ],
+   "status": "teilweise"
+  }
+ ]
+}
