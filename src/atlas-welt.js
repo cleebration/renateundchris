@@ -8,7 +8,8 @@
   const n0 = (x) => Math.round(x).toLocaleString("de-AT");
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   // Handy hochkant: Globus oben, Liste darunter scrollt · Handy quer: Globus links, Liste rechts · sonst Panel links über dem Globus
-  const modus = () => (innerHeight <= 500 && innerWidth > innerHeight ? "quer" : innerWidth < 760 ? "hoch" : "gross");
+  const grob = matchMedia("(pointer: coarse)").matches; // iPad & Co.: dieselben Ansichten wie am iPhone
+  const modus = () => (grob ? (innerWidth > innerHeight ? "quer" : "hoch") : innerHeight <= 500 && innerWidth > innerHeight ? "quer" : innerWidth < 760 ? "hoch" : "gross");
   const narrow = () => modus() !== "gross";
   const setzeModus = () => { document.body.dataset.modus = modus(); };
   setzeModus();

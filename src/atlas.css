@@ -693,3 +693,32 @@ body.handy.quer #insel{flex:1 1 auto;max-width:none}
 body.handy.quer #cardTab,body.handy.quer #card,body.handy.quer .tzBox.suche.oben{left:var(--mL)!important;right:var(--mR)!important}
 body.handy.quer .pad{top:calc(env(safe-area-inset-top,0px) + 8px);bottom:calc(env(safe-area-inset-bottom,0px) + 8px);height:auto!important}
 body.handy.quer #navPad .pZ small{display:block}
+
+/* ================= iPad (body.handy.tablet) – wie iPhone, größer ================= */
+body.handy.tablet .tbBtn{flex:0 0 46px;height:46px;font-size:20px}
+body.handy.tablet #tbZahnrad{flex:0 0 54px;height:54px;font-size:30px}
+body.handy.tablet #insel{height:54px;gap:10px;border-radius:28px}
+body.handy.tablet #insel .tzChip{font-size:15px;padding:10px 16px}
+body.handy.tablet #insel #kompass{width:36px;height:36px;flex-basis:36px}
+body.handy.tablet #insel #uhr b{font-size:15px}
+body.handy.tablet #tbTitel{top:calc(env(safe-area-inset-top,0px) + 70px);font-size:14px}
+body.handy.tablet .pad{width:84px;height:min(62vh,560px)!important;top:50%!important;bottom:auto!important;transform:translateY(-50%)}
+body.handy.tablet #navPad .pZ{font-size:20px;padding:10px 0}
+body.handy.tablet #navPad .pZ small{display:block;font-size:10px}
+body.handy.tablet #navPad .pT b{font-size:17px}body.handy.tablet #navPad .pT em{font-size:19px}
+body.handy.tablet #tempoPad .pZ{font-size:22px}
+body.handy.tablet{--mL:max(104px,calc(env(safe-area-inset-left,0px) + 100px));--mR:max(104px,calc(env(safe-area-inset-right,0px) + 100px))}
+/* hochkant: Zeile unten und Blatt mittig, gut lesbare Breite */
+body.handy.tablet:not(.quer) #cardTab,body.handy.tablet:not(.quer) #card{left:max(104px,calc(50vw - 380px))!important;right:max(104px,calc(50vw - 380px))!important}
+body.handy.tablet:not(.quer) #card{height:72vh}
+body.handy.tablet #cardTab .ctMitte b{font-size:17px}body.handy.tablet #cardTab .ctMitte small{font-size:12px}
+body.handy.tablet #cardTab .ctPfeil{flex-basis:48px;height:48px}
+body.handy.tablet #waehler{left:max(8px,calc(50vw - 420px));right:max(8px,calc(50vw - 420px));top:calc(env(safe-area-inset-top,0px) + 76px)}
+body.handy.tablet .tzBox.suche.oben{left:max(8px,calc(50vw - 380px));right:max(8px,calc(50vw - 380px));top:calc(env(safe-area-inset-top,0px) + 76px)}
+body.handy.tablet #side:not(.zu){top:calc(env(safe-area-inset-top,0px) + 76px)!important;right:auto;width:min(440px,70vw)}
+body.handy.tablet.quer #topbar{padding-top:8px}
+body.handy.tablet.quer #card{top:74px}
+body.handy.tablet.quer #side:not(.zu),body.handy.tablet.quer #waehler,body.handy.tablet.quer .tzBox.suche.oben{top:74px!important}
+body.handy #card,body.handy #cardTab{width:auto!important}
+body.handy.tablet:not(.quer) #topbar{left:max(104px,calc(50vw - 380px));right:max(104px,calc(50vw - 380px));padding-left:0;padding-right:0;background:none;justify-content:space-between}
+body.handy.tablet:not(.quer) #insel{flex:1 1 auto}
