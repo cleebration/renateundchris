@@ -8,6 +8,7 @@
 //   _routen.json  Straßenrouten je Tag (OSRM, Polyline precision 5)
 //   _karte.json   Fotos je Tag (wie für die Tagesseiten)
 //   Tag-XX_Ort.md vorhandene Tagesseiten → Link „Tagebuch lesen“
+//   _videos.json  Videos je Tag in Cloudflare R2 (Bucket renateundchris-videos, Schlüssel <reise>/<datei>) → /video/<reise>/<datei>
 //   _vorlesen.json Aufnahmen je Tag { tage: { "<tag>": { text, chris: "<datei>", renate: "<datei>" } } }
 //                 Dateien: assets/reisen/<reise>/vorlesen/ (geschrieben von der Redaktion, Werkzeug „Vorlesen“)
 // Gemeinsam: content/reisen/_musik.json  Musik je Land (Wikimedia Commons, freie Lizenzen, mit Nachweis)
@@ -23,6 +24,19 @@ import { buildWelt } from "./atlas-welt.mjs";
 import { ladeQuellen, verknuepfe, schreibeRueckverweise } from "./atlas-querbezuege.mjs";
 
 const readJson = (f) => (fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, "utf8")) : null);
+
+// Videos je Tag aus _videos.json: { tage: { "<tag>": [ { datei: "tag-03-hafen.mp4", text: "…", dauer: 42, mb: 18 } ] } }
+// Regeln: nur .mp4 (H.264/AAC), Dateiname klein a-z0-9-_. , höchstens VIDEO_MAX_MB (Größe laut Eintrag). Ungültige Einträge werden mit Warnung übersprungen.
+export const VIDEO_MAX_MB = 200;
+export const VIDEO_NAME = /^[a-z0-9][a-z0-9._-]*\.mp4$/;
+export function videoListe(videos, tag) {
+  const liste = ((videos && videos.tage) || {})[String(tag)] || [];
+  return liste.filter((v) => {
+    if (!v || !VIDEO_NAME.test(v.datei || "")) { console.warn(`  Video übersprungen (Name ungültig, nur a-z0-9-_.mp4): Tag ${tag} ${v && v.datei}`); return false; }
+    if (v.mb != null && +v.mb > VIDEO_MAX_MB) { console.warn(`  Video übersprungen (größer als ${VIDEO_MAX_MB} MB): Tag ${tag} ${v.datei}`); return false; }
+    return true;
+  });
+}
 
 function tripData(ROOT, slug) {
   const dir = path.join(ROOT, "content", "reisen", slug);
@@ -46,6 +60,7 @@ function tripData(ROOT, slug) {
   }
 
   const fotosAuto = readJson(path.join(dir, "_fotos.json")) || { tage: {} };
+  const videos = readJson(path.join(dir, "_videos.json")) || { tage: {} };
   // Vorlesen: Aufnahmen von Chris und Renate je Tag (Redaktion → Werkzeug „Vorlesen“), Dateien unter assets/reisen/<reise>/vorlesen/
   const vorlesen = readJson(path.join(dir, "_vorlesen.json")) || { tage: {} };
   const vlUrl = (datei) => (datei && /^[a-z0-9._-]+$/i.test(datei) && fs.existsSync(path.join(ROOT, "assets", "reisen", slug, "vorlesen", datei)) ? `/assets/reisen/${slug}/vorlesen/${datei}` : null);
@@ -80,6 +95,13 @@ function tripData(ROOT, slug) {
     const clipDir = path.join(ROOT, "assets", "reisen", slug, "clips");
     const clips = fs.existsSync(clipDir) ? fs.readdirSync(clipDir).filter((f) => new RegExp(`^tag-${String(t.tag).padStart(2, "0")}-.+\\.mp4$`).test(f)).sort()
       .map((f) => ({ url: `/assets/reisen/${slug}/clips/${f}`, poster: fs.existsSync(path.join(clipDir, f.replace(/\.mp4$/, ".jpg"))) ? `/assets/reisen/${slug}/clips/${f.replace(/\.mp4$/, ".jpg")}` : null })) : [];
+    // Videos aus Cloudflare R2 (seit 07.11.2026): content/reisen/<reise>/_videos.json, Datei liegt im Bucket unter <reise>/<datei>,
+    // ausgeliefert vom Worker unter /video/<reise>/<datei> (Range-Requests). Vorschaubild klein im Repo: assets/reisen/<reise>/videos/<name>.jpg
+    for (const v of videoListe(videos, t.tag)) clips.push({
+      url: `/video/${slug}/${v.datei}`,
+      poster: fs.existsSync(path.join(ROOT, "assets", "reisen", slug, "videos", v.datei.replace(/\.mp4$/, ".jpg"))) ? `/assets/reisen/${slug}/videos/${v.datei.replace(/\.mp4$/, ".jpg")}` : null,
+      text: v.text || "", dauer: v.dauer || null,
+    });
     const vl = (vorlesen.tage || {})[String(t.tag)] || {};
     const stimmen = { chris: vlUrl(vl.chris), renate: vlUrl(vl.renate) };
     return { ...t, route: routen.tage[String(t.tag)] || null, seite: seite ? seite.url : null, fotos, clips,

@@ -890,7 +890,7 @@
           np.style.setProperty("--fort", ((d.tag - 1 + (tagSt.length ? (nr - 1) / tagSt.length : 0)) / DAYS.length * 100).toFixed(1) + "%"); np.style.setProperty("--lc", colOf(d)); } }
       card.querySelectorAll("[data-f]").forEach((b) => b.onclick = () => openPhoto(fotos[+b.dataset.f]));
       card.querySelectorAll("[data-c]").forEach((b) => b.onclick = () => { const c = d.clips[+b.dataset.c]; const box = document.createElement("div"); box.className = "tzBox";
-        box.innerHTML = `<div class="tzIn"><video src="${esc(c.url)}" ${c.poster ? `poster="${esc(c.poster)}"` : ""} controls autoplay muted playsinline></video><p class="note">Tag ${d.tag} · Ton per Klick auf 🔈 im Video</p><button class="big" data-x>Schließen</button></div>`;
+        box.innerHTML = `<div class="tzIn"><video src="${esc(c.url)}" ${c.poster ? `poster="${esc(c.poster)}"` : ""} controls autoplay muted playsinline preload="metadata"></video><p class="note">Tag ${d.tag}${c.text ? " · " + esc(c.text) : ""} · Ton per Klick auf 🔈 im Video</p><button class="big" data-x>Schließen</button></div>`;
         box.onclick = (e) => { if (e.target === box || e.target.hasAttribute("data-x")) box.remove(); }; document.body.appendChild(box); });
       broadcast();
     }

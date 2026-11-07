@@ -1,0 +1,6 @@
+{
+  "hinweis": "Videos liegen in Cloudflare R2 (Bucket renateundchris-videos, EU) unter <reise>/<datei>. Vorschaubild: assets/reisen/<reise>/videos/<datei ohne .mp4>.jpg. Nur MP4 (H.264/AAC), max. 200 MB. Vorbereiten: tools/video-vorbereiten.sh",
+  "tage": {
+    "1": []
+  }
+}

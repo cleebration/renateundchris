@@ -6,6 +6,38 @@
 // Schutz: Frage max. 300 Zeichen · 15 Fragen je Gerät und Tag · 200 Fragen je Tag gesamt · Monatsbudget (BUDGET_USD, Standard 5,40 USD ≈ 5 €).
 // Kosten je Frage werden aus der Token-Zahl der Antwort geschätzt (PREIS_IN_USD / PREIS_OUT_USD je Million Token, als Variablen setzbar).
 
+// GET/HEAD /video/<reise>/<datei>.mp4  →  Video aus Cloudflare R2 (Bindung VIDEOS, Bucket renateundchris-videos, EU), Schlüssel <reise>/<datei>.
+// Unterstützt Range-Requests (206, nötig für Safari/iPhone und Vorspulen), If-None-Match/ETag (304) und langes Caching.
+export const VIDEO_PFAD = /^\/video\/([a-z0-9-]+)\/([a-z0-9][a-z0-9._-]*\.mp4)$/;
+export async function video(req, env, url) {
+  if (req.method !== "GET" && req.method !== "HEAD") return new Response("Nur GET", { status: 405, headers: { allow: "GET, HEAD" } });
+  const m = VIDEO_PFAD.exec(url.pathname);
+  if (!m) return new Response("Nicht gefunden", { status: 404 });
+  if (!env.VIDEOS) return new Response("Videos sind noch nicht eingerichtet.", { status: 503 });
+  const key = `${m[1]}/${m[2]}`;
+  const range = req.headers.get("range");
+  let obj;
+  try { obj = await env.VIDEOS.get(key, { range: req.headers, onlyIf: req.headers }); }
+  catch (e) { return new Response("Ungültiger Bereich", { status: 416 }); }
+  if (obj === null) return new Response("Nicht gefunden", { status: 404 });
+  const h = new Headers();
+  h.set("content-type", "video/mp4");
+  h.set("accept-ranges", "bytes");
+  h.set("cache-control", "public, max-age=604800");
+  h.set("etag", obj.httpEtag);
+  if (!("body" in obj)) return new Response(null, { status: 304, headers: h }); // onlyIf griff (ETag gleich)
+  const r = obj.range;
+  if (range && r) {
+    const start = r.offset != null ? r.offset : obj.size - r.suffix;
+    const len = r.length != null ? r.length : (r.suffix != null ? r.suffix : obj.size - start);
+    h.set("content-range", `bytes ${start}-${start + len - 1}/${obj.size}`);
+    h.set("content-length", String(len));
+    return new Response(req.method === "HEAD" ? null : obj.body, { status: 206, headers: h });
+  }
+  h.set("content-length", String(obj.size));
+  return new Response(req.method === "HEAD" ? null : obj.body, { status: 200, headers: h });
+}
+
 const MODELL = "claude-haiku-5-5";
 const STOPP = new Set("der die das und oder ein eine einer eines wo wie was wann wer welche welcher welches war waren ist sind wir ihr habt hat haben am im in an auf mit von zu zum zur den dem des es gab gibt euch uns man auch noch nur sehr mal".split(" "));
 const norm = (t) => String(t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
@@ -14,6 +46,7 @@ const json = (o, status = 200) => new Response(JSON.stringify(o), { status, head
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
+    if (url.pathname.startsWith("/video/")) return video(req, env, url);
     if (url.pathname !== "/api/frage") return env.ASSETS.fetch(req);
     if (req.method !== "POST") return json({ fehler: "Nur POST" }, 405);
     if (!env.ANTHROPIC_API_KEY) return json({ fehler: "Die Fragefunktion ist noch nicht eingerichtet." }, 503);

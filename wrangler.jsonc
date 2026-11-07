@@ -7,6 +7,11 @@
     "directory": "./dist",
     "binding": "ASSETS"
   },
+  // Videos des Reise-Atlas (seit 07.11.2026): R2-Bucket in der EU, angelegt mit
+  // `npx wrangler r2 bucket create renateundchris-videos --jurisdiction eu` – VOR dem Merge anlegen, sonst scheitert der Deploy.
+  "r2_buckets": [
+    { "binding": "VIDEOS", "bucket_name": "renateundchris-videos", "jurisdiction": "eu" }
+  ],
   "kv_namespaces": [
     { "binding": "FRAGE", "id": "27edfd5989b846109f467ed9078c0f78" }
   ],

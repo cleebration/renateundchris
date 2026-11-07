@@ -80,3 +80,14 @@ Nach Stationen und Routen einmal ausführen, dann werden Wetter und Höhen fest 
 - Wetter: Tageswerte je Übernachtungsort vom Open-Meteo-Archiv holen (Format siehe Kopf von `tools/wetter-hoehen.mjs`), dann `node tools/wetter-hoehen.mjs --wetter <datei>` → `_wetter.json`
 
 Ohne diese Dateien lädt die Statistik Wetter und Höhen im Browser der Besucher nach (langsamer, abhängig von Open-Meteo).
+
+## Videos (Cloudflare R2, seit 07.11.2026)
+
+Videos liegen nicht im Repo, sondern im R2-Bucket `renateundchris-videos` (EU) unter `<reise>/<datei>.mp4`;
+der Worker liefert sie unter `/video/<reise>/<datei>.mp4` mit Range-Requests aus.
+Im Repo nur: `content/reisen/<reise>/_videos.json` (Vorlage `_videos.json` hier) und das Vorschaubild
+`assets/reisen/<reise>/videos/<datei>.jpg`. Format MP4 H.264/AAC, max. 1080p, max. 200 MB je Video.
+
+1. `tools/video-vorbereiten.sh <reise> <tag> <eingabe> <kurzname> "Beschriftung"` (ffmpeg) → MP4 + Vorschaubild + JSON-Zeile
+2. `npx wrangler r2 object put renateundchris-videos/<reise>/<datei> --file _video-upload/<reise>/<datei> --content-type video/mp4 --jurisdiction eu --remote`
+3. Zeile in `_videos.json` eintragen, `node scripts/build.mjs`, `npm test`, nur eigene Dateien committen.
