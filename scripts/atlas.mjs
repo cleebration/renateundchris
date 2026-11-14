@@ -160,6 +160,7 @@ export async function buildAtlas({ ROOT, DIST, site }) {
     data.title = t.title;
     data.fahrzeug = t.fahrzeug || "";
     data.teaser = teaserVon(ROOT, t.slug);
+    data.teaserSchwerpunkt = Array.isArray(t.teaserSchwerpunkt) ? t.teaserSchwerpunkt : []; // Teaser: Tage, die mehr Zeit + Zoom bekommen (tools/teaser)
     data.fahrzeugTyp = t.fahrzeugTyp || ""; // l3 · l2 · mietauto (Symbol auf der Karte); je Tag abweichend: _atlas.json tage[].fahrzeug
     // Musik je Land (content/reisen/_musik.json, gemeinsam für alle Reisen) – nur die Länder dieser Reise
     const laender = new Set(data.tage.flatMap((d) => d.land || []));

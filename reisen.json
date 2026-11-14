@@ -48,7 +48,8 @@
       "accentInk": "#7a3218",
       "wash": "#f3e3d6",
       "fahrzeug": "ein Campervan",
-      "fahrzeugTyp": "l2"
+      "fahrzeugTyp": "l2",
+      "teaserSchwerpunkt": [4, 5, 6]
     },
     {
       "slug": "dubrovnik-2023",

@@ -13,7 +13,7 @@ const Q = new URLSearchParams(location.search);
 const SLUG = Q.get("reise"), W = +Q.get("w") || 1920, H = +Q.get("h") || 1080, HOCH = H > W;
 const C = document.getElementById("c"); C.width = W; C.height = H; const g = C.getContext("2d");
 const S = Math.min(W, H) / 1080; // Grundmaß
-const T_INTRO = 3.2, T_MAP = 23, T_STATS = 5, T_END = 4.3, DUR = T_INTRO + T_MAP + T_STATS + T_END;
+const T_INTRO = 3.2, T_MAP = 25, T_STATS = 4, T_END = 4.3, DUR = T_INTRO + T_MAP + T_STATS + T_END;
 const ISO = { AT: 40, SI: 705, HR: 191, ME: 499, AL: 8, GR: 300, MK: 807, RS: 688, BA: 70, IT: 380, HU: 348, SK: 703, CZ: 203, DE: 276, CH: 756, FR: 250, BG: 100, RO: 642, PL: 616, ES: 724, PT: 620, TR: 792, NL: 528, BE: 56, DK: 208, NO: 578, SE: 752, FI: 246, GB: 826, IE: 372 };
 const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
 const ease = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -22,11 +22,11 @@ const fmt = (x) => Math.round(x).toLocaleString("de-AT");
 function decode(s) { const out = []; let i = 0, lat = 0, lon = 0; while (i < s.length) { for (const k of [0, 1]) { let b, sh = 0, r = 0; do { b = s.charCodeAt(i++) - 63; r |= (b & 31) << sh; sh += 5; } while (b >= 32); const v = r & 1 ? ~(r >> 1) : r >> 1; if (k === 0) lat += v; else lon += v; } out.push([lon / 1e5, lat / 1e5]); } return out; }
 const loadImg = (u) => new Promise((ok) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ok(null); i.src = u; });
 
-let M, D, R, mapLayer, pts, cum, total, fotos, cover;
+let M, D, R, mapLayer, focusLayer, pts, ts, fotos, cover, feats, SP, ZOOM, labels, polyTag;
 window.ready = (async () => {
   await document.fonts.load("800 40px 'Big Shoulders Display'"); await document.fonts.load("700 40px 'Big Shoulders Display'");
   await document.fonts.load("500 20px 'IBM Plex Mono'"); await document.fonts.load("400 20px 'Source Serif 4'"); await document.fonts.load("italic 400 20px 'Source Serif 4'");
-  const [welt, data, topo] = await Promise.all([fetch("dist/atlas/data/welt.json").then((r) => r.json()), fetch(`dist/atlas/data/${SLUG}.json`).then((r) => r.json()), fetch("node_modules/world-atlas/countries-50m.json").then((r) => r.json())]);
+  const [welt, data, topo] = await Promise.all([fetch("dist/atlas/data/welt.json").then((r) => r.json()), fetch(`dist/atlas/data/${SLUG}.json`).then((r) => r.json()), fetch("node_modules/world-atlas/countries-10m.json").then((r) => r.json())]);
   M = welt.reisen.find((r) => r.slug === SLUG); D = data;
   // Route mit Tageszuordnung; Tage ohne Fahrt bekommen eine kurze Pause an der Station
   pts = [];
@@ -37,33 +37,64 @@ window.ready = (async () => {
   }
   const km = (a, b) => Math.hypot((b[0] - a[0]) * Math.cos(((a[1] + b[1]) / 2) * Math.PI / 180), b[1] - a[1]) * 111.2;
   window.RC = [0]; for (let i = 1; i < pts.length; i++) RC.push(RC[i - 1] + km(pts[i - 1].p, pts[i].p));
-  // Zeit je Tag: halb nach Strecke, halb gleich verteilt (sonst rasen kurze Tage vorbei)
-  const bonus = (RC[RC.length - 1] || 100) / Math.max(1, D.tage.length);
-  cum = [0]; for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + (RC[i] - RC[i - 1]) + (pts[i].stop ? bonus : 0));
-  total = cum[cum.length - 1] || 1;
-  // Projektion (Web-Mercator) auf den Kartenbereich
+  // Zeit je Tag (Anteil an der Kartenphase). Schwerpunkt-Tage (reisen.json teaserSchwerpunkt, z. B. Hauptziel) bekommen ~4 s,
+  // An-/Rückreise ~2,5 s, übrige Tage ~1,5–2 s. Ohne Schwerpunkt: Fahrt-Anteil gekappt, kein Tag unter 1,5 s (sofern möglich).
+  SP = new Set(((Q.get("schwerpunkt") || "").split(",").filter(Boolean).map(Number)).concat(D.teaserSchwerpunkt || []));
+  const tags = D.tage.map((d) => d.tag), kmTag = {};
+  for (let i = 1; i < pts.length; i++) kmTag[pts[i].tag] = (kmTag[pts[i].tag] || 0) + (RC[i] - RC[i - 1]);
+  const avgKm = (RC[RC.length - 1] || 1) / Math.max(1, tags.length), MOVE = T_MAP - 1.6;
+  let wt = {};
+  if (SP.size) {
+    const spIdx = tags.map((t, k) => SP.has(t) ? k : -1).filter((k) => k >= 0), first = Math.min(...spIdx), last = Math.max(...spIdx);
+    tags.forEach((t, k) => { const fahrt = (kmTag[t] || 0) > 1.5 * avgKm; wt[t] = SP.has(t) ? 4 : (fahrt && (k < first || k > last) && (k === 0 || k === tags.length - 1)) ? 2.5 : fahrt ? 2 : 1.5; });
+  } else tags.forEach((t) => (wt[t] = 1 + Math.min((kmTag[t] || 0) / avgKm, 1.5)));
+  let sw = tags.reduce((x, t) => x + wt[t], 0);
+  if (!SP.size && MOVE / tags.length >= 1.5) { // Mindestdauer 1,5 s je Tag einhalten
+    for (let r = 0; r < 5; r++) { const f = MOVE / sw; tags.forEach((t) => { if (wt[t] * f < 1.5) wt[t] = 1.5 / f; }); sw = tags.reduce((x, t) => x + wt[t], 0); }
+  }
+  const slot = {}; let acc = 0; tags.forEach((t) => { slot[t] = [acc / sw, (acc + wt[t]) / sw]; acc += wt[t]; });
+  window.SLOTS = slot;
+  // Zeitpunkt (0..1 der Fahrt) je Routenpunkt: innerhalb des Tages nach Strecke, ohne Strecke gleichmäßig
+  ts = new Array(pts.length).fill(0);
+  for (const t of tags) {
+    const idx = pts.map((x, i) => x.tag === t ? i : -1).filter((i) => i >= 0); if (!idx.length) continue;
+    const [s0, s1] = slot[t], kmT = kmTag[t] || 0;
+    let c = 0; idx.forEach((i, j) => { if (i > 0) c += RC[i] - RC[i - 1]; const f = kmT > 0.05 ? c / kmT : (idx.length > 1 ? j / (idx.length - 1) : 1); ts[i] = s0 + (s1 - s0) * (0.7 * f + 0.3 * f * f * (3 - 2 * f)); });
+  }
+  for (let i = 1; i < ts.length; i++) ts[i] = Math.max(ts[i], ts[i - 1]);
+  polyTag = new Set(D.tage.filter((d) => d.route && d.route.poly).map((d) => d.tag));
+  // Projektion (Web-Mercator) mit Kamera: Übersicht über die ganze Reise, bei Schwerpunkt-Tagen weicher Zoom auf deren Stationen
   const my = (lat) => Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360));
-  const lo = pts.map((x) => x.p[0]), la = pts.map((x) => x.p[1]);
-  const bx = [Math.min(...lo), Math.max(...lo)], by = [my(Math.min(...la)), my(Math.max(...la))];
   const area = HOCH ? { x: 70 * S, y: H * 0.40, w: W - 140 * S, h: H * 0.47 } : { x: 110 * S, y: 150 * S, w: W * 0.56, h: H - 300 * S };
-  const sc = Math.min(area.w / (((bx[1] - bx[0]) * Math.PI) / 180 || 0.01), area.h / (by[1] - by[0] || 0.01));
-  const cx = (bx[0] + bx[1]) / 2, cy = (by[0] + by[1]) / 2;
-  R = { area, proj: ([lon, lat]) => [area.x + area.w / 2 + ((lon - cx) * Math.PI / 180) * sc, area.y + area.h / 2 - (my(lat) - cy) * sc] };
-  pts.forEach((x) => (x.xy = R.proj(x.p)));
-  // statische Karte
-  mapLayer = document.createElement("canvas"); mapLayer.width = W; mapLayer.height = H; const m = mapLayer.getContext("2d");
-  const sea = m.createLinearGradient(0, 0, W, H); sea.addColorStop(0, "#0b2430"); sea.addColorStop(1, "#071820"); m.fillStyle = sea; m.fillRect(0, 0, W, H);
+  const view = (ps, rand = 0) => {
+    const lo = ps.map((p) => p[0] * Math.PI / 180), la = ps.map((p) => my(p[1]));
+    let bx = [Math.min(...lo), Math.max(...lo)], by = [Math.min(...la), Math.max(...la)];
+    const ex = (bx[1] - bx[0]) * rand + 0.0002, ey = (by[1] - by[0]) * rand + 0.0002; bx = [bx[0] - ex, bx[1] + ex]; by = [by[0] - ey, by[1] + ey];
+    return { cx: (bx[0] + bx[1]) / 2, cy: (by[0] + by[1]) / 2, sc: Math.min(area.w / (bx[1] - bx[0] || 0.01), area.h / (by[1] - by[0] || 0.01)) };
+  };
+  const V0 = view(pts.map((x) => x.p));
+  const spSt = D.tage.filter((d) => SP.has(d.tag)).flatMap((d) => (d.stationen || []).filter((s) => typeof s.lat === "number").map((s) => [s.lon, s.lat]));
+  const V1 = spSt.length > 1 ? view(spSt, 0.22) : null;
+  const projV = (v) => ([lon, lat]) => [area.x + area.w / 2 + (lon * Math.PI / 180 - v.cx) * v.sc, area.y + area.h / 2 - (my(lat) - v.cy) * v.sc];
+  const mix = (z) => !V1 || z <= 0 ? V0 : z >= 1 ? V1 : { cx: V0.cx + (V1.cx - V0.cx) * z, cy: V0.cy + (V1.cy - V0.cy) * z, sc: V0.sc * Math.pow(V1.sc / V0.sc, z) };
+  R = { area, V0, V1, projV, mix, proj: projV(V0) };
+  // Zoom-Fenster: von 1,5 s vor dem ersten bis 1,5 s nach dem letzten Schwerpunkt-Tag
+  if (V1) { const sp = tags.filter((t) => SP.has(t)); const tA = T_INTRO + 0.8 + slot[sp[0]][0] * MOVE, tB = T_INTRO + 0.8 + slot[sp[sp.length - 1]][1] * MOVE; ZOOM = { a0: tA - 1.5, a1: tA, b0: tB, b1: tB + 1.5 }; }
+  // Ortsnamen der Schwerpunkt-Tage (beim Zoom eingeblendet)
+  labels = []; const kurz = (n) => { const t = n.split(/,\s*/).sort((x, y) => x.split(" ").length - y.split(" ").length)[0]; return t.replace(/^(Kirche|Strand|Hafen|Bahnhof)( in| von)? /, ""); };
+  for (const d of D.tage.filter((d) => SP.has(d.tag))) for (const s of d.stationen || []) { if (typeof s.lat !== "number") continue; const n = kurz(s.name); if (!labels.some((l) => l.n === n)) labels.push({ n, p: [s.lon, s.lat] }); }
+  // Länder (Natural Earth 1:10 Mio.), nur was in der Nähe der Reise liegt
   const besucht = new Set(D.tage.flatMap((d) => d.land || []).map((c) => ISO[c]).filter(Boolean));
-  const feats = topojson.feature(topo, topo.objects.countries).features;
-  const path = (geom) => { m.beginPath(); const polys = geom.type === "Polygon" ? [geom.coordinates] : geom.type === "MultiPolygon" ? geom.coordinates : [];
-    for (const poly of polys) for (const ring of poly) ring.forEach((p, i) => { const [x, y] = R.proj([p[0], clamp(p[1], -85, 85)]); i ? m.lineTo(x, y) : m.moveTo(x, y); }); };
-  for (const f of feats) { if (!f.geometry) continue; path(f.geometry); m.fillStyle = besucht.has(+f.id) ? "#2a4a4c" : "#16313a"; m.fill("evenodd"); m.strokeStyle = "rgba(243,236,220,.16)"; m.lineWidth = 1.2 * S; m.stroke(); }
-  // feines Raster
-  m.strokeStyle = "rgba(255,255,255,.035)"; m.lineWidth = 1; for (let x = 0; x < W; x += 60 * S) { m.beginPath(); m.moveTo(x, 0); m.lineTo(x, H); m.stroke(); } for (let y = 0; y < H; y += 60 * S) { m.beginPath(); m.moveTo(0, y); m.lineTo(W, y); m.stroke(); }
-  // ganze Route schwach
-  m.setLineDash([6 * S, 8 * S]); m.strokeStyle = "rgba(243,236,220,.22)"; m.lineWidth = 2 * S; m.beginPath(); pts.forEach((x, i) => (i ? m.lineTo(...x.xy) : m.moveTo(...x.xy))); m.stroke(); m.setLineDash([]);
+  const lon0 = Math.min(...pts.map((x) => x.p[0])), lon1 = Math.max(...pts.map((x) => x.p[0])), lat0 = Math.min(...pts.map((x) => x.p[1])), lat1 = Math.max(...pts.map((x) => x.p[1]));
+  const padL = Math.max(8, (lon1 - lon0) * 1.5), padB = Math.max(6, (lat1 - lat0) * 1.5);
+  feats = topojson.feature(topo, topo.objects.countries).features.filter((f) => f.geometry).map((f) => {
+    const polys = f.geometry.type === "Polygon" ? [f.geometry.coordinates] : f.geometry.type === "MultiPolygon" ? f.geometry.coordinates : [];
+    const keep = polys.filter((poly) => poly[0].some((p) => p[0] > lon0 - padL && p[0] < lon1 + padL && p[1] > lat0 - padB && p[1] < lat1 + padB));
+    return { polys: keep, besucht: besucht.has(+f.id) };
+  }).filter((f) => f.polys.length);
+  mapLayer = drawMap(R.proj); if (V1) focusLayer = drawMap(projV(V1));
   // Fotos: erscheinen, wenn der Van einen Tag erreicht (Tagesbeginn), mit mindestens 2,9 s Abstand
-  const tOf = (tag) => { const i = pts.findIndex((x) => x.tag === tag); const p = i < 0 ? 0 : cum[i] / total; return T_INTRO + 0.8 + inv(p) * (T_MAP - 1.6); };
+  const tOf = (tag) => T_INTRO + 0.8 + (slot[tag] ? slot[tag][0] : 0) * MOVE;
   const wahl = []; let last = -9;
   for (const d of D.tage) {
     if (!(d.fotos || []).length) continue;
@@ -75,9 +106,21 @@ window.ready = (async () => {
   cover = await loadImg("dist" + (M.cover || (fotos[0] && fotos[0].f.url) || ""));
   return { dur: DUR };
 })();
-// Fortschritt der Fahrt über die Zeit (sanft anfahren und bremsen) und Umkehrung
-const prog = (u) => { u = clamp(u); return u - 0.35 * Math.sin(2 * Math.PI * u) / (2 * Math.PI); }; // fast gleichmäßig, sanft an den Enden
-function inv(p) { let a = 0, b = 1; for (let k = 0; k < 30; k++) { const c = (a + b) / 2; prog(c) < p ? (a = c) : (b = c); } return (a + b) / 2; }
+// Karte (Meer, Länder, Raster, ganze Route schwach) für eine Projektion zeichnen
+function drawMap(proj, m) {
+  let cv = null; if (!m) { cv = document.createElement("canvas"); cv.width = W; cv.height = H; m = cv.getContext("2d"); }
+  const sea = m.createLinearGradient(0, 0, W, H); sea.addColorStop(0, "#0b2430"); sea.addColorStop(1, "#071820"); m.fillStyle = sea; m.fillRect(0, 0, W, H);
+  for (const f of feats) {
+    m.beginPath();
+    for (const poly of f.polys) for (const ring of poly) { let lx = 1e9, ly = 1e9, n = 0; ring.forEach((p, i) => { const [x, y] = proj([p[0], clamp(p[1], -85, 85)]); if (i && i < ring.length - 1 && Math.abs(x - lx) < 0.6 && Math.abs(y - ly) < 0.6) return; n++ ? m.lineTo(x, y) : m.moveTo(x, y); lx = x; ly = y; }); m.closePath(); }
+    m.fillStyle = f.besucht ? "#2a4a4c" : "#16313a"; m.fill("evenodd"); m.strokeStyle = "rgba(243,236,220,.16)"; m.lineWidth = 1.2 * S; m.stroke();
+  }
+  m.strokeStyle = "rgba(255,255,255,.035)"; m.lineWidth = 1; for (let x = 0; x < W; x += 60 * S) { m.beginPath(); m.moveTo(x, 0); m.lineTo(x, H); m.stroke(); } for (let y = 0; y < H; y += 60 * S) { m.beginPath(); m.moveTo(0, y); m.lineTo(W, y); m.stroke(); }
+  m.setLineDash([6 * S, 8 * S]); m.strokeStyle = "rgba(243,236,220,.22)"; m.lineWidth = 2 * S; m.beginPath(); pts.forEach((x, i) => { const q = proj(x.p); i ? m.lineTo(...q) : m.moveTo(...q); }); m.stroke(); m.setLineDash([]);
+  return cv;
+}
+// Zoomstufe der Kamera zur Zeit t (0 = Übersicht, 1 = Schwerpunkt)
+const zoomAt = (t) => !ZOOM ? 0 : t < ZOOM.a0 ? 0 : t < ZOOM.a1 ? ease((t - ZOOM.a0) / (ZOOM.a1 - ZOOM.a0)) : t < ZOOM.b0 ? 1 : t < ZOOM.b1 ? 1 - ease((t - ZOOM.b0) / (ZOOM.b1 - ZOOM.b0)) : 0;
 
 function coverDraw(img, x, y, w, h, zoom = 1, fx = 0.5, fy = 0.5) {
   if (!img) { g.fillStyle = "#1c3a45"; g.fillRect(x, y, w, h); return; }
@@ -90,17 +133,35 @@ const AMBER = "#e0913a", INK = "#f3ecdc", MUTED = "#a9b6b6";
 const BSD = "'Big Shoulders Display'", MONO = "'IBM Plex Mono'", SERIF = "'Source Serif 4'";
 
 function karte(t, alpha = 1) {
-  const u = clamp((t - T_INTRO - 0.8) / (T_MAP - 1.6)), p = prog(u) * total;
-  let i = 0; while (i < cum.length - 1 && cum[i + 1] <= p) i++;
-  const f = cum[i + 1] > cum[i] ? (p - cum[i]) / (cum[i + 1] - cum[i]) : 0;
-  const a = pts[i].xy, b = (pts[i + 1] || pts[i]).xy, van = [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f];
-  g.globalAlpha = alpha; g.drawImage(mapLayer, 0, 0);
-  // gefahrene Strecke mit Leuchten
+  const u = clamp((t - T_INTRO - 0.8) / (T_MAP - 1.6)), z = zoomAt(t), proj = z <= 0 ? R.proj : R.projV(R.mix(z));
+  let i = 0; while (i < ts.length - 1 && ts[i + 1] <= u) i++;
+  const f = ts[i + 1] > ts[i] ? clamp((u - ts[i]) / (ts[i + 1] - ts[i])) : 0;
+  const XY = pts.map((x) => proj(x.p));
+  const a = XY[i], b = XY[i + 1] || XY[i], van = [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f];
+  g.globalAlpha = alpha;
+  if (z <= 0) g.drawImage(mapLayer, 0, 0); else if (z >= 1 && focusLayer) g.drawImage(focusLayer, 0, 0); else drawMap(proj, g);
+  // gefahrene Strecke mit Leuchten (Tage ohne echte Route gestrichelt zwischen den Stationen)
   for (const [lw, al] of [[14, 0.18], [7, 0.35], [3.4, 1]]) {
     g.strokeStyle = M.accent; g.globalAlpha = al * alpha; g.lineWidth = lw * S; g.lineCap = "round"; g.lineJoin = "round";
-    g.beginPath(); for (let k = 0; k <= i; k++) k ? g.lineTo(...pts[k].xy) : g.moveTo(...pts[k].xy); g.lineTo(...van); g.stroke();
+    for (const echt of [true, false]) {
+      g.setLineDash(echt ? [] : [lw * S * 0.9 + 6 * S, 9 * S]); g.beginPath(); let on = false;
+      for (let k = 1; k <= i + 1 && k < XY.length; k++) {
+        if (polyTag.has(pts[k].tag) !== echt) { on = false; continue; }
+        const q = k === i + 1 ? van : XY[k]; if (!on) { g.moveTo(...XY[k - 1]); on = true; } g.lineTo(...q);
+      }
+      g.stroke();
+    }
+    g.setLineDash([]);
   }
   g.globalAlpha = alpha;
+  // Ortsnamen beim Zoom auf den Schwerpunkt
+  if (z > 0.05 && labels.length) {
+    const belegt = [], ord = labels.slice().sort((p, q) => p.n.split(" ").length - q.n.split(" ").length); g.font = `500 ${26 * S}px ${MONO}`;
+    for (const l of ord) { const [x, y] = proj(l.p), bw = g.measureText(l.n).width, hit = (bx) => belegt.some((o) => bx[0] < o[2] && bx[2] > o[0] && bx[1] < o[3] && bx[3] > o[1]);
+      let box = [x + 10 * S, y - 34 * S, x + 14 * S + bw, y - 4 * S]; if (hit(box)) box = [x - 14 * S - bw, y + 6 * S, x - 10 * S, y + 36 * S]; if (hit(box)) continue; belegt.push(box); g.globalAlpha = alpha * clamp((z - 0.4) / 0.5); g.fillStyle = INK; g.beginPath(); g.arc(x, y, 5 * S, 0, 7); g.fill();
+      g.font = `500 ${26 * S}px ${MONO}`; g.lineWidth = 6 * S; g.strokeStyle = "rgba(7,24,32,.85)"; g.textAlign = "left"; g.strokeText(l.n, box[0] + 2 * S, box[3] - 6 * S); g.fillText(l.n, box[0] + 2 * S, box[3] - 6 * S); }
+    g.globalAlpha = alpha;
+  }
   // Van
   const puls = 1 + 0.25 * Math.sin(t * 6);
   g.fillStyle = M.accent; g.globalAlpha = 0.3 * alpha; g.beginPath(); g.arc(van[0], van[1], 16 * S * puls, 0, 7); g.fill(); g.globalAlpha = alpha;
@@ -111,7 +172,7 @@ function karte(t, alpha = 1) {
   const pad = 70 * S;
   text("RENATE & CHRIS · REISE-ATLAS", pad, pad + 10 * S, `500 ${20 * S}px ${MONO}`, AMBER, "left", alpha);
   text(M.title.toUpperCase(), pad, pad + 74 * S, `800 ${fitFont(M.title.toUpperCase(), 800, BSD, W - 2 * pad, 70 * S)}px ${BSD}`, INK, "left", alpha);
-  const ort = (() => { const st = (d.stationen || []).filter((s) => typeof s.lat === "number"); if (!st.length) return d.titel || ""; let best = st[0], bd = 1e9; st.forEach((s) => { const [x, y] = R.proj([s.lon, s.lat]); const dd = (x - van[0]) ** 2 + (y - van[1]) ** 2; if (dd < bd) { bd = dd; best = s; } }); return best.name; })();
+  const ort = (() => { const st = (d.stationen || []).filter((s) => typeof s.lat === "number"); if (!st.length) return d.titel || ""; let best = st[0], bd = 1e9; st.forEach((s) => { const [x, y] = proj([s.lon, s.lat]); const dd = (x - van[0]) ** 2 + (y - van[1]) ** 2; if (dd < bd) { bd = dd; best = s; } }); return best.name; })();
   const yB = H - pad;
   g.globalAlpha = 0.85 * alpha; g.fillStyle = "rgba(9,24,31,.9)"; const bw = HOCH ? W - 2 * pad : Math.min(760 * S, W * 0.55); roundRect(pad - 18 * S, yB - 108 * S, bw, 132 * S, 16 * S); g.fill(); g.globalAlpha = alpha;
   text(`TAG ${tag} VON ${D.tage.length}`, pad, yB - 70 * S, `500 ${22 * S}px ${MONO}`, AMBER, "left", alpha);
