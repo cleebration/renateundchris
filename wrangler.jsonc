@@ -16,6 +16,8 @@
     { "binding": "FRAGE", "id": "27edfd5989b846109f467ed9078c0f78" }
   ],
   "vars": {
-    "BUDGET_USD": "5.4"
+    "BUDGET_USD": "5.4",
+    "PREIS_IN_USD": "0.1",
+    "PREIS_OUT_USD": "0.5"
   }
 }
