@@ -38,6 +38,36 @@ export async function video(req, env, url) {
   return new Response(req.method === "HEAD" ? null : obj.body, { status: 200, headers: h });
 }
 
+// Modellantwort robust lesen (Auftrag 361): JSON auch in ```-Block, mit Text davor/danach oder abgeschnitten.
+// Liefert immer { antwort: <reiner Text>, quellen: [{ reise, tag }] } – nie JSON-Text in „antwort“.
+export function leseAntwort(text, stopReason) {
+  const roh = String(text || "").trim();
+  const ohneBlock = roh.replace(/```(?:json)?\s*/gi, "").replace(/```/g, "").trim();
+  const kandidaten = [ohneBlock];
+  const a = ohneBlock.indexOf("{"), b = ohneBlock.lastIndexOf("}");
+  if (a >= 0 && b > a) kandidaten.push(ohneBlock.slice(a, b + 1));
+  for (const k of kandidaten) {
+    try {
+      const o = JSON.parse(k);
+      if (o && typeof o === "object" && typeof o.antwort === "string") return { antwort: o.antwort.trim(), quellen: Array.isArray(o.quellen) ? o.quellen : [] };
+    } catch (e) {}
+  }
+  // Abgeschnitten oder kaputt: Feld „antwort“ von Hand herauslösen
+  const m = /"antwort"\s*:\s*"((?:[^"\\]|\\.)*)("?)/s.exec(ohneBlock);
+  let antwort;
+  if (m) {
+    try { antwort = JSON.parse('"' + m[1].replace(/\\$/, "") + '"'); } catch (e) { antwort = m[1].replace(/\\n/g, " ").replace(/\\"/g, '"'); }
+    if (!m[2] || stopReason === "max_tokens") antwort = antwort.trim().replace(/[,;:\s]+$/, "") + " …";
+  } else if (!/^[{\[]/.test(ohneBlock)) {
+    antwort = ohneBlock;
+  } else {
+    antwort = "";
+  }
+  const quellen = [];
+  for (const q of ohneBlock.matchAll(/"reise"\s*:\s*"([a-z0-9-]+)"\s*,\s*"tag"\s*:\s*"?(\d+)/g)) quellen.push({ reise: q[1], tag: +q[2] });
+  return { antwort: antwort.trim(), quellen };
+}
+
 const MODELL = "claude-haiku-5-5";
 const STOPP = new Set("der die das und oder ein eine einer eines wo wie was wann wer welche welcher welches war waren ist sind wir ihr habt hat haben am im in an auf mit von zu zum zur den dem des es gab gibt euch uns man auch noch nur sehr mal".split(" "));
 const norm = (t) => String(t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
@@ -94,7 +124,7 @@ Regeln:
       r = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
         headers: { "x-api-key": env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01", "content-type": "application/json" },
-        body: JSON.stringify({ model: env.MODELL || MODELL, max_tokens: 500, system, messages: [{ role: "user", content: nutzer }] }),
+        body: JSON.stringify({ model: env.MODELL || MODELL, max_tokens: 1200, system, messages: [{ role: "user", content: nutzer }] }),
       });
     } catch (e) { return json({ fehler: "Der Sprachdienst ist gerade nicht erreichbar." }, 502); }
     if (!r.ok) { let grund = ""; try { const e = await r.json(); grund = (e.error && e.error.message) || ""; } catch (e) {}
@@ -112,11 +142,19 @@ Regeln:
       kv.put(`usd:${monat}`, String(Math.round((kosten + usd) * 1e6) / 1e6), { expirationTtl: 40 * 86400 }),
     ]);
 
-    let out; try { out = JSON.parse(text.replace(/^```(json)?|```$/g, "").trim()); } catch (e) { out = { antwort: text, quellen: [] }; }
-    const quellen = (Array.isArray(out.quellen) ? out.quellen : []).map((q) => {
+    const out = leseAntwort(text, a.stop_reason);
+    const quellen = out.quellen.map((q) => {
       const rr = w.find((x) => x.reise === q.reise); const d = rr && rr.tage.find((t) => t.tag === +q.tag);
       return rr && d ? { reise: rr.reise, titelReise: rr.titel, tag: d.tag, titel: d.titel } : null;
-    }).filter(Boolean).slice(0, 6);
+    }).filter(Boolean).filter((q, i, l) => l.findIndex((x) => x.reise === q.reise && x.tag === q.tag) === i).slice(0, 6);
+    // Fallback: keine Quellen im JSON, aber „Tag 16“ im Text → Tag der (einzigen bzw. gewählten) Reise nehmen
+    if (!quellen.length) {
+      const kand = reise ? w.filter((x) => x.reise === reise) : auswahl.length === 1 ? auswahl : top.map((x) => x.r).filter((x, i, l) => l.indexOf(x) === i);
+      for (const m of out.antwort.matchAll(/Tag\s+(\d{1,3})/g)) {
+        for (const rr of kand) { const d = rr.tage.find((t) => t.tag === +m[1]); if (d && !quellen.some((q) => q.reise === rr.reise && q.tag === d.tag)) { quellen.push({ reise: rr.reise, titelReise: rr.titel, tag: d.tag, titel: d.titel }); break; } }
+        if (quellen.length >= 6) break;
+      }
+    }
     return json({ antwort: String(out.antwort || "Dazu haben wir nichts aufgeschrieben."), quellen });
   },
 };

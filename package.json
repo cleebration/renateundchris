@@ -8,7 +8,7 @@
     "build": "node scripts/build.mjs",
     "update-prices": "node scripts/fetch-prices.mjs",
     "refresh": "node scripts/fetch-prices.mjs && node scripts/build.mjs",
-    "test": "node tests/videos.test.mjs"
+    "test": "node tests/videos.test.mjs && node tests/frage.test.mjs"
   },
   "engines": { "node": ">=18" }
 }
